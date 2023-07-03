@@ -7,19 +7,18 @@
             <source
                 width="400"
                 media="(prefers-color-scheme: dark)"
-                srcset="./public/images/logo/log-dark.png"
+                srcset="./public/images/logo/logo-light.png"
             >
             <img
                 width="300"
                 alt="Artisans logo"
-                src="./public/images/logo/logo-light.png"
+                src="./public/images/logo/logo-dark.png"
             >
         </picture>
     </a>
 </p>
 
 ## Product Experience Management
----
 
 ### Requirements
 - PHP 8.2
