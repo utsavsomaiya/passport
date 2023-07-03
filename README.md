@@ -5,7 +5,7 @@
     >
         <picture>
             <source
-                width="400"
+                width="300"
                 media="(prefers-color-scheme: dark)"
                 srcset="./public/images/logo/logo-light.png"
             >
