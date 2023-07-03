@@ -1,0 +1,30 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "array_indentation": true,
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "binary_operator_spaces": {
+            "default": "single_space"
+        },
+        "global_namespace_import": true,
+        "method_chaining_indentation": true,
+        "method_argument_space": true,
+        "no_extra_blank_lines": true,
+        "class_attributes_separation": true,
+        "single_quote": true,
+        "function_declaration": true,
+        "no_unused_imports": true,
+        "concat_space": false,
+        "curly_braces_position": {
+                "control_structures_opening_brace": "same_line",
+                "functions_opening_brace": "next_line_unless_newline_at_signature_end",
+                "anonymous_functions_opening_brace": "same_line",
+                "classes_opening_brace": "next_line_unless_newline_at_signature_end",
+                "anonymous_classes_opening_brace": "same_line",
+                "allow_single_line_empty_anonymous_classes": false,
+                "allow_single_line_anonymous_functions": false
+        }
+    }
+}
