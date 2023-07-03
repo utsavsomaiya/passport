@@ -7,12 +7,11 @@
             <source
                 width="300"
                 media="(prefers-color-scheme: dark)"
-                srcset="./public/images/logo/logo-light.png"
+                srcset="./public/images/logo/dark-mode-300.png"
             >
             <img
-                width="300"
                 alt="Artisans logo"
-                src="./public/images/logo/logo-dark.png"
+                src="./public/images/logo/light-mode-300.png"
             >
         </picture>
     </a>
