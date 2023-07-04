@@ -28,7 +28,7 @@ uses(TestCase::class)->beforeEach(fn () => $this->withoutVite())->in('Feature', 
 |
 */
 
-expect()->extend('toBeOne', fn() => $this->toBe(1));
+expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 /*
 |--------------------------------------------------------------------------
