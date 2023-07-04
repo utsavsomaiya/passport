@@ -11,11 +11,5 @@ parameters:
 
     # The level 9 is the highest level
     level: 8
-
-    tmpDir: build/phpstan
-
-    checkMissingIterableValueType: true
-
     checkModelProperties: true
-
     checkGenericClassInNonGenericObjectType: false

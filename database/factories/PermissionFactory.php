@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Role>
+ * @extends Factory<Permission>
  */
-class RoleFactory extends Factory
+class PermissionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,19 +20,9 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->randomElement(['Access Manager', 'Admin', 'Developer']),
+            'name' => fake()->unique()->randomElement(['Create User', 'Edit User', 'Delete User']),
             'description' => fake()->sentence(),
             'guard_name' => config('auth.defaults.guard'),
         ];
-    }
-
-    /**
-     * Indicate that the model's name should be Developer.
-     */
-    public function named(string $name): static
-    {
-        return $this->state(fn (): array => [
-            'name' => $name,
-        ]);
     }
 }
