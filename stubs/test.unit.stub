@@ -1,0 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
+test('test_example', function (): void {
+    $this->assertTrue(true);
+});
