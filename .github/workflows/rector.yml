@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run_ecs:
+  run_rector:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -38,12 +38,19 @@ jobs:
         - name: Fetch latest changes from current branch
           run: git fetch origin ${{ github.event.pull_request.head.ref }}
 
+        - name: Check if working directory is dirty
+          id: check_dirty
+          run: |
+            dirty=$(git status --porcelain)
+            echo "::set-output name=is_dirty::$(if [ -n "$dirty" ]; then echo "true"; else echo "false"; fi)"
+
         - name: Prepare git user
           run: |
             git config --global user.name "github-actions[bot]"
             git config --global user.email "action@github.com"
 
         - name: Commit and push changes
+          if: steps.check_dirty.outputs.is_dirty == 'true'
           run: |
             git add .
             git commit -m "code: refactor by rector"

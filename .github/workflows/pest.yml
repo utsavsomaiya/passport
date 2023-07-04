@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run_tests:
+  run_pest_test:
     runs-on: ubuntu-latest
 
     services:
