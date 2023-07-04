@@ -25,6 +25,7 @@
                 "anonymous_classes_opening_brace": "same_line",
                 "allow_single_line_empty_anonymous_classes": false,
                 "allow_single_line_anonymous_functions": false
-        }
+        },
+        "declare_strict_types": true
     }
 }

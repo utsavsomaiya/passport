@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -20,6 +21,10 @@ class DatabaseSeeder extends Seeder
             'username' => 'user',
             'email' => 'test@example.com',
             'password' => bcrypt('123456'),
+        ]);
+
+        Role::factory()->create([
+            'name' => 'Permission Manager',
         ]);
     }
 }
