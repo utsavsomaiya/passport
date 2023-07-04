@@ -1,0 +1,18 @@
+tests not updated:
+- all: ['!tests/**/*']
+
+postman updates:
+- 'app/Http/Controllers/Api/**/*'
+- 'routes/api.php'
+
+database schema updates:
+- 'database/migrations/**/*'
+- 'database/schema/**/*'
+
+env or config updates:
+- '.env.example'
+- 'config/**/*'
+
+frontend updates:
+- 'resources/js/**/*'
+- 'resources/css/**/*'
