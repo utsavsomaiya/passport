@@ -52,6 +52,7 @@ jobs:
         - name: Commit and push changes
           if: steps.check_dirty.outputs.is_dirty == 'true'
           run: |
-            git add .
-            git commit -m "code: refactor by pint"
-            git push origin ${{ github.event.pull_request.head.ref }}
+            gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+            gh pr checkout ${{ github.event.pull_request.number }}
+            git commit --allow-empty -m "code: refactor by pint"
+            git push
