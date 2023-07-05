@@ -26,9 +26,6 @@ class RoleFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the model's name should be Developer.
-     */
     public function named(string $name): static
     {
         return $this->state(fn (): array => [

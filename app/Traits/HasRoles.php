@@ -5,12 +5,25 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Models\Role;
+use App\Models\User;
 use BackedEnum;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 trait HasRoles
 {
+    public static function bootHasRoles(): void
+    {
+        static::deleting(function (User $model): void {
+            if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
+                return;
+            }
+
+            $model->roles()->detach();
+        });
+    }
+
     /**
      * Assign the given role to the model.
      *
@@ -19,6 +32,11 @@ trait HasRoles
      */
     public function assignRole(array|string|int|Role|Collection $roles = [])
     {
+        if ($roles instanceof Role) {
+            $roles = $roles->getKey();
+            $roles = Arr::wrap($roles);
+        }
+
         $roles = $this->collectRoles($roles);
 
         $model = $this->getModel();
@@ -72,6 +90,18 @@ trait HasRoles
                     return $carry;
                 }
 
+                if (Str::isUuid($role)) {
+                    $carry[] = $role;
+
+                    return $carry;
+                }
+
+                if ($role instanceof Role) {
+                    $carry[] = $role->getKey();
+
+                    return $carry;
+                }
+
                 $role = $this->getStoredRole($role);
 
                 if (! $role instanceof Role) {
@@ -84,10 +114,14 @@ trait HasRoles
             }, []);
     }
 
-    protected function getStoredRole(BackedEnum|string $role): Role
+    protected function getStoredRole(BackedEnum|Role|string $role): Role
     {
         if ($role instanceof BackedEnum) {
             $role = $role->value;
+        }
+
+        if ($role instanceof Role) {
+            return $role;
         }
 
         /** @var string $role */
@@ -96,5 +130,36 @@ trait HasRoles
         }
 
         return Role::findByName($role, config('auth.defaults.guard'));
+    }
+
+    /**
+     * Remove all current roles and set the given ones.
+     *
+     * @return $this
+     */
+    // @phpstan-ignore-next-line
+    public function syncRoles(array $roles = [])
+    {
+        if ($this->getModel()->exists) {
+            $this->collectRoles($roles);
+            $this->roles()->detach();
+            $this->setRelation('roles', collect());
+        }
+
+        return $this->assignRole($roles);
+    }
+
+    /**
+     * Revoke the given role from the model.
+     *
+     * @return $this
+     */
+    public function removeRole(string|Role $role)
+    {
+        $this->roles()->detach($this->getStoredRole($role));
+
+        $this->unsetRelation('roles');
+
+        return $this;
     }
 }

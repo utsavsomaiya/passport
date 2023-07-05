@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use Illuminate\Database\Eloquent\Builder;
+
+/**
+ * @template TModelClass of {{ model }}
+ *
+ * @extends Builder<TModelClass>
+ */
+class {{ class }} extends Builder
+{
+
+}
