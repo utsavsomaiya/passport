@@ -44,12 +44,6 @@ jobs:
             dirty=$(git status --porcelain)
             echo "::set-output name=is_dirty::$(if [ -n "$dirty" ]; then echo "true"; else echo "false"; fi)"
 
-        - name: Get remote branch name
-          id: get_branch_name
-          run: |
-            branch_name=$(git branch -r --contains HEAD | sed -n 's/origin\///p')
-            echo "::set-output name=branch_name::$branch_name"
-
         - name: Prepare git user
           run: |
             git config --global user.name "github-actions[bot]"
@@ -60,4 +54,4 @@ jobs:
           run: |
             git add .
             git commit -m "code: refactor by pint"
-            git push origin HEAD:${{ steps.get_branch_name.outputs.branch_name }}
+            git push origin ${{ github.event.pull_request.head.ref }}
