@@ -16,7 +16,6 @@ return new class() extends Migration {
             $table->uuid('id')->primary();
             $table->string('name')->unique();
             $table->longText('description')->nullable();
-            $table->string('guard_name')->default(config('auth.defaults.guard'));
             $table->timestamps();
         });
     }

@@ -84,10 +84,10 @@ class BuilderMakeCommand extends GeneratorCommand
     protected function replaceClass($stub, $name)
     {
         if (Str::endsWith(class_basename($name), 'Builder')) {
-            return str_replace('{{ class }}', Str::of($name)->classBasename()->title()->value(), $stub);
+            return str_replace('{{ class }}', Str::of($name)->classBasename()->value(), $stub);
         }
 
-        return str_replace('{{ class }}', Str::of($name)->classBasename()->title()->value() . 'Builder', $stub);
+        return str_replace('{{ class }}', Str::of($name)->classBasename()->value() . 'Builder', $stub);
     }
 
     /**

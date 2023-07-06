@@ -44,9 +44,9 @@ class DatabaseSeeder extends Seeder
         $superAdmin = Role::factory()->named('Super Admin')->create();
         $accessManager = Role::factory()->named('Access Manager')->create();
 
-        $utsav->assignRole($developer);
-        $gaurav->assignRole($superAdmin);
-        $dev->assignRole([$accessManager, $superAdmin]);
+        $utsav->assignRole([$developer->name]);
+        $gaurav->assignRole([$superAdmin->name]);
+        $dev->assignRole([$accessManager->name, $superAdmin->name]);
 
         // This data is static data because of we are playing with real world!!
         $this->displayUserData(collect([$utsav, $gaurav, $dev]), collect([$developer, $superAdmin, $accessManager]));
