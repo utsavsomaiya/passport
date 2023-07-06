@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\GenerateTokenRequest;
 use App\Queries\UserQueries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +18,11 @@ class GenerateTokenController extends Controller
 
     }
 
+    /**
+     * Generate token using Laravel Sanctum
+     *
+     * @return array<string, string>
+    */
     public function generateToken(Request $request): array
     {
         $request->validate([

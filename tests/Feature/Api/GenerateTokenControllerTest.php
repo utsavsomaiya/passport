@@ -11,7 +11,7 @@ test('it can generate the user token', function (): void {
     $response = $this->postJson(route('api.generate_token'), [
         'email' => $user->email,
         'password' => 'password',
-        'device_name' => 'test'
+        'device_name' => 'test',
     ]);
 
     $response->assertOk()

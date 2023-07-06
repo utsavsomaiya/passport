@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:query')]
 class QueryMakeCommand extends GeneratorCommand
 {
-     /**
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -24,14 +26,14 @@ class QueryMakeCommand extends GeneratorCommand
      */
     protected $description = 'Create a new query';
 
-     /**
+    /**
      * The type of class being generated.
      *
      * @var string
      */
     protected $type = 'Queries';
 
-     /**
+    /**
      * Get the stub file for the generator.
      *
      * @return string
@@ -54,7 +56,7 @@ class QueryMakeCommand extends GeneratorCommand
             : __DIR__.$stub;
     }
 
-     /**
+    /**
      * Replace the class name for the given stub.
      *
      * @param  string  $name
@@ -67,7 +69,7 @@ class QueryMakeCommand extends GeneratorCommand
         return str_replace(array_keys($replace), array_values($replace), parent::buildClass($name));
     }
 
-     /**
+    /**
      * Build the model replacement values.
      *
      * @return array<string, string>

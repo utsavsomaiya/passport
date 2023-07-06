@@ -8,7 +8,6 @@ use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Input\InputArgument;
 
 #[AsCommand(name: 'make:builder')]
 class BuilderMakeCommand extends GeneratorCommand
