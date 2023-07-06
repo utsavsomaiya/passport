@@ -25,7 +25,7 @@ trait HasRoles
     /**
      * Assign the given role to the model.
      *
-     * @param array<int, string> $roles
+     * @param  array<int, string>  $roles
      * @return $this
      */
     public function assignRole(array $roles)
@@ -55,7 +55,7 @@ trait HasRoles
     /**
      * Returns roles ids as array keys
      *
-     * @param array<int, string> $roles
+     * @param  array<int, string>  $roles
      * @return array<int, string> $roles
      */
     private function collectRoles(array $roles): array
@@ -96,7 +96,7 @@ trait HasRoles
     /**
      * Revoke the given role from the model.
      *
-     * @param array<int, string> $roles
+     * @param  array<int, string>  $roles
      * @return $this
      */
     public function removeRole(array $roles)

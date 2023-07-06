@@ -9,29 +9,29 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'make:builder')]
-class BuilderMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'make:query')]
+class QueryMakeCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:builder {name}';
+    protected $signature = 'make:query {name}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new builder';
+    protected $description = 'Create a new query';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Builder';
+    protected $type = 'Queries';
 
     /**
      * Get the stub file for the generator.
@@ -40,7 +40,7 @@ class BuilderMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return $this->resolveStubPath('/stubs/builder.stub');
+        return $this->resolveStubPath('/stubs/query.stub');
     }
 
     /**
@@ -54,39 +54,6 @@ class BuilderMakeCommand extends GeneratorCommand
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.$stub;
-    }
-
-    /**
-     * Get the destination class path.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function getPath($name)
-    {
-        if (Str::endsWith(class_basename($name), 'Builder')) {
-            return parent::getPath($name);
-        }
-
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-
-        return app_path().'/'.str_replace('\\', '/', $name).'Builder.php';
-    }
-
-    /**
-     * Replace the class name for the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $name
-     * @return string
-     */
-    protected function replaceClass($stub, $name)
-    {
-        if (Str::endsWith(class_basename($name), 'Builder')) {
-            return str_replace('{{ class }}', Str::of($name)->classBasename()->value(), $stub);
-        }
-
-        return str_replace('{{ class }}', Str::of($name)->classBasename()->value() . 'Builder', $stub);
     }
 
     /**
@@ -112,11 +79,7 @@ class BuilderMakeCommand extends GeneratorCommand
         /** @var string $name */
         $name = $this->argument('name');
 
-        if (Str::endsWith($name, 'Builder')) {
-            $modelClass = $this->parseModel(Str::before($name, 'Builder'));
-        } else {
-            $modelClass = $this->parseModel($name);
-        }
+        $modelClass = $this->parseModel(Str::before($name, 'Queries'));
 
         if (
             ! class_exists($modelClass) &&
@@ -126,20 +89,8 @@ class BuilderMakeCommand extends GeneratorCommand
         }
 
         return [
-            '{{ model }}' => class_basename($modelClass),
             '{{ namespacedModel }}' => $modelClass,
         ];
-    }
-
-    /**
-     * Get the default namespace for the class.
-     *
-     * @param  string  $rootNamespace
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace.'\Builders';
     }
 
     /**
@@ -157,5 +108,16 @@ class BuilderMakeCommand extends GeneratorCommand
         }
 
         return $this->qualifyModel($model);
+    }
+
+    /**
+     * Get the default namespace for the class.
+     *
+     * @param  string  $rootNamespace
+     * @return string
+     */
+    protected function getDefaultNamespace($rootNamespace)
+    {
+        return $rootNamespace.'\Queries';
     }
 }
