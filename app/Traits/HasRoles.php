@@ -6,10 +6,8 @@ namespace App\Traits;
 
 use App\Models\Role;
 use App\Models\User;
-use BackedEnum;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 trait HasRoles
 {
@@ -27,16 +25,11 @@ trait HasRoles
     /**
      * Assign the given role to the model.
      *
-     * @param  array<int, string>|string|int|Role|Collection  ...$roles
+     * @param array<int, string> $roles
      * @return $this
      */
-    public function assignRole(array|string|int|Role|Collection $roles = [])
+    public function assignRole(array $roles)
     {
-        if ($roles instanceof Role) {
-            $roles = $roles->getKey();
-            $roles = Arr::wrap($roles);
-        }
-
         $roles = $this->collectRoles($roles);
 
         $model = $this->getModel();
@@ -47,7 +40,6 @@ trait HasRoles
             $roles = array_diff($roles, $currentRoles);
 
             if ($roles !== []) {
-
                 $this->roles()->attach(array_combine(
                     $roles,
                     array_map(fn (): array => ['created_at' => now(), 'updated_at' => now()], $roles)
@@ -55,22 +47,6 @@ trait HasRoles
 
                 $model->unsetRelation('roles');
             }
-        } else {
-            $class = $model::class;
-
-            $class::saved(
-                function ($object) use ($roles, $model): void {
-                    if ($model->getKey() !== $object->getKey()) {
-                        return;
-                    }
-
-                    $model->roles()->attach(array_combine(
-                        $roles,
-                        array_map(fn (): array => ['created_at' => now(), 'updated_at' => now()], $roles)
-                    ));
-                    $model->unsetRelation('roles');
-                }
-            );
         }
 
         return $this;
@@ -78,85 +54,54 @@ trait HasRoles
 
     /**
      * Returns roles ids as array keys
+     *
+     * @param array<int, string> $roles
+     * @return array<int, string> $roles
      */
-    // @phpstan-ignore-next-line
-    private function collectRoles($roles = []): array
+    private function collectRoles(array $roles): array
     {
-        // @phpstan-ignore-next-line
         return collect($roles)
-            ->flatten()
-            ->reduce(function ($carry, $role) {
-                if (empty($role)) {
-                    return $carry;
-                }
-
-                if (Str::isUuid($role)) {
-                    $carry[] = $role;
-
-                    return $carry;
-                }
-
-                if ($role instanceof Role) {
-                    $carry[] = $role->getKey();
-
-                    return $carry;
-                }
-
-                $role = $this->getStoredRole($role);
-
-                if (! $role instanceof Role) {
-                    return $carry;
-                }
-
-                $carry[] = $role->getKey();
-
-                return $carry;
-            }, []);
-    }
-
-    protected function getStoredRole(BackedEnum|Role|string $role): Role
-    {
-        if ($role instanceof BackedEnum) {
-            $role = $role->value;
-        }
-
-        if ($role instanceof Role) {
-            return $role;
-        }
-
-        /** @var string $role */
-        if (Str::isUuid($role)) {
-            return Role::findById($role, config('auth.defaults.guard'));
-        }
-
-        return Role::findByName($role, config('auth.defaults.guard'));
+            ->map(fn (string $role) => $this->getStoredRole($role))
+            ->toArray();
     }
 
     /**
-     * Remove all current roles and set the given ones.
+     * Find a role by its name or id.
      *
-     * @return $this
+     * @throws InvalidArgumentException
      */
-    // @phpstan-ignore-next-line
-    public function syncRoles(array $roles = [])
+    private function getStoredRole(string $role): string
     {
-        if ($this->getModel()->exists) {
-            $this->collectRoles($roles);
-            $this->roles()->detach();
-            $this->setRelation('roles', collect());
+        if (Str::isUuid($role)) {
+            $roleModel = Role::find($role);
+
+            if ($roleModel?->exists) {
+                return $roleModel->getKey();
+            }
+
+            throw new InvalidArgumentException(sprintf('There is no role with id `%s`.', $role));
         }
 
-        return $this->assignRole($roles);
+        $roleModel = Role::query()
+            ->where('name', $role)
+            ->first();
+
+        if ($roleModel?->exists) {
+            return $roleModel->getKey();
+        }
+
+        throw new InvalidArgumentException(sprintf('There is no role named `%s`.', $role));
     }
 
     /**
      * Revoke the given role from the model.
      *
+     * @param array<int, string> $roles
      * @return $this
      */
-    public function removeRole(string|Role $role)
+    public function removeRole(array $roles)
     {
-        $this->roles()->detach($this->getStoredRole($role));
+        $this->roles()->detach($this->collectRoles($roles));
 
         $this->unsetRelation('roles');
 

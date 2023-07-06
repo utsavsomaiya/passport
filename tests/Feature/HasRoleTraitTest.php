@@ -10,7 +10,7 @@ test('it can assign role using name', function (): void {
 
     $role = Role::factory()->named($name = 'Developer')->create();
 
-    $user->assignRole($name);
+    $user->assignRole([$name]);
 
     $this->assertDatabaseHas($user->roles()->getTable(), [
         'user_id' => $user->id,
@@ -21,9 +21,9 @@ test('it can assign role using name', function (): void {
 test('it can remove the roles', function (): void {
     $user = User::factory()->create();
 
-    $user->roles()->attach($role = Role::factory()->create());
+    $user->roles()->attach($roles = Role::factory(2)->create());
 
-    $user->removeRole($role);
+    $user->removeRole([$roles->first()->getKey(), $roles->last()->getKey()]);
 
     $this->assertDatabaseCount($user->roles()->getTable(), 0);
 });
@@ -33,7 +33,7 @@ test('it can assign multiple roles', function (): void {
 
     $roles = Role::factory(2)->create();
 
-    $user->assignRole($roles);
+    $user->assignRole([$roles->first()->getKey(), $roles->last()->getKey()]);
 
     $this->assertDatabaseCount($user->roles()->getTable(), 2);
 });
@@ -43,7 +43,7 @@ test('it can assign multiple roles using name also', function (): void {
 
     $roles = Role::factory(2)->create();
 
-    $user->assignRole($roles->pluck('name'));
+    $user->assignRole($roles->pluck('name')->toArray());
 
     $this->assertDatabaseCount($user->roles()->getTable(), 2);
 });

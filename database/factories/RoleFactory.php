@@ -22,7 +22,6 @@ class RoleFactory extends Factory
         return [
             'name' => fake()->unique()->randomElement(['Access Manager', 'Admin', 'Developer']),
             'description' => fake()->sentence(),
-            'guard_name' => config('auth.defaults.guard'),
         ];
     }
 
