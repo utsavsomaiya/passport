@@ -22,7 +22,7 @@ class GenerateTokenController extends Controller
      * Generate token using Laravel Sanctum
      *
      * @return array<string, string>
-    */
+     */
     public function generateToken(Request $request): array
     {
         $request->validate([
