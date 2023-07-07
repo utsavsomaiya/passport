@@ -67,7 +67,7 @@ class EnumMakeCommand extends GeneratorCommand
     {
         $stub = parent::replaceClass($stub, $name);
 
-        return str_replace('{{ enum }}', Str::of($name)->classBasename()->title()->value(), $stub);
+        return str_replace('{{ enum }}', Str::of($name)->classBasename()->value(), $stub);
     }
 
     /**

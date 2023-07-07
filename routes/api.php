@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Enums\PermissionEnum;
 use App\Http\Controllers\Api\GenerateTokenController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\LocaleController;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +21,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('api.')->group(function () {
-    Route::post('generate-token', [GenerateTokenController::class, 'generateToken'])->name('generate_token');
+    Route::middleware(ThrottleRequests::with(5, 1))
+        ->post('generate-token', [GenerateTokenController::class, 'generateToken'])
+        ->name('generate_token');
 
-    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-        return $request->user();
+    Route::middleware(['auth:sanctum'])->group(function (): void {
+        Route::controller(LocaleController::class)
+            ->name('locales.')
+            ->prefix('locales')
+            ->group(function (): void {
+                Route::get('fetch', 'fetch')
+                    ->middleware(Authorize::using(PermissionEnum::LOCALES->can('fetch')))
+                    ->name('fetch');
+
+                Route::post('create', 'create')
+                    ->middleware(Authorize::using(PermissionEnum::LOCALES->can('create')))
+                    ->name('create');
+
+                Route::delete('delete', 'delete')
+                    ->middleware(Authorize::using(PermissionEnum::LOCALES->can('delete')))
+                    ->name('delete');
+
+                Route::put('update', 'update')
+                    ->middleware(Authorize::using(PermissionEnum::LOCALES->can('update')))
+                    ->name('update');
+            });
     });
 });
