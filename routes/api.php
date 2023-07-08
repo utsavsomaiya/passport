@@ -38,11 +38,11 @@ Route::name('api.')->group(function () {
                     ->middleware(Authorize::using(PermissionEnum::LOCALES->can('create')))
                     ->name('create');
 
-                Route::delete('delete', 'delete')
+                Route::delete('{id}/delete', 'delete')
                     ->middleware(Authorize::using(PermissionEnum::LOCALES->can('delete')))
                     ->name('delete');
 
-                Route::put('update', 'update')
+                Route::put('{id}/update', 'update')
                     ->middleware(Authorize::using(PermissionEnum::LOCALES->can('update')))
                     ->name('update');
             });

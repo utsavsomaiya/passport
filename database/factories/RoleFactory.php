@@ -20,7 +20,7 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->randomElement(['Access Manager', 'Admin', 'Developer']),
+            'name' => fake()->unique()->randomElement(['Access Manager', 'Super Admin']),
             'description' => fake()->sentence(),
         ];
     }

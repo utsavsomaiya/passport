@@ -27,12 +27,16 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        PermissionEnum::getFeatureGates()->each(function ($gate) {
-            Gate::define($gate, function (User $user) use($gate) {
-                $user->roles->each(function ($role) use($gate) {
-                    
-                });
-            });
+        PermissionEnum::getFeatureGates()->each(function ($gate): void {
+            Gate::define($gate, fn (User $user) => $user->roles->map(function ($role) use ($gate): bool {
+                if (str($role->name)->title->value === 'Super Admin') {
+                    return true;
+                }
+
+                $permissions = $role->permissions()->pluck('name')->toArray();
+
+                return in_array($gate, $permissions);
+            }));
         });
     }
 }

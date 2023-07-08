@@ -19,35 +19,38 @@ enum PermissionEnum: int
     public static function getFeatureGates(): Collection
     {
         return collect(self::names())
-            ->map(fn ($name) => self::generateCrud(Str::of($name)->lower()->singular()->value()))
+            ->map(fn ($name): array => self::generateCrud(Str::of($name)->lower()->singular()->value()))
             ->flatten();
     }
 
-    public function can(string $action)
+    public function can(string $action): string
     {
         return self::generateAction($action, Str::singular($this->name));
     }
 
+    /**
+     * @return array<int, string>
+     */
     private static function generateCrud(string $for): array
     {
         $crud = collect(['fetch', 'create', 'update', 'delete']);
 
-        return $crud->map(fn ($action) => self::generateAction($action, $for))->toArray();
+        return $crud->map(fn ($action): string => self::generateAction($action, $for))->toArray();
     }
 
-    private static function generateAction(string $action, string $for)
+    private static function generateAction(string $action, string $for): string
     {
         if ($action === 'fetch') {
             return Str::of($action)
                 ->title()
-                ->append(Str::of($for)->plural()->title())
+                ->append(Str::of($for)->plural()->title()->value())
                 ->kebab()
                 ->value();
         }
 
         return Str::of($action)
             ->title()
-            ->append(Str::of($for)->title())
+            ->append(Str::of($for)->title()->value())
             ->kebab()
             ->value();
     }

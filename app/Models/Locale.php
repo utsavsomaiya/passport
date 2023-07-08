@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -16,12 +18,14 @@ class Locale extends Model
      *
      * @var array<int, string>
      */
-     protected $fillable = [];
+    protected $fillable = ['company_id', 'name', 'code', 'status'];
 
-     /**
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-     protected $casts = [];
+    protected $casts = [
+        'status' => 'boolean',
+    ];
 }

@@ -1,11 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
+use App\Models\Company;
+use App\Models\Locale;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Locale>
+ * @extends Factory<Locale>
  */
 class LocaleFactory extends Factory
 {
@@ -17,7 +23,9 @@ class LocaleFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'company_id' => fn (): Collection|Model => Company::factory()->create(),
+            'name' => fake()->locale(),
+            'code' => fake()->languageCode(),
         ];
     }
 }

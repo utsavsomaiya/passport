@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Exception;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 
 class Authenticate extends Middleware
 {
@@ -21,8 +19,10 @@ class Authenticate extends Middleware
             return null;
         }
 
-        if (Str::startsWith($request->route()->getName(), 'api')) {
+        if (str($request->route()?->getName())->startsWith('api')) {
             abort(Response::HTTP_FORBIDDEN);
         }
+
+        return null;
     }
 }
