@@ -24,8 +24,8 @@ class LocaleFactory extends Factory
     {
         return [
             'company_id' => fn (): Collection|Model => Company::factory()->create(),
-            'name' => fake()->locale(),
-            'code' => fake()->languageCode(),
+            'name' => fake()->unique()->locale(),
+            'code' => fake()->unique()->languageCode(),
         ];
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\PermissionEnum;
 use App\Models\Role;
 use App\Models\RolePermission;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @extends Factory<RolePermission>
  */
-class RolePermissionFactory extends Factory
+class PermissionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -24,7 +25,7 @@ class RolePermissionFactory extends Factory
     {
         return [
             'role_id' => fn (): Collection|Model => Role::factory()->create(),
-            'permission' => fake()->numberBetween(1, 255), // This will change after we make an enum
+            'title' => fake()->randomElement(PermissionEnum::getFeatureGates()->toArray()),
         ];
     }
 }

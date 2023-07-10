@@ -13,10 +13,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('role_permissions', function (Blueprint $table): void {
+        Schema::create('permissions', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignIdFor(Role::class, 'role_id')->constrained('roles');
-            $table->unsignedTinyInteger('permission')->comment('https://dev.mysql.com/doc/refman/8.0/en/integer-types.html');
+            $table->string('title');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_permissions');
+        Schema::dropIfExists('permissions');
     }
 };

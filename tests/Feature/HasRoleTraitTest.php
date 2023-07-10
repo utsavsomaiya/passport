@@ -38,7 +38,7 @@ test('it can assign multiple roles', function (): void {
     $this->assertDatabaseCount($user->roles()->getTable(), 2);
 });
 
-test('it can assign multiple roles using name also', function (): void {
+test('it can assign multiple roles using name', function (): void {
     $user = User::factory()->create();
 
     $roles = Role::factory(2)->create();

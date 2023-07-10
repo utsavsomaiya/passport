@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
                         return true;
                     }
 
-                    $permissions = $role->permissions()->pluck('name')->toArray();
+                    $permissions = $role->permissions()->pluck('title')->toArray();
 
                     return in_array($gate, $permissions);
                 });
