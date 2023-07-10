@@ -7,7 +7,9 @@ namespace Database\Factories;
 use App\Enums\CurrencyStatus;
 use App\Models\Company;
 use App\Models\Currency;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends Factory<Currency>
@@ -23,7 +25,7 @@ class CurrencyFactory extends Factory
     {
         // Ref: https://useast.cm.elasticpath.com/settings/currencies/35465caf-4446-4c57-9552-f2995cf7558f
         return [
-            'company_id' => fn () => Company::factory()->create(),
+            'company_id' => fn (): Collection|Model => Company::factory()->create(),
             'code' => fake()->currencyCode(),
             'format' => '${price}',
             'thousand_seprator' => ',',

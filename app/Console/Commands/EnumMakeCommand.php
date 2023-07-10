@@ -7,7 +7,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Input\InputArgument;
 
 #[AsCommand(name: 'make:enum')]
 class EnumMakeCommand extends GeneratorCommand
@@ -59,49 +58,22 @@ class EnumMakeCommand extends GeneratorCommand
     /**
      * Replace the class name for the given stub.
      *
-     * @param  string  $stub
      * @param  string  $name
      * @return string
      */
-    protected function replaceClass($stub, $name)
+    protected function buildClass($name)
     {
-        $stub = parent::replaceClass($stub, $name);
-
-        return str_replace('{{ enum }}', Str::of($name)->classBasename()->value(), $stub);
+        return str_replace('{{ enum }}', Str::of($name)->classBasename()->value(), parent::buildClass($name));
     }
 
     /**
-     * Get the destination class path.
+     * Get the default namespace for the class.
      *
-     * @param  string  $name
+     * @param  string  $rootNamespace
      * @return string
      */
-    protected function getPath($name)
+    protected function getDefaultNamespace($rootNamespace)
     {
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-
-        return app_path().str_replace('\\', '/Enums/', $name).'.php';
-    }
-
-    /**
-     * Get the root namespace for the class.
-     *
-     * @return string
-     */
-    protected function rootNamespace()
-    {
-        return 'App\Enums';
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array<int, array<int, int|string>>
-     */
-    protected function getArguments(): array
-    {
-        return [
-            ['name', InputArgument::REQUIRED, 'The name of the enum'],
-        ];
+        return $rootNamespace.'\Enums';
     }
 }

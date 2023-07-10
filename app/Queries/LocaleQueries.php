@@ -10,7 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class LocaleQueries
 {
     /**
-     * @param array<string, string> $filterData
+     * @param  array<string, string>  $filterData
      */
     public function listQuery(array $filterData): LengthAwarePaginator
     {
