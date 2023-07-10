@@ -17,6 +17,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class User extends Authenticatable
 {
@@ -64,14 +65,16 @@ class User extends Authenticatable
     /**
      * Create a new personal access token for the user.
      *
-     * @return \Laravel\Sanctum\NewAccessToken
+     * @param  array<int, string>  $abilities
      */
     public function createToken(
         string $name,
         string $companyId,
         array $abilities = ['*'],
         DateTimeInterface $expiresAt = null
-    ) {
+    ): NewAccessToken {
+
+        /** @var PersonalAccessToken $token */
         $token = $this->tokens()->create([
             'name' => $name,
             'company_id' => $companyId,

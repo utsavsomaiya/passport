@@ -18,7 +18,7 @@ class AddCompanyIdInServiceContainer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $personalAccessToken = PersonalAccessToken::firstWhere('id', str($request->bearerToken())->before('|'));
+        $personalAccessToken = PersonalAccessToken::findToken($request->bearerToken());
 
         abort_if(! $personalAccessToken, Response::HTTP_FORBIDDEN);
 

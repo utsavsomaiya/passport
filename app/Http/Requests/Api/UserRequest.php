@@ -6,6 +6,7 @@ namespace App\Http\Requests\Api;
 
 use App\Models\User;
 use App\Queries\UserQueries;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
@@ -13,12 +14,12 @@ use Illuminate\Validation\Validator;
 
 class UserRequest extends FormRequest
 {
-    protected ?User $user;
+    protected ?User $user = null;
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, (ValidationRule | array | string)>
+     * @return array<string, (ValidationRule | array<int, string> | string)>
      */
     public function rules(): array
     {
@@ -30,13 +31,15 @@ class UserRequest extends FormRequest
 
     /**
      * Get the "after" validation callables for the request.
+     *
+     * @return array<int, Closure>
      */
     public function after(): array
     {
         $this->user = resolve(UserQueries::class)->findByEmail($this->email);
 
         return [
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 if (! $this->user || ! Hash::check($this->password, $this->user->password)) {
                     $validator->errors()->add('email', 'The provided credentials are incorrect');
                 }
@@ -44,7 +47,11 @@ class UserRequest extends FormRequest
         ];
     }
 
-    public function validated($key = null, $default = null)
+    /**
+     * @param  array<int, string>|int|string|null  $key
+     * @return array<string, mixed>
+     */
+    public function validated($key = null, $default = null): array
     {
         return array_merge(parent::validated(), [
             'user' => $this->user,
