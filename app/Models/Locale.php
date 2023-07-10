@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RolePermission extends Model
+class Locale extends Model
 {
     use HasFactory;
     use HasUuids;
@@ -18,5 +18,14 @@ class RolePermission extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['role_id', 'permission'];
+    protected $fillable = ['company_id', 'name', 'code', 'status'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'status' => 'boolean',
+    ];
 }
