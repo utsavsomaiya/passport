@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use Illuminate\Console\Command;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
 
 class GenerateCsvDataSeeder extends Seeder
 {
-    protected function seedDataFromCsvFile(string $filename, string $table = null): int
+    protected function seedDataFromCsvFile(string $filename, string $table = null, string $companyId = null): int
     {
         $csvFile = @fopen($filename, 'r');
 
@@ -29,11 +30,11 @@ class GenerateCsvDataSeeder extends Seeder
 
         if ([] === $columns = Schema::getColumnListing($table)) {
             $selections = $this->command->choice('Bro!! There are 2 possibilities', [
-                1 => $firstPosibility = sprintf('<fg=yellow>Maybe you forgot to name the file the same as your <options=bold>%s</> table!</>', $table),
+                1 => $firstPossibility = sprintf('<fg=yellow>Maybe you forgot to name the file the same as your <options=bold>%s</> table!</>', $table),
                 2 => '<options=bold;fg=yellow>Or you forgot to run the migration before seeding!</>',
             ]);
 
-            if ($selections === $firstPosibility) {
+            if ($selections === $firstPossibility) {
                 $this->renameFile($filename);
 
                 return Command::FAILURE;
@@ -60,7 +61,7 @@ class GenerateCsvDataSeeder extends Seeder
             return Command::FAILURE;
         }
 
-        $records = self::generateData($csvFile, $headerColumns, $table);
+        $records = self::generateData($csvFile, $companyId, $headerColumns, $table);
 
         fclose($csvFile);
 
@@ -90,7 +91,7 @@ class GenerateCsvDataSeeder extends Seeder
         }
     }
 
-    private static function generateData($csvFile, array $headerColumns, string $table): array
+    private static function generateData($csvFile, ?string $companyId, array $headerColumns, string $table): array
     {
         $records = [];
 
@@ -101,6 +102,12 @@ class GenerateCsvDataSeeder extends Seeder
             foreach ($headerColumns as $key => $headerColumn) {
                 if ($headerColumn === 'password') {
                     $fields[$headerColumn] = $data[$key] !== '' ? bcrypt($data[$key]) : bcrypt('password');
+
+                    continue;
+                }
+
+                if ($headerColumn === 'company_id') {
+                    $fields[$headerColumn] = $companyId ?? Company::min('id');
 
                     continue;
                 }

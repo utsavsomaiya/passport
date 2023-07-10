@@ -20,8 +20,8 @@ return new class extends Migration {
             $table->string('code');
             $table->integer('exchange_rate')->default(0);
             $table->string('format');
-            $table->string('decimal_point');
-            $table->string('thousand_separator');
+            $table->string('decimal_point')->default('.');
+            $table->string('thousand_separator')->default(',');
             $table->string('decimal_places')->nullable();
             $table->boolean('is_default')->default(false);
             $table->tinyInteger('status')->default(CurrencyStatus::DISABLE->value);

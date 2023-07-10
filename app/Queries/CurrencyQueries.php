@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use App\Models\Locale;
+use App\Models\Currency;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class LocaleQueries
+class CurrencyQueries
 {
     /**
      * @param  array<string, string>  $filterData
      */
     public function listQuery(array $filterData): LengthAwarePaginator
     {
-        return Locale::query()
+        return Currency::query()
+            ->select('id', 'code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status')
             ->where('company_id', $filterData['company_id'])
             ->when($filterData['sort_by'] && $filterData['sort_direction'], function ($query) use ($filterData): void {
                 $query->orderBy($filterData['sort_by'], $filterData['sort_direction']);
@@ -26,8 +27,9 @@ class LocaleQueries
 
     public function delete(string $id): void
     {
-        Locale::where('id', $id)
+        Currency::query()
             ->where('company_id', app('company_id'))
+            ->where('id', $id)
             ->delete();
     }
 
@@ -38,7 +40,7 @@ class LocaleQueries
     {
         $data['company_id'] ??= app('company_id');
 
-        Locale::create($data);
+        Currency::create($data);
     }
 
     /**
@@ -46,7 +48,7 @@ class LocaleQueries
      */
     public function update(string $id, array $data): void
     {
-        Locale::query()
+        Currency::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)
             ->update($data);

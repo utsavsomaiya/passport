@@ -16,8 +16,8 @@ return new class extends Migration {
         Schema::create('locales', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignIdFor(Company::class, 'company_id')->constrained('companies');
-            $table->string('name');
-            $table->string('code');
+            $table->string('name')->unique();
+            $table->string('code')->unique();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

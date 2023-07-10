@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\PermissionEnum;
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\GenerateTokenController;
 use App\Http\Controllers\Api\LocaleController;
 use App\Http\Middleware\AddCompanyIdInServiceContainer;
@@ -47,8 +48,29 @@ Route::name('api.')->group(function () {
                     ->middleware(Authorize::using(PermissionEnum::LOCALES->can('delete')))
                     ->name('delete');
 
-                Route::put('{id}/update', 'update')
+                Route::post('{id}/update', 'update')
                     ->middleware(Authorize::using(PermissionEnum::LOCALES->can('update')))
+                    ->name('update');
+            });
+
+        Route::controller(CurrencyController::class)
+            ->name('currencies.')
+            ->prefix('currencies')
+            ->group(function (): void {
+                Route::get('fetch', 'fetch')
+                    ->middleware(Authorize::using(PermissionEnum::CURRENCIES->can('fetch')))
+                    ->name('fetch');
+
+                Route::post('create', 'create')
+                    ->middleware(Authorize::using(PermissionEnum::CURRENCIES->can('create')))
+                    ->name('create');
+
+                Route::delete('{id}/delete', 'delete')
+                    ->middleware(Authorize::using(PermissionEnum::CURRENCIES->can('delete')))
+                    ->name('delete');
+
+                Route::post('{id}/update', 'update')
+                    ->middleware(Authorize::using(PermissionEnum::CURRENCIES->can('update')))
                     ->name('update');
             });
     });
