@@ -18,11 +18,11 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->foreignIdFor(Company::class, 'company_id')->constrained('companies');
             $table->string('code');
-            $table->integer('exchange_rate');
+            $table->integer('exchange_rate')->default(0);
             $table->string('format');
             $table->string('decimal_point');
-            $table->string('decimal_places');
             $table->string('thousand_separator');
+            $table->string('decimal_places')->nullable();
             $table->boolean('is_default')->default(false);
             $table->tinyInteger('status')->default(CurrencyStatus::DISABLE->value);
             $table->timestamps();
