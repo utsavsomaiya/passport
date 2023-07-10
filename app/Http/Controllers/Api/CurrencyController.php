@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\LocaleRequest;
-use App\Http\Resources\Api\LocaleResource;
-use App\Queries\LocaleQueries;
+use App\Http\Requests\Api\CurrencyRequest;
+use App\Http\Resources\Api\CurrencyResource;
+use App\Queries\CurrencyQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class LocaleController extends Controller
+class CurrencyController extends Controller
 {
     public function __construct(
-        protected LocaleQueries $localeQueries
+        protected CurrencyQueries $currencyQueries
     ) {
-
     }
 
     public function fetch(Request $request): AnonymousResourceCollection
@@ -29,39 +28,39 @@ class LocaleController extends Controller
             'company_id' => app('company_id'),
         ];
 
-        $locales = $this->localeQueries->listQuery($filterData);
+        $currencies = $this->currencyQueries->listQuery($filterData);
 
-        return LocaleResource::collection($locales->getCollection());
+        return CurrencyResource::collection($currencies->getCollection());
     }
 
-    public function create(LocaleRequest $request): JsonResponse
+    public function create(CurrencyRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
 
-        $this->localeQueries->create($validatedData);
+        $this->currencyQueries->create($validatedData);
 
         return response()->json([
-            'success' => 'Locales created successfully.',
+            'success' => __('Currency created successfully.'),
         ]);
     }
 
     public function delete(string $id): JsonResponse
     {
-        $this->localeQueries->delete($id);
+        $this->currencyQueries->delete($id);
 
         return response()->json([
-            'success' => 'Locales deleted successfully.',
+            'success' => __('Currency deleted successfully.'),
         ]);
     }
 
-    public function update(LocaleRequest $request, string $id): JsonResponse
+    public function update(CurrencyRequest $request, string $id): JsonResponse
     {
         $validatedData = $request->validated();
 
-        $this->localeQueries->update($id, $validatedData);
+        $this->currencyQueries->update($id, $validatedData);
 
         return response()->json([
-            'success' => 'Locales updated successfully.',
+            'success' => __('Currency updated successfully.'),
         ]);
     }
 }

@@ -1,0 +1,3 @@
+code,format,decimal_places,is_default,status,exchange_rate,company_id
+USD,${price},2,1,1,0,
+EUR,€{price},2,0,1,10,
