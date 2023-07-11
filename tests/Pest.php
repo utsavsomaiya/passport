@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Models\Company;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Support\Arr;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 /*
@@ -41,7 +47,36 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 |
 */
 
-function something(): void
+function frontendApiLoginWithPermissions(...$permissions)
 {
-    // ..
+    $user = User::factory()
+        ->has(
+            Role::factory()
+                ->has(Permission::factory(count(Arr::flatten($permissions)))->sequence(...$permissions))
+                ->named('Access Manager')
+        )
+        ->create();
+
+    $company = Company::factory()->create();
+
+    $token = $user->createToken('test', $company->id)->plainTextToken;
+
+    $user = Sanctum::actingAs($user);
+
+    return [$user, $company, $token];
+}
+
+function frontendApiLoginWithUser(string $roleName)
+{
+    $user = User::factory()
+        ->has(Role::factory()->named($roleName))
+        ->create();
+
+    $company = Company::factory()->create();
+
+    $token = $user->createToken('test', $company->id)->plainTextToken;
+
+    $user = Sanctum::actingAs($user);
+
+    return [$user, $company, $token];
 }

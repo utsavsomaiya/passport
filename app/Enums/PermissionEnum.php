@@ -41,6 +41,7 @@ enum PermissionEnum: int
     private static function generateAction(string $action, string $for): string
     {
         if ($action === 'fetch') {
+            // Ref: if action is fetch then the return value is `fetch-locales`
             return Str::of($action)
                 ->title()
                 ->append(Str::of($for)->plural()->title()->value())
@@ -48,6 +49,7 @@ enum PermissionEnum: int
                 ->value();
         }
 
+        // Ref: if action is create, update or delete then the return value is `create-locale`, `delete-locale` or `update-locale`
         return Str::of($action)
             ->title()
             ->append(Str::of($for)->title()->value())

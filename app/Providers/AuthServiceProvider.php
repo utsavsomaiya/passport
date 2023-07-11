@@ -29,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         PermissionEnum::getFeatureGates()->each(function ($gate): void {
             Gate::define($gate, function (User $user) use ($gate) {
+                $user->load('roles');
                 $user->roles->load('permissions');
 
                 $userPermissions = $user->roles->map(function ($role) use ($gate): bool {

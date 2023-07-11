@@ -3,33 +3,16 @@
 declare(strict_types=1);
 
 use App\Enums\PermissionEnum;
-use App\Models\Company;
 use App\Models\Locale;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Laravel\Sanctum\Sanctum;
 
 beforeEach(function (): void {
-    $user = User::factory()
-        ->has(
-            Role::factory()
-                ->has(Permission::factory(4)->sequence(
-                    ['title' => PermissionEnum::LOCALES->can('fetch')],
-                    ['title' => PermissionEnum::LOCALES->can('create')],
-                    ['title' => PermissionEnum::LOCALES->can('delete')],
-                    ['title' => PermissionEnum::LOCALES->can('update')]
-                ))
-                ->named('Access Manager')
-        )
-        ->create();
-
-    $this->company = Company::factory()->create();
-
-    $this->token = $user->createToken('test', $this->company->id)->plainTextToken;
-
-    $this->user = Sanctum::actingAs($user);
+    [$this->user, $this->company, $this->token] = frontendApiLoginWithPermissions(
+        ['title' => PermissionEnum::LOCALES->can('create')],
+        ['title' => PermissionEnum::LOCALES->can('update')],
+        ['title' => PermissionEnum::LOCALES->can('delete')],
+        ['title' => PermissionEnum::LOCALES->can('fetch')]
+    );
 });
 
 test('it can fetch locales', function (): void {
@@ -71,7 +54,7 @@ test('it can create locale', function (): void {
     $response->assertOk()
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json
-                ->where('success', 'Locales created successfully.')
+                ->where('success', __('Locale created successfully.'))
         );
 
     $this->assertDatabaseCount(Locale::class, 1);
@@ -89,7 +72,7 @@ test('it can delete locale', function (): void {
     $response->assertOk()
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json
-                ->where('success', 'Locales deleted successfully.')
+                ->where('success', __('Locale deleted successfully.'))
         );
 
     $this->assertModelMissing($locale);
@@ -107,7 +90,7 @@ test('it can update locale', function (): void {
     $response->assertOk()
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json
-                ->where('success', 'Locales updated successfully.')
+                ->where('success', __('Locale updated successfully.'))
         );
 
     $this->assertDatabaseHas(Locale::class, [

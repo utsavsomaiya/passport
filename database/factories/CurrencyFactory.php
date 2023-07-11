@@ -28,7 +28,7 @@ class CurrencyFactory extends Factory
             'company_id' => fn (): Collection|Model => Company::factory()->create(),
             'code' => fake()->currencyCode(),
             'format' => '${price}',
-            'thousand_seprator' => ',',
+            'thousand_separator' => ',',
             'decimal_places' => '2',
             'is_default' => false,
             'status' => fake()->randomElement(CurrencyStatus::values()),

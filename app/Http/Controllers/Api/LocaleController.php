@@ -41,7 +41,7 @@ class LocaleController extends Controller
         $this->localeQueries->create($validatedData);
 
         return response()->json([
-            'success' => 'Locales created successfully.',
+            'success' => __('Locale created successfully.'),
         ]);
     }
 
@@ -50,7 +50,7 @@ class LocaleController extends Controller
         $this->localeQueries->delete($id);
 
         return response()->json([
-            'success' => 'Locales deleted successfully.',
+            'success' => __('Locale deleted successfully.'),
         ]);
     }
 
@@ -61,7 +61,7 @@ class LocaleController extends Controller
         $this->localeQueries->update($id, $validatedData);
 
         return response()->json([
-            'success' => 'Locales updated successfully.',
+            'success' => __('Locale updated successfully.'),
         ]);
     }
 }

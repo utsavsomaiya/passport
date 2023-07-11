@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('api.')->group(function () {
-    /* We don't need to pass the secure data in query parameter that's why we use post request */
     Route::post('companies/fetch', CompanyController::class)->name('companies.fetch');
 
     Route::middleware(ThrottleRequests::with(5, 1))
