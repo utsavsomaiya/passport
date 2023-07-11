@@ -21,14 +21,7 @@ class CurrencyController extends Controller
 
     public function fetch(Request $request): AnonymousResourceCollection
     {
-        $filterData = [
-            'per_page' => $request->get('per_page', 12),
-            'sort_by' => $request->get('sort_by'),
-            'sort_direction' => $request->get('sort_direction'),
-            'company_id' => app('company_id'),
-        ];
-
-        $currencies = $this->currencyQueries->listQuery($filterData);
+        $currencies = $this->currencyQueries->listQuery();
 
         return CurrencyResource::collection($currencies->getCollection());
     }

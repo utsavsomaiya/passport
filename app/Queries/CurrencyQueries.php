@@ -6,23 +6,18 @@ namespace App\Queries;
 
 use App\Models\Currency;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CurrencyQueries
 {
-    /**
-     * @param  array<string, string>  $filterData
-     */
-    public function listQuery(array $filterData): LengthAwarePaginator
+    public function listQuery(): LengthAwarePaginator
     {
-        return Currency::query()
-            ->select('id', 'code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status')
-            ->where('company_id', $filterData['company_id'])
-            ->when($filterData['sort_by'] && $filterData['sort_direction'], function ($query) use ($filterData): void {
-                $query->orderBy($filterData['sort_by'], $filterData['sort_direction']);
-            }, function ($query): void {
-                $query->orderBy('id', 'desc');
-            })
-            ->paginate((int) $filterData['per_page']);
+        return QueryBuilder::for(Currency::class)
+            ->allowedFields(['id', 'code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status'])
+            ->defaultSort('-id')
+            ->allowedSorts(['id', 'format', 'code'])
+            ->where('company_id', app('company_id'))
+            ->paginate(request()->per_page ?? 12);
     }
 
     public function delete(string $id): void
