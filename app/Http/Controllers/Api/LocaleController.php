@@ -22,14 +22,7 @@ class LocaleController extends Controller
 
     public function fetch(Request $request): AnonymousResourceCollection
     {
-        $filterData = [
-            'per_page' => $request->get('per_page', 12),
-            'sort_by' => $request->get('sort_by'),
-            'sort_direction' => $request->get('sort_direction'),
-            'company_id' => app('company_id'),
-        ];
-
-        $locales = $this->localeQueries->listQuery($filterData);
+        $locales = $this->localeQueries->listQuery();
 
         return LocaleResource::collection($locales->getCollection());
     }
