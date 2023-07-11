@@ -22,4 +22,14 @@ class HierarchyQueries
             ->with('childHierarchies')
             ->jsonPaginate();
     }
+
+    /**
+     * @param array<string, string> $data
+    */
+    public function create(array $data)
+    {
+        $data['company_id'] ??= app('company_id');
+
+        Hierarchy::create($data);
+    }
 }
