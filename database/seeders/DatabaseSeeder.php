@@ -54,8 +54,10 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
             $this->command->info('Currencies created.');
         }
 
-        $secs = microtime(true) - $time;
         $this->command->newLine();
+        $this->call(HierarchySeeder::class, parameters: ['companyId' => $companyMinimumId]);
+
+        $secs = microtime(true) - $time;
         app()->make(Factory::class, ['output' => $this->command->getOutput()])
             ->info('All this took '.round($secs * 1000).'ms');
     }
