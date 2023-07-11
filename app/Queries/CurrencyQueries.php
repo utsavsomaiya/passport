@@ -17,7 +17,7 @@ class CurrencyQueries
             ->defaultSort('-id')
             ->allowedSorts(['id', 'format', 'code'])
             ->where('company_id', app('company_id'))
-            ->paginate(request()->per_page ?? 12);
+            ->jsonPaginate();
     }
 
     public function delete(string $id): void

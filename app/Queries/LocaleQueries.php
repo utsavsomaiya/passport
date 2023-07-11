@@ -16,7 +16,7 @@ class LocaleQueries
             ->defaultSort('-id')
             ->allowedSorts(['id', 'name', 'code'])
             ->where('company_id', app('company_id'))
-            ->paginate();
+            ->jsonPaginate();
     }
 
     public function delete(string $id): void
