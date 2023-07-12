@@ -17,6 +17,7 @@ enum PermissionEnum: int
     case CURRENCIES = 3;
     case HIERARCHIES = 4;
     case PRICE_BOOKS = 5;
+    case TEMPLATES = 6;
 
     public static function getFeatureGates(): Collection
     {
@@ -52,7 +53,7 @@ enum PermissionEnum: int
 
         // Ref: if action is create, update or delete then the return value is `create-locale`, `delete-locale` or `update-locale`
         return Str::of($action)
-            ->append('-', Str::of($for)->title()->value())
+            ->append('-', Str::title($for))
             ->slug()
             ->value();
     }
