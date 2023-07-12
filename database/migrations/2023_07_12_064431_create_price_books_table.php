@@ -16,7 +16,7 @@ return new class extends Migration {
         Schema::create('price_books', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignIdFor(Company::class)->constrained('companies');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->longText('description')->nullable();
             $table->timestamps();
         });
