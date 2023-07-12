@@ -16,17 +16,18 @@ enum PermissionEnum: int
     case LOCALES = 2;
     case CURRENCIES = 3;
     case HIERARCHIES = 4;
+    case PRICE_BOOKS = 5;
 
     public static function getFeatureGates(): Collection
     {
         return collect(self::names())
-            ->map(fn ($name): array => self::generateCrud(Str::of($name)->lower()->singular()->value()))
+            ->map(fn ($name): array => self::generateCrud(Str::of($name)->slug()->singular()->value()))
             ->flatten();
     }
 
     public function can(string $action): string
     {
-        return self::generateAction($action, Str::singular($this->name));
+        return self::generateAction($action, Str::of($this->name)->slug()->singular()->value());
     }
 
     /**
@@ -44,17 +45,15 @@ enum PermissionEnum: int
         if ($action === 'fetch') {
             // Ref: if action is fetch then the return value is `fetch-locales`
             return Str::of($action)
-                ->title()
-                ->append(Str::of($for)->plural()->title()->value())
-                ->kebab()
+                ->append('-', Str::of($for)->plural()->title()->value())
+                ->slug()
                 ->value();
         }
 
         // Ref: if action is create, update or delete then the return value is `create-locale`, `delete-locale` or `update-locale`
         return Str::of($action)
-            ->title()
-            ->append(Str::of($for)->title()->value())
-            ->kebab()
+            ->append('-', Str::of($for)->title()->value())
+            ->slug()
             ->value();
     }
 }
