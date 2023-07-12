@@ -6,8 +6,9 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use App\Models\User;
-use Illuminate\Console\Command;
+use Database\Factories\CompanyFactory;
 use Illuminate\Console\View\Components\Factory;
+use Illuminate\Console\View\Components\TwoColumnDetail;
 
 class DatabaseSeeder extends GenerateCsvDataSeeder
 {
@@ -18,53 +19,44 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
     {
         $time = microtime(true);
 
-        $this->command->warn('Creating companies...');
-        Company::factory(2)->create();
-        $this->command->info('Companies created.');
+        $this->fakerCompanySeeding();
 
         $companyMinimumId = Company::min('id');
 
-        $this->command->warn(PHP_EOL.'Creating users...');
+        $this->seedDataFromCsvFile(database_path('/seeders/csv/users.csv'));
 
-        $success = $this->seedDataFromCsvFile(database_path('/seeders/csv/users.csv'));
-        if ($success === Command::SUCCESS) {
-            $this->command->info('Users created.');
-        }
-
-        $this->command->warn(PHP_EOL.'Creating roles');
-        $success = $this->seedDataFromCsvFile(database_path('/seeders/csv/roles.csv'));
-        if ($success === Command::SUCCESS) {
-            $this->command->info('Roles created.');
-        }
+        $this->seedDataFromCsvFile(database_path('/seeders/csv/roles.csv'));
 
         User::cursor()->each(function (User $user): void {
             $user->assignRole(['Super Admin']);
             $user->companies()->attach(Company::min('id'), ['created_at' => now(), 'updated_at' => now()]);
         });
 
-        $this->command->warn(PHP_EOL.'Creating Locales...');
-        $success = $this->seedDataFromCsvFile(database_path('/seeders/csv/locales.csv'), companyId: $companyMinimumId);
-        if ($success === Command::SUCCESS) {
-            $this->command->info('Locales created.');
-        }
+        $this->seedDataFromCsvFile(database_path('/seeders/csv/locales.csv'), companyId: $companyMinimumId);
 
-        $this->command->warn(PHP_EOL.'Creating Currencies...');
-        $success = $this->seedDataFromCsvFile(database_path('/seeders/csv/currencies.csv'), companyId: $companyMinimumId);
-        if ($success === Command::SUCCESS) {
-            $this->command->info('Currencies created.');
-        }
+        $this->seedDataFromCsvFile(database_path('/seeders/csv/currencies.csv'), companyId: $companyMinimumId);
 
-        $this->command->warn(PHP_EOL.'Creating Price books...');
-        $success = $this->seedDataFromCsvFile(database_path('/seeders/csv/price_books.csv'), companyId: $companyMinimumId);
-        if ($success === Command::SUCCESS) {
-            $this->command->info('Currencies created.');
-        }
+        $this->seedDataFromCsvFile(database_path('/seeders/csv/price_books.csv'), companyId: $companyMinimumId);
 
-        $this->command->newLine();
         $this->call(HierarchySeeder::class, parameters: ['companyId' => $companyMinimumId]);
 
-        $secs = microtime(true) - $time;
+        $this->seedDataFromCsvFile(database_path('/seeders/csv/templates.csv'), companyId: $companyMinimumId);
+
         app()->make(Factory::class, ['output' => $this->command->getOutput()])
-            ->info('All this took '.round($secs * 1000).'ms');
+            ->info('All this took '.number_format((microtime(true) - $time) * 1000, 2).' ms');
+    }
+
+    private function fakerCompanySeeding(): void
+    {
+        with(new TwoColumnDetail($this->command->getOutput()))->render(CompanyFactory::class, '<fg=yellow;options=bold>RUNNING</>');
+
+        $startTime = microtime(true);
+
+        Company::factory(2)->create();
+
+        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
+
+        with(new TwoColumnDetail($this->command->getOutput()))->render(CompanyFactory::class, sprintf('<fg=gray>%s ms</> <fg=green;options=bold>DONE</>', $runTime));
+        $this->command->getOutput()->writeln('');
     }
 }

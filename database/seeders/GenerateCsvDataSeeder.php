@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use Illuminate\Console\Command;
+use Illuminate\Console\View\Components\TwoColumnDetail;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,10 @@ class GenerateCsvDataSeeder extends Seeder
 {
     protected function seedDataFromCsvFile(string $filename, string $table = null, string $companyId = null): int
     {
+        with(new TwoColumnDetail($this->command->getOutput()))->render($filename, '<fg=yellow;options=bold>RUNNING</>');
+
+        $startTime = microtime(true);
+
         $csvFile = @fopen($filename, 'r');
 
         if (is_bool($csvFile)) {
@@ -65,9 +70,15 @@ class GenerateCsvDataSeeder extends Seeder
 
         fclose($csvFile);
 
-        if ($records !== []) {
-            return self::storeInDatabase($table, $records);
+        if ($records === []) {
+            return Command::FAILURE;
         }
+
+        self::storeInDatabase($table, $records);
+
+        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
+        with(new TwoColumnDetail($this->command->getOutput()))->render($filename, sprintf('<fg=gray>%s ms</> <fg=green;options=bold>DONE</>', $runTime));
+        $this->command->getOutput()->writeln('');
 
         return Command::SUCCESS;
     }

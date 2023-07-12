@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\GenerateTokenController;
 use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
 use App\Http\Controllers\Api\PriceBookController;
+use App\Http\Controllers\Api\TemplateController;
 use App\Http\Middleware\AddCompanyIdInServiceContainer;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
@@ -114,6 +115,27 @@ Route::name('api.')->group(function () {
 
                 Route::post('{id}/update', 'update')
                     ->middleware(Authorize::using(PermissionEnum::PRICE_BOOKS->can('update')))
+                    ->name('update');
+            });
+
+        Route::controller(TemplateController::class)
+            ->name('templates.')
+            ->prefix('templates')
+            ->group(function (): void {
+                Route::get('fetch', 'fetch')
+                    ->middleware(Authorize::using(PermissionEnum::TEMPLATES->can('fetch')))
+                    ->name('fetch');
+
+                Route::post('create', 'create')
+                    ->middleware(Authorize::using(PermissionEnum::TEMPLATES->can('create')))
+                    ->name('create');
+
+                Route::delete('{id}/delete', 'delete')
+                    ->middleware(Authorize::using(PermissionEnum::TEMPLATES->can('delete')))
+                    ->name('delete');
+
+                Route::post('{id}/update', 'update')
+                    ->middleware(Authorize::using(PermissionEnum::TEMPLATES->can('update')))
                     ->name('update');
             });
     });
