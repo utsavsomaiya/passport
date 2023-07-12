@@ -8,12 +8,16 @@ use App\Models\Locale;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class LocaleQueries
+class LocaleQueries extends GlobalQueries
 {
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Locale::class)
             ->defaultSort('-id')
+            ->allowedFilters([
+                $this->filter('name'),
+                $this->filter('code'),
+            ])
             ->allowedSorts(['id', 'name', 'code'])
             ->where('company_id', app('company_id'))
             ->jsonPaginate();
