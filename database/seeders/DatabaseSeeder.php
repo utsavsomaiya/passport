@@ -54,6 +54,12 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
             $this->command->info('Currencies created.');
         }
 
+        $this->command->warn(PHP_EOL.'Creating Price books...');
+        $success = $this->seedDataFromCsvFile(database_path('/seeders/csv/price_books.csv'), companyId: $companyMinimumId);
+        if ($success === Command::SUCCESS) {
+            $this->command->info('Currencies created.');
+        }
+
         $this->command->newLine();
         $this->call(HierarchySeeder::class, parameters: ['companyId' => $companyMinimumId]);
 

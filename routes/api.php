@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\GenerateTokenController;
 use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
+use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Middleware\AddCompanyIdInServiceContainer;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
@@ -92,6 +93,27 @@ Route::name('api.')->group(function () {
 
                 Route::post('{id}/update', 'update')
                     ->middleware(Authorize::using(PermissionEnum::HIERARCHIES->can('update')))
+                    ->name('update');
+            });
+
+        Route::controller(PriceBookController::class)
+            ->name('price_books.')
+            ->prefix('price-books')
+            ->group(function (): void {
+                Route::get('fetch', 'fetch')
+                    ->middleware(Authorize::using(PermissionEnum::PRICE_BOOKS->can('fetch')))
+                    ->name('fetch');
+
+                Route::post('create', 'create')
+                    ->middleware(Authorize::using(PermissionEnum::PRICE_BOOKS->can('create')))
+                    ->name('create');
+
+                Route::delete('{id}/delete', 'delete')
+                    ->middleware(Authorize::using(PermissionEnum::PRICE_BOOKS->can('delete')))
+                    ->name('delete');
+
+                Route::post('{id}/update', 'update')
+                    ->middleware(Authorize::using(PermissionEnum::PRICE_BOOKS->can('update')))
                     ->name('update');
             });
     });
