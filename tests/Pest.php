@@ -80,3 +80,24 @@ function frontendApiLoginWithUser(string $roleName)
 
     return [$user, $company, $token];
 }
+
+function getRoutes(array $routes)
+{
+    $actions = [];
+
+    foreach ($routes as $route) {
+        $actions[] = getRoutesAndMethod($route);
+    }
+
+    return collect($actions)->flatten()->toArray();
+}
+
+function getRoutesAndMethod(string $requestFor): array
+{
+    return [
+        fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.create', $requestFor))],
+        fn (): array => ['method' => 'delete', 'route' => route(sprintf('api.%s.delete', $requestFor), ['id' => fake()->uuid()])],
+        fn (): array => ['method' => 'get', 'route' => route(sprintf('api.%s.fetch', $requestFor))],
+        fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.update', $requestFor), ['id' => fake()->uuid()])],
+    ];
+}

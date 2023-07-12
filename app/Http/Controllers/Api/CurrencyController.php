@@ -9,7 +9,6 @@ use App\Http\Requests\Api\CurrencyRequest;
 use App\Http\Resources\Api\CurrencyResource;
 use App\Queries\CurrencyQueries;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CurrencyController extends Controller
@@ -19,7 +18,7 @@ class CurrencyController extends Controller
     ) {
     }
 
-    public function fetch(Request $request): AnonymousResourceCollection
+    public function fetch(): AnonymousResourceCollection
     {
         $currencies = $this->currencyQueries->listQuery();
 

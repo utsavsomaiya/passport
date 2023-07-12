@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use {{ namespacedModel }};
+use Spatie\QueryBuilder\QueryBuilder;
 
 class {{ class }}
 {
-    
+
 }

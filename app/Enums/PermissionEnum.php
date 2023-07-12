@@ -15,6 +15,7 @@ enum PermissionEnum: int
     case USERS = 1;
     case LOCALES = 2;
     case CURRENCIES = 3;
+    case HIERARCHIES = 4;
 
     public static function getFeatureGates(): Collection
     {

@@ -3,17 +3,18 @@
 declare(strict_types=1);
 
 use App\Models\Currency;
-use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-test('it can fetch the currencies', function (): void {
-    [$user, $company, $token] = frontendApiLoginWithUser('Super Admin');
+beforeEach(function (): void {
+    [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
+});
 
+test('it can fetch the currencies', function (): void {
     $currencies = Currency::factory(2)->create([
-        'company_id' => $company->id,
+        'company_id' => $this->company->id,
     ]);
 
-    $response = $this->withToken($token)->getJson(route('api.currencies.fetch'));
+    $response = $this->withToken($this->token)->getJson(route('api.currencies.fetch'));
 
     $response->assertOk()
         ->assertJson(
@@ -33,18 +34,8 @@ test('it can fetch the currencies', function (): void {
         );
 });
 
-test('it cannot fetch the currencies if they have not a proper permission', function (): void {
-    [$user, $company, $token] = frontendApiLoginWithUser('Access Manager');
-
-    $response = $this->withToken($token)->getJson(route('api.currencies.fetch'));
-
-    $response->assertStatus(Response::HTTP_FORBIDDEN);
-});
-
 test('it can create currency', function (): void {
-    [$user, $company, $token] = frontendApiLoginWithUser('Super Admin');
-
-    $response = $this->withToken($token)->postJson(route('api.currencies.create'), [
+    $response = $this->withToken($this->token)->postJson(route('api.currencies.create'), [
         'code' => 'USD',
         'format' => '${price}',
     ]);
@@ -59,11 +50,9 @@ test('it can create currency', function (): void {
 });
 
 test('it can delete currency', function (): void {
-    [$user, $company, $token] = frontendApiLoginWithUser('Super Admin');
+    $currency = Currency::factory()->for($this->company)->create();
 
-    $currency = Currency::factory()->for($company)->create();
-
-    $response = $this->withToken($token)->deleteJson(route('api.currencies.delete', [
+    $response = $this->withToken($this->token)->deleteJson(route('api.currencies.delete', [
         'id' => $currency->id,
     ]));
 
@@ -77,11 +66,9 @@ test('it can delete currency', function (): void {
 });
 
 test('it can update currency', function (): void {
-    [$user, $company, $token] = frontendApiLoginWithUser('Super Admin');
+    $currency = Currency::factory()->for($this->company)->create();
 
-    $currency = Currency::factory()->for($company)->create();
-
-    $response = $this->withToken($token)->postJson(route('api.currencies.update', [
+    $response = $this->withToken($this->token)->postJson(route('api.currencies.update', [
         'id' => $currency->id,
     ]), ['code' => $code = fake()->currencyCode(), 'format' => 'RM{price}']);
 
@@ -96,16 +83,3 @@ test('it can update currency', function (): void {
         'code' => $code,
     ]);
 });
-
-test('it cannot perform any action without any proper permission', function ($data): void {
-    [$user, $company, $token] = frontendApiLoginWithUser('Access Manager');
-
-    $response = $this->withToken($token)->{$data['method'] . 'Json'}($data['route']);
-
-    $response->assertStatus(Response::HTTP_FORBIDDEN);
-})->with([
-    fn (): array => ['method' => 'post', 'route' => route('api.currencies.create')],
-    fn (): array => ['method' => 'delete', 'route' => route('api.currencies.delete', ['id' => fake()->uuid()])],
-    fn (): array => ['method' => 'get', 'route' => route('api.currencies.fetch')],
-    fn (): array => ['method' => 'post', 'route' => route('api.currencies.update', ['id' => fake()->uuid()])],
-]);
