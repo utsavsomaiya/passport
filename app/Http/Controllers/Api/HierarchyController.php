@@ -9,6 +9,7 @@ use App\Http\Requests\Api\HierarchyRequest;
 use App\Http\Resources\Api\HierarchyResource;
 use App\Queries\HierarchyQueries;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class HierarchyController extends Controller
 {
@@ -18,7 +19,7 @@ class HierarchyController extends Controller
 
     }
 
-    public function fetch()
+    public function fetch(): AnonymousResourceCollection
     {
         $hierarchies = $this->hierarchyQueries->listQuery();
 
@@ -35,6 +36,26 @@ class HierarchyController extends Controller
 
         return response()->json([
             'success' => __('Hierarchy created successfully.'),
+        ]);
+    }
+
+    public function delete(string $id): JsonResponse
+    {
+        $this->hierarchyQueries->delete($id);
+
+        return response()->json([
+            'success' => __('Hierarchy deleted successfully.'),
+        ]);
+    }
+
+    public function update(HierarchyRequest $request, string $id): JsonResponse
+    {
+        $validatedData = $request->validated();
+
+        $this->hierarchyQueries->update($validatedData, $id);
+
+        return response()->json([
+            'success' => __('Hierarchy updated successfully.'),
         ]);
     }
 }

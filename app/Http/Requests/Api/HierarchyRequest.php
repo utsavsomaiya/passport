@@ -20,15 +20,18 @@ class HierarchyRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'description' => ['nullable', 'string'],
-            'slug' => ['sometimes']
+            'slug' => ['sometimes'],
         ];
     }
 
     /**
-     * Handle a passed validation attempt.
+     * @param  array<int, string>|int|string|null  $key
+     * @return array<string, mixed>
      */
-    protected function passedValidation(): void
+    public function validated($key = null, $default = null): array
     {
-        $this->replace(['slug' => Str::kebab($this->slug)]);
+        return array_merge(parent::validated(), [
+            'slug' => Str::slug($this->slug),
+        ]);
     }
 }
