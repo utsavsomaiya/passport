@@ -16,7 +16,7 @@ test('it can fetch hierarchies', function (): void {
         ->company($this->company->id)
         ->has(
             Hierarchy::factory()->company($this->company->id)->state(fn (): array => ['name' => 'B2B']),
-            'childHierarchies'
+            'children'
         )
         ->create(['name' => 'B2B']);
 
@@ -33,7 +33,7 @@ test('it can fetch hierarchies', function (): void {
                             fn (AssertableJson $json): AssertableJson => $json
                                 ->where('id', $hierarchy->id)
                                 ->where('name', $hierarchy->name)
-                                ->count('children', $hierarchy->childHierarchies->count())
+                                ->count('children', $hierarchy->children->count())
                                 ->etc()
                         )
                         ->etc()
@@ -113,7 +113,7 @@ test('it can delete a hierarchy', function (): void {
 
 test('it cannot delete a hierarchy if it has children', function (): void {
     $hierarchy = Hierarchy::factory()->for($this->company)
-        ->has(Hierarchy::factory()->for($this->company), 'childHierarchies')
+        ->has(Hierarchy::factory()->for($this->company), 'children')
         ->create();
 
     $response = $this->withToken($this->token)->deleteJson(route('api.hierarchies.delete', [

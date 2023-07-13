@@ -33,12 +33,12 @@ class Hierarchy extends Model
         return SlugOptions::create()
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
-            ->preventOverwrite();
+            ->preventOverwrite(); // Ref: https://github.com/spatie/laravel-sluggable#preventing-overwrites
     }
 
-    public function childHierarchies(): HasMany
+    public function children(): HasMany
     {
-        return $this->hasMany(self::class, 'parent_hierarchy_id')->with('childHierarchies');
+        return $this->hasMany(self::class, 'parent_hierarchy_id')->with('children');
     }
 
     public function company(): BelongsTo
