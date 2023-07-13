@@ -42,6 +42,8 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
 
         $this->seedDataFromCsvFile(database_path('/seeders/csv/templates.csv'), companyId: $companyMinimumId);
 
+        $this->call(AttributeSeeder::class);
+
         app()->make(Factory::class, ['output' => $this->command->getOutput()])
             ->info('All this took '.number_format((microtime(true) - $time) * 1000, 2).' ms');
     }
