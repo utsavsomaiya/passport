@@ -16,4 +16,5 @@ test('it cannot perform any action without any proper permission', function ($da
     'hierarchies',
     'price_books',
     'templates',
+    'attributes'
 ]));

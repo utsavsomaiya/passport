@@ -25,7 +25,7 @@ class AttributeController extends Controller
         return AttributeResource::collection($attributes->getCollection());
     }
 
-    public function create(AttributeRequest $request)
+    public function create(AttributeRequest $request): void
     {
         $validatedData = $request->validated();
 

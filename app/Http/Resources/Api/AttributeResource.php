@@ -22,6 +22,7 @@ class AttributeResource extends JsonResource
         return [
             'id' => $attribute->id,
             'name' => $attribute->name,
+            'description' => $attribute->description ?? 'N/A',
             'template_name' => $attribute->template->name,
             'field' => $attribute->field_type->resourceName(),
             'field_description' => $attribute->field_type->description(),

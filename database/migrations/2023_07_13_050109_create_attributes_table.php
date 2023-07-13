@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->json('options')->nullable()->comment('If field type is select or list then user gives its options');
             $table->boolean('is_required')->default(false);
             $table->boolean('status')->default(false);
-            $table->unsignedBigInteger('order');
+            $table->unsignedBigInteger('order')->nullable();
             $table->timestamps();
         });
     }

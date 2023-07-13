@@ -57,7 +57,7 @@ enum FieldType: int
             self::DECIMAL->value => $this->generateNumberValidation($from, $to),
             self::NUMBER->value => $this->generateNumberValidation($from, $to),
             self::TEXT->value => ['string'],
-            self::DATE->value => ['date'],
+            self::DATE->value => $this->generateDateValidation($from, $to),
             self::SELECT->value => ['string'],
             self::LIST->value => ['array'],
         ]);
@@ -66,27 +66,45 @@ enum FieldType: int
     }
 
     /**
-     * @return array<int, string>| null
+     * @return array<int, string>
      */
-    private function generateNumberValidation(mixed $from, mixed $to): ?array
+    private function generateDateValidation(mixed $from, mixed $to): array
     {
-        if ($from === null) {
+        $validations = ['date'];
+
+        if ($from !== null) {
+            $validations[] = 'after:'.$from;
+        }
+
+        if ($to !== null) {
+            $validations[] = 'before:'.$to;
+        }
+
+        return $validations;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function generateNumberValidation(mixed $from, mixed $to): array
+    {
+        if ($from === null && $to === null) {
             return [$this->value === self::NUMBER->value ? 'integer' : 'decimal'];
         }
 
-        if ($to === null) {
-            return [$this->value === self::NUMBER->value ? 'integer' : 'decimal'];
+        if ($from !== null) {
+            if ($this->value === self::NUMBER->value) {
+                return ['integer', 'min_digits:' . $from];
+            }
+
+            return ['decimal', 'min:'. $from];
         }
 
         if ($this->value === self::NUMBER->value) {
-            return ['integer', 'digits_between:' . $from . ',' . $to];
+            return ['integer', 'max_digits:' . $to];
         }
 
-        if ($this->value === self::DECIMAL->value) {
-            return ['decimal', 'min:'. $from, 'max:' . $to];
-        }
-
-        return null;
+        return ['decimal', 'max:'. $to];
     }
 
     public function defaultValue(): mixed

@@ -15,13 +15,13 @@ class AttributeQueries extends GlobalQueries
     public function listQuery(?string $templateId): LengthAwarePaginator
     {
         return QueryBuilder::for(Attribute::class)
-            ->allowedFields(['id', 'template_id', 'name', 'field_type', 'options', 'is_required', 'status'])
+            ->allowedFields(['id', 'template_id', 'name', 'description', 'field_type', 'options', 'is_required', 'status'])
             ->defaultSort('-id')
             ->allowedSorts(['id', 'name'])
             ->allowedFilters([
                 $this->filter('name'),
                 AllowedFilter::callback('template_name', function (Builder $query, $value): void {
-                    $query->whereHas('template', function (Builder $query) use($value): void {
+                    $query->whereHas('template', function (Builder $query) use ($value): void {
                         $query->where('name', $value);
                     });
                 }),
@@ -37,7 +37,7 @@ class AttributeQueries extends GlobalQueries
     }
 
     /**
-     * @param  array<int, string|array<int, string>>  $data
+     * @param  array<string, mixed>  $data
      */
     public function create(array $data): void
     {
@@ -52,7 +52,7 @@ class AttributeQueries extends GlobalQueries
     }
 
     /**
-     * @param  array<int, string|array<int, string>>  $data
+     * @param  array<string, mixed>  $data
      */
     public function update(array $data, string $id): void
     {
