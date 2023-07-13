@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Hierarchy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -18,10 +20,17 @@ class HierarchyQueries
             ->allowedFields(['id', 'name', 'description', 'slug', 'parent_hierarchy_id'])
             ->defaultSort('-id')
             ->allowedSorts(['id', 'name'])
-            ->allowedFilters(['name', 'slug'])
+            ->allowedFilters([
+                AllowedFilter::callback('name', function (Builder $query, $value): void {
+                    $query->where('name', '=', $value)
+                        ->orWhereHas('children', function ($query) use ($value): void {
+                            $query->where('name', '=', $value);
+                        });
+                }),
+            ])
             ->whereNull('parent_hierarchy_id')
             ->where('company_id', app('company_id'))
-            ->with('childHierarchies')
+            ->with('children')
             ->jsonPaginate();
     }
 
@@ -32,13 +41,13 @@ class HierarchyQueries
     {
         $data['company_id'] ??= app('company_id');
 
-        $hierarchyDoesntExist = Hierarchy::query()
+        $hierarchyExists = Hierarchy::query()
             ->where('company_id', app('company_id'))
             ->where('id', $data['parent_hierarchy_id'])
-            ->doesntExist();
+            ->exists();
 
-        if ($data['parent_hierarchy_id'] && $hierarchyDoesntExist) {
-            abort(Response::HTTP_NOT_ACCEPTABLE, 'Parent hierarchy does not exists in database');
+        if ($data['parent_hierarchy_id'] && ! $hierarchyExists) {
+            abort(Response::HTTP_NOT_ACCEPTABLE, 'Parent hierarchy does not exist in database');
         }
 
         Hierarchy::create($data);
@@ -52,11 +61,11 @@ class HierarchyQueries
         $hierarchy = Hierarchy::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)
-            ->withExists('childHierarchies')
+            ->withExists('children')
             ->firstOrFail();
 
         // @phpstan-ignore-next-line
-        abort_if($hierarchy->child_hierarchies_exists > 0, Response::HTTP_NOT_ACCEPTABLE, sprintf('This `%s` has children available', $hierarchy->name));
+        abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted.', $hierarchy->name));
 
         $hierarchy->delete();
     }

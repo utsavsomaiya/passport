@@ -19,7 +19,7 @@ class HierarchySeeder extends Seeder
             ->company($companyId)
             ->has(
                 Hierarchy::factory()->company($companyId)->state(fn (): array => ['name' => 'B2B']),
-                'childHierarchies'
+                'children'
             )
             ->create(['name' => 'B2B']);
 
@@ -33,7 +33,7 @@ class HierarchySeeder extends Seeder
                     ['name' => 'Sneakers'],
                     ['name' => 'Wallets']
                 ),
-                'childHierarchies'
+                'children'
             )
             ->create(['name' => 'Type']);
 
@@ -46,7 +46,7 @@ class HierarchySeeder extends Seeder
                     ['name' => "Women's"],
                     ['name' => 'Unisex'],
                 ),
-                'childHierarchies'
+                'children'
             )
             ->create(['name' => 'Gender']);
 
@@ -60,7 +60,7 @@ class HierarchySeeder extends Seeder
                     ['name' => 'Spring'],
                     ['name' => 'Fall']
                 ),
-                'childHierarchies'
+                'children'
             )
             ->create(['name' => 'Seasonality']);
 
@@ -75,7 +75,7 @@ class HierarchySeeder extends Seeder
                         ['name' => 'Retro'],
                         ['name' => 'Sports'],
                     ),
-                'childHierarchies'
+                'children'
             )
             ->company($companyId)
             ->create(['name' => 'Style']);
@@ -87,7 +87,7 @@ class HierarchySeeder extends Seeder
                 ['name' => 'Printed'],
                 ['name' => 'Solid'],
             )
-            ->create(['parent_hierarchy_id' => $styleHierarChy->childHierarchies->first()->id]);
+            ->create(['parent_hierarchy_id' => $styleHierarChy->children->first()->id]);
 
         Hierarchy::factory(3)
             ->company($companyId)
@@ -96,7 +96,7 @@ class HierarchySeeder extends Seeder
                 ['name' => 'Printed'],
                 ['name' => 'Solid'],
             )
-            ->create(['parent_hierarchy_id' => $styleHierarChy->childHierarchies->firstWhere('name', 'Formal')->id]);
+            ->create(['parent_hierarchy_id' => $styleHierarChy->children->firstWhere('name', 'Formal')->id]);
 
         // Material
         Hierarchy::factory()
@@ -106,7 +106,7 @@ class HierarchySeeder extends Seeder
                     ['name' => 'Cotton'],
                     ['name' => 'Machine-wash'],
                 ),
-                'childHierarchies'
+                'children'
             )
             ->create(['name' => 'Material']);
     }
