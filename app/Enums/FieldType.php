@@ -16,25 +16,25 @@ enum FieldType: int
     use Values;
     use Metadata;
 
-    #[Description('A button that a user clicks to set an option. e.g.: gender = male or female')]
+    #[Description('For \'status\' like fields: Yes/No or Enable/Disable')]
     case TOGGLE = 1;
 
-    #[Description('A text box only allow the decimal numbers. e.g.: measurement = 5.5 feet')]
+    #[Description('For numbers with decimal point. e.g.: measurement = 5.5 feet')]
     case DECIMAL = 2;
 
-    #[Description('A text box only allow the integer numbers. e.g.: quantity = 5')]
+    #[Description('For whole numbers. e.g.: quantity = 5')]
     case NUMBER = 3;
 
-    #[Description('A text box only allow the string values. e.g.: name = John Doe')]
+    #[Description('For regular text. e.g.: name = John Doe')]
     case TEXT = 4;
 
-    #[Description('A text box only select the dates. e.g.: a sale happened_at = 12/07/2023, 09:35 PM')]
+    #[Description('For dates. e.g.: a sale date = 12/07/2023')]
     case DATE = 5;
 
-    #[Description('A selection box select the single value. e.g. city = San Francisco')]
+    #[Description('For selecting one of the options. e.g. Gender = Male/Female')]
     case SELECT = 6;
 
-    #[Description('A selection box which allows multiselect. e.g. tagging')]
+    #[Description('For multiselect from the provided options. e.g. tags')]
     case LIST = 7;
 
     /**
