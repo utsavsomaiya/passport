@@ -18,6 +18,7 @@ enum PermissionEnum: int
     case HIERARCHIES = 4;
     case PRICE_BOOKS = 5;
     case TEMPLATES = 6;
+    case ATTRIBUTES = 7;
 
     public static function getFeatureGates(): Collection
     {

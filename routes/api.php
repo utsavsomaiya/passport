@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\PermissionEnum;
+use App\Http\Controllers\Api\AttributeController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\GenerateTokenController;
@@ -136,6 +137,27 @@ Route::name('api.')->group(function () {
 
                 Route::post('{id}/update', 'update')
                     ->middleware(Authorize::using(PermissionEnum::TEMPLATES->can('update')))
+                    ->name('update');
+            });
+
+        Route::controller(AttributeController::class)
+            ->name('attributes.')
+            ->prefix('attributes')
+            ->group(function (): void {
+                Route::get('fetch/{templateId?}', 'fetch')
+                    ->middleware(Authorize::using(PermissionEnum::ATTRIBUTES->can('fetch')))
+                    ->name('fetch');
+
+                Route::post('create', 'create')
+                    ->middleware(Authorize::using(PermissionEnum::ATTRIBUTES->can('create')))
+                    ->name('create');
+
+                Route::delete('{id}/delete', 'delete')
+                    ->middleware(Authorize::using(PermissionEnum::ATTRIBUTES->can('delete')))
+                    ->name('delete');
+
+                Route::post('{id}/update', 'update')
+                    ->middleware(Authorize::using(PermissionEnum::ATTRIBUTES->can('update')))
                     ->name('update');
             });
     });

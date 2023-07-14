@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Models\Attribute;
 use App\Models\Template;
+use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
@@ -49,7 +51,7 @@ test('it can create a template', function (): void {
     ]);
 });
 
-test('it can delete a price book', function (): void {
+test('it can delete a template', function (): void {
     $template = Template::factory()->for($this->company)->create();
 
     $response = $this->withToken($this->token)->deleteJson(route('api.templates.delete', [
@@ -63,6 +65,18 @@ test('it can delete a price book', function (): void {
         );
 
     $this->assertModelMissing($template);
+});
+
+test('it can not delete the template if it has attribute exists', function (): void {
+    $template = Template::factory()->for($this->company)->create();
+
+    Attribute::factory()->for($template)->create();
+
+    $response = $this->withToken($this->token)->deleteJson(route('api.templates.delete', [
+        'id' => $template->id,
+    ]));
+
+    $response->assertStatus(Response::HTTP_NOT_ACCEPTABLE);
 });
 
 test('it can update a template', function (): void {
