@@ -12,7 +12,7 @@ class GlobalQueries
     public function filter(string $columnName): AllowedFilter
     {
         return AllowedFilter::callback($columnName, function (Builder $query, $value) use ($columnName): void {
-            if (request()->input('filter_action')[$columnName] === 'is') {
+            if (request()->input('filter_action')[$columnName] === 'equals') {
                 $query->where($columnName, '=', $value);
             }
 
