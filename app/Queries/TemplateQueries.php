@@ -14,7 +14,7 @@ class TemplateQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Template::class)
-            ->allowedFields(['id', 'name', 'description'])
+            ->select(['id', 'name', 'description'])
             ->defaultSort('-id')
             ->allowedSorts(['id', 'name'])
             ->jsonPaginate();

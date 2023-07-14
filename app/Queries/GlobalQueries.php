@@ -12,21 +12,27 @@ class GlobalQueries
     public function filter(string $columnName): AllowedFilter
     {
         return AllowedFilter::callback($columnName, function (Builder $query, $value) use ($columnName): void {
-            if (request()->input('filter_action')[$columnName] === 'equals') {
-                $query->where($columnName, '=', $value);
+            $filterMethod = request()->get('filter_method', []);
+
+            if (array_key_exists($columnName, $filterMethod)) {
+                if ($filterMethod[$columnName] === 'equals') {
+                    $query->where($columnName, '=', $value);
+                }
+
+                if ($filterMethod[$columnName] === 'starts_with') {
+                    $query->where($columnName, 'LIKE', $value . '%');
+                }
+
+                if ($filterMethod[$columnName] === 'ends_with') {
+                    $query->where($columnName, 'LIKE', '%' . $value);
+                }
+
+                if ($filterMethod[$columnName] === 'is_like') {
+                    $query->where($columnName, 'LIKE', '%' . $value . '%');
+                }
             }
 
-            if (request()->input('filter_action')[$columnName] === 'starts_with') {
-                $query->where($columnName, 'LIKE', $value . '%');
-            }
-
-            if (request()->input('filter_action')[$columnName] === 'ends_with') {
-                $query->where($columnName, 'LIKE', '%' . $value);
-            }
-
-            if (request()->input('filter_action')[$columnName] === 'is_like') {
-                $query->where($columnName, 'LIKE', '%' . $value . '%');
-            }
+            $query->where($columnName, '=', $value);
         });
     }
 }

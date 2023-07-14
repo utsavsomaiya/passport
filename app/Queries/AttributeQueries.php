@@ -15,9 +15,9 @@ class AttributeQueries extends GlobalQueries
     public function listQuery(?string $templateId): LengthAwarePaginator
     {
         return QueryBuilder::for(Attribute::class)
-            ->allowedFields(['id', 'template_id', 'name', 'description', 'field_type', 'options', 'is_required', 'status'])
-            ->defaultSort('-id')
-            ->allowedSorts(['id', 'name'])
+            ->allowedFields(['name', 'description', 'field_type', 'options', 'is_required', 'status', 'created_at'])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['name', 'is_required', 'created_at'])
             ->allowedFilters([
                 $this->filter('name'),
                 AllowedFilter::callback('template_name', function (Builder $query, $value): void {
@@ -29,6 +29,7 @@ class AttributeQueries extends GlobalQueries
                     $query->whereJsonContains('options', $value);
                 }),
             ])
+            ->addSelect('id', 'template_id')
             ->with('template:id,name')
             ->when($templateId, function ($query) use ($templateId): void {
                 $query->where('template_id', $templateId);

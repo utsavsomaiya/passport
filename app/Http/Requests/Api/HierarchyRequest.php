@@ -18,9 +18,9 @@ class HierarchyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'slug' => ['sometimes'],
+            'slug' => ['sometimes', 'string', 'max:255'],
         ];
     }
 

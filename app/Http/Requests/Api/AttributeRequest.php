@@ -31,17 +31,17 @@ class AttributeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'template_id' => ['required', Rule::exists('templates', 'id')->where('company_id', app('company_id'))],
-            'description' => ['nullable'],
-            'slug' => ['sometimes'],
+            'description' => ['nullable', 'string'],
+            'slug' => ['sometimes', 'string', 'max:255'],
             'field_type' => ['required', 'in:'.FieldType::getValidationValues()],
-            'options' => [Rule::requiredIf(fn (): bool => in_array($this->field_type, FieldType::selections())), 'array'],
-            'from' => ['numeric'],
-            'to' => ['numeric'],
+            'options' => ['sometimes', Rule::requiredIf(fn (): bool => in_array($this->field_type, FieldType::selections())), 'array'],
+            'from' => ['nullable', 'numeric'],
+            'to' => ['nullable', 'numeric'],
             'order' => ['nullable', 'integer'],
             'default_value' => FieldType::tryFrom($this->field_type)?->validation($this->get('from'), $this->get('to')),
-            'is_required' => ['boolean'],
+            'is_required' => ['sometimes', 'boolean'],
         ];
     }
 
@@ -52,7 +52,6 @@ class AttributeRequest extends FormRequest
     public function validated($key = null, $default = null): array
     {
         return array_merge(parent::validated(), [
-            'slug' => Str::slug($this->slug),
             'validation' => FieldType::tryFrom($this->field_type)?->validation(),
         ]);
     }

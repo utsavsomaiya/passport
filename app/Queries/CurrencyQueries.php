@@ -8,15 +8,20 @@ use App\Models\Currency;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class CurrencyQueries
+class CurrencyQueries extends GlobalQueries
 {
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Currency::class)
             ->allowedFields(['id', 'code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status'])
-            ->defaultSort('-id')
+            ->defaultSort('-created_at')
+            ->allowedFilters([
+                $this->filter('code'),
+            ])
             ->allowedSorts(['id', 'format', 'code'])
             ->where('company_id', app('company_id'))
+            ->addSelect('id', 'code', 'exchange_rate')
+            // ->ddRawSql();
             ->jsonPaginate();
     }
 

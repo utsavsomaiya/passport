@@ -39,6 +39,7 @@ We have created some ‘make’ commands. Feel free to use these commands:
 
 ### Scheduled tasks
 - Remove expired Sanctum tokens after 24 hours.
+- [Horizon SnapShot](https://laravel.com/docs/10.x/horizon#metrics)
 
 
 ### [Prevent main branch direct pushes](https://hiltonmeyer.com/articles/protect-git-branch-and-prevent-master-push.html)

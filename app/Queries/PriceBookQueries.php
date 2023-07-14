@@ -13,7 +13,7 @@ class PriceBookQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(PriceBook::class)
-            ->allowedFields(['id', 'name', 'description'])
+            ->select(['id', 'name', 'description'])
             ->defaultSort('-id')
             ->allowedSorts(['name'])
             ->where('company_id', app('company_id'))

@@ -17,7 +17,7 @@ class HierarchyQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Hierarchy::class)
-            ->allowedFields(['id', 'name', 'description', 'slug', 'parent_hierarchy_id'])
+            ->select(['id', 'name', 'description', 'slug', 'parent_hierarchy_id'])
             ->defaultSort('-id')
             ->allowedSorts(['id', 'name'])
             ->allowedFilters([
