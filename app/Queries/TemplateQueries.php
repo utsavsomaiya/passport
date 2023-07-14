@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Template;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -31,6 +32,11 @@ class TemplateQueries
 
     public function delete(string $id): void
     {
+        $template = Template::query()->where('id', $id)->withExists('attributes')->firstOrFail();
+
+        // @phpstan-ignore-next-line
+        abort_if($template->attributes_exists > 0, Response::HTTP_NOT_ACCEPTABLE, sprintf('The template has attribute. Cannot be deleted %s.', $template->name));
+
         Template::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)

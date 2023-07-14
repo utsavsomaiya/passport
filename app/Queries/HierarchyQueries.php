@@ -65,7 +65,7 @@ class HierarchyQueries
             ->firstOrFail();
 
         // @phpstan-ignore-next-line
-        abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted.', $hierarchy->name));
+        abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted %s.', $hierarchy->name));
 
         $hierarchy->delete();
     }
