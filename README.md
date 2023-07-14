@@ -29,6 +29,16 @@
 - Install the dependencies: `composer install`
 - Generate Key: `php artisan key:generate`
 - DB migrate: `php artisan migrate`
+- Please setup the [scheduler](#scheduled-tasks) (cronjob) on the server.
+
+
+### Make commands
+We have created some ‘make’ commands. Feel free to use these commands:
+    - make:enum
+    - make:query
+
+### Scheduled tasks
+- Remove expired Sanctum tokens after 24 hours.
 
 
 ### [Prevent main branch direct pushes](https://hiltonmeyer.com/articles/protect-git-branch-and-prevent-master-push.html)
