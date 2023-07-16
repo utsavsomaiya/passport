@@ -16,7 +16,7 @@ enum FieldType: int
     use Values;
     use Metadata;
 
-    #[Description('For \'status\' like fields: Yes/No or Enable/Disable')]
+    #[Description("For 'status' like fields: Yes/No or Enable/Disable")]
     case TOGGLE = 1;
 
     #[Description('For numbers with decimal point. e.g.: measurement = 5.5 feet')]
@@ -51,9 +51,9 @@ enum FieldType: int
     }
 
     /**
-     * @return array<int, string>|null
+     * @return array<int, string>
      */
-    public function validation(mixed $from = null, mixed $to = null): ?array
+    public function validation(mixed $from = null, mixed $to = null): array
     {
         $validations = collect([
             self::TOGGLE->value => ['boolean'],
@@ -66,7 +66,7 @@ enum FieldType: int
             self::LIST->value => ['array'],
         ]);
 
-        return $validations->get($this->value);
+        return $validations->get($this->value) ?? [];
     }
 
     /**

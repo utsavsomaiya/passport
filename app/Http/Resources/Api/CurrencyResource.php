@@ -28,6 +28,7 @@ class CurrencyResource extends JsonResource
             'thousand_separator' => $currency->thousand_separator,
             'is_default' => $currency->is_default,
             'status' => $currency->status,
+            'created_at' => $currency->created_at?->format('d F Y, h:i A'),
         ];
     }
 }

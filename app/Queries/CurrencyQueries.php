@@ -13,15 +13,15 @@ class CurrencyQueries extends GlobalQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Currency::class)
-            ->allowedFields(['id', 'code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status'])
-            ->defaultSort('-created_at')
+            ->allowedFields(['code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status', 'created_at'])
             ->allowedFilters([
                 $this->filter('code'),
+                $this->filter('format'),
             ])
-            ->allowedSorts(['id', 'format', 'code'])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['code', 'created_at'])
             ->where('company_id', app('company_id'))
-            ->addSelect('id', 'code', 'exchange_rate')
-            // ->ddRawSql();
+            ->mergeSelect('id')
             ->jsonPaginate();
     }
 

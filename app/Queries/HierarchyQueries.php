@@ -5,31 +5,25 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Hierarchy;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class HierarchyQueries
+class HierarchyQueries extends GlobalQueries
 {
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Hierarchy::class)
-            ->select(['id', 'name', 'description', 'slug', 'parent_hierarchy_id'])
-            ->defaultSort('-id')
-            ->allowedSorts(['id', 'name'])
+            ->allowedFields(['name', 'description', 'slug', 'created_at'])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['name', 'created_at'])
             ->allowedFilters([
-                AllowedFilter::callback('name', function (Builder $query, $value): void {
-                    $query->where('name', '=', $value)
-                        ->orWhereHas('children', function ($query) use ($value): void {
-                            $query->where('name', '=', $value);
-                        });
-                }),
+                $this->filter('name'),
+                $this->filter('id'),
             ])
-            ->whereNull('parent_hierarchy_id')
             ->where('company_id', app('company_id'))
+            ->mergeSelect('id', 'parent_hierarchy_id')
             ->with('children')
             ->jsonPaginate();
     }

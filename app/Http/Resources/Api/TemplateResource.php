@@ -22,6 +22,7 @@ class TemplateResource extends JsonResource
             'id' => $template->id,
             'name' => $template->name,
             'description' => $template->description,
+            'created_at' => $template->created_at?->format('d F Y, h:i A'),
         ];
     }
 }

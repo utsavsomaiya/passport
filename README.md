@@ -17,7 +17,7 @@
     </a>
 </p>
 
-## Product Experience Management
+## Product Xperience Management
 
 ### Requirements
 - PHP 8.2

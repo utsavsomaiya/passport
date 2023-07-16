@@ -29,7 +29,7 @@ class AttributeQueries extends GlobalQueries
                     $query->whereJsonContains('options', $value);
                 }),
             ])
-            ->addSelect('id', 'template_id')
+            ->mergeSelect('id', 'template_id')
             ->with('template:id,name')
             ->when($templateId, function ($query) use ($templateId): void {
                 $query->where('template_id', $templateId);

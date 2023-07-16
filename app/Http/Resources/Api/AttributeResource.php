@@ -19,10 +19,6 @@ class AttributeResource extends JsonResource
     {
         $attribute = $this->resource;
 
-        if ($attribute == null) {
-            dd($attribute);
-        }
-
         return [
             'id' => $attribute->id,
             'name' => $attribute->name,
@@ -33,6 +29,8 @@ class AttributeResource extends JsonResource
             $this->mergeWhen(in_array($attribute->field_type, FieldType::selections()), [
                 'field_options' => $attribute->options,
             ]),
+            'is_required' => $attribute->is_required,
+            'status' => $attribute->status,
             'created_at' => $attribute->created_at?->format('d F Y, h:i A'),
         ];
     }

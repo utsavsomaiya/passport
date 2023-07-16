@@ -8,14 +8,18 @@ use App\Models\PriceBook;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class PriceBookQueries
+class PriceBookQueries extends GlobalQueries
 {
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(PriceBook::class)
-            ->select(['id', 'name', 'description'])
-            ->defaultSort('-id')
-            ->allowedSorts(['name'])
+            ->allowedFields(['name', 'description', 'created_at'])
+            ->allowedFilters([
+                $this->filter('name'),
+            ])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['name', 'created_at'])
+            ->mergeSelect('id')
             ->where('company_id', app('company_id'))
             ->jsonPaginate();
     }

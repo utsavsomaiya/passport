@@ -17,9 +17,9 @@ class CurrencyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => ['required'],
-            'format' => ['required', 'string'],
-            'status' => ['nullable'],
+            'code' => ['required', 'string', 'max:255'],
+            'format' => ['required', 'string', 'max:255'],
+            'status' => ['sometimes', 'boolean'],
         ];
     }
 }

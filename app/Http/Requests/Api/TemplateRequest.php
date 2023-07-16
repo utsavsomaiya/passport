@@ -6,7 +6,6 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 
 class TemplateRequest extends FormRequest
 {
@@ -18,20 +17,9 @@ class TemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'slug' => ['sometimes'],
+            'slug' => ['sometimes', 'string', 'max:255'],
         ];
-    }
-
-    /**
-     * @param  array<int, string>|int|string|null  $key
-     * @return array<string, mixed>
-     */
-    public function validated($key = null, $default = null): array
-    {
-        return array_merge(parent::validated(), [
-            'slug' => Str::slug($this->slug),
-        ]);
     }
 }

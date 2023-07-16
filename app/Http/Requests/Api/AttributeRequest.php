@@ -6,7 +6,6 @@ namespace App\Http\Requests\Api;
 
 use App\Enums\FieldType;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\RequiredIf;
@@ -30,6 +29,7 @@ class AttributeRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'template_id' => ['required', Rule::exists('templates', 'id')->where('company_id', app('company_id'))],
@@ -40,7 +40,7 @@ class AttributeRequest extends FormRequest
             'from' => ['nullable', 'numeric'],
             'to' => ['nullable', 'numeric'],
             'order' => ['nullable', 'integer'],
-            'default_value' => FieldType::tryFrom($this->field_type)?->validation($this->get('from'), $this->get('to')),
+            'default_value' => ['nullable'] + FieldType::tryFrom($this->field_type)?->validation($this->get('from'), $this->get('to')),
             'is_required' => ['sometimes', 'boolean'],
         ];
     }
