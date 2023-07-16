@@ -23,12 +23,15 @@ class AttributeResource extends JsonResource
             'id' => $attribute->id,
             'name' => $attribute->name,
             'description' => $attribute->description ?? 'N/A',
-            'template_name' => $attribute->template->name,
-            'field' => $attribute->field_type->resourceName(),
-            'field_description' => $attribute->field_type->description(),
+            'template_name' => $attribute->template?->name,
+            'field_type' => $attribute->field_type?->resourceName(),
+            'field_description' => $attribute->field_type?->description(),
             $this->mergeWhen(in_array($attribute->field_type, FieldType::selections()), [
-                'options' => $attribute->options,
+                'field_options' => $attribute->options,
             ]),
+            'is_required' => $attribute->is_required,
+            'status' => $attribute->status,
+            'created_at' => $attribute->created_at?->format('d F Y, h:i A'),
         ];
     }
 }

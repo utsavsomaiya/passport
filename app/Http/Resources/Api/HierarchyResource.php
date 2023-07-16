@@ -23,6 +23,8 @@ class HierarchyResource extends JsonResource
             'name' => $hierarchy->name,
             'description' => $hierarchy->description,
             'slug' => $hierarchy->slug,
+            'parent_hierarchy_id' => $hierarchy->parent_hierarchy_id,
+            'created_at' => $hierarchy->created_at?->format('d F Y, h:i A'),
             'children' => self::collection($hierarchy->children),
         ];
     }

@@ -22,6 +22,7 @@ class PriceBookResource extends JsonResource
             'id' => $priceBook->id,
             'name' => $priceBook->name,
             'description' => $priceBook->description,
+            'created_at' => $priceBook->created_at?->format('d F Y, h:i A'),
         ];
     }
 }

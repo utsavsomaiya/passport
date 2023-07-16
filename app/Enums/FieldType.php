@@ -16,7 +16,7 @@ enum FieldType: int
     use Values;
     use Metadata;
 
-    #[Description('For \'status\' like fields: Yes/No or Enable/Disable')]
+    #[Description("For 'status' like fields: Yes/No or Enable/Disable")]
     case TOGGLE = 1;
 
     #[Description('For numbers with decimal point. e.g.: measurement = 5.5 feet')]
@@ -31,11 +31,14 @@ enum FieldType: int
     #[Description('For dates. e.g.: a sale date = 12/07/2023')]
     case DATE = 5;
 
+    #[Description('For date and time. e.g. 14 July 2023, 10:51 AM')]
+    case DATETIME = 6;
+
     #[Description('For selecting one of the options. e.g. Gender = Male/Female')]
-    case SELECT = 6;
+    case SELECT = 7;
 
     #[Description('For multiselect from the provided options. e.g. tags')]
-    case LIST = 7;
+    case LIST = 8;
 
     /**
      * @return array<string, string>
@@ -48,9 +51,9 @@ enum FieldType: int
     }
 
     /**
-     * @return array<int, string>|null
+     * @return array<int, string>
      */
-    public function validation(mixed $from = null, mixed $to = null): ?array
+    public function validation(mixed $from = null, mixed $to = null): array
     {
         $validations = collect([
             self::TOGGLE->value => ['boolean'],
@@ -58,11 +61,12 @@ enum FieldType: int
             self::NUMBER->value => $this->generateNumberValidation($from, $to),
             self::TEXT->value => ['string'],
             self::DATE->value => $this->generateDateValidation($from, $to),
+            self::DATETIME->value => $this->generateDateValidation($from, $to),
             self::SELECT->value => ['string'],
             self::LIST->value => ['array'],
         ]);
 
-        return $validations->get($this->value);
+        return $validations->get($this->value) ?? [];
     }
 
     /**
@@ -73,10 +77,18 @@ enum FieldType: int
         $validations = ['date'];
 
         if ($from !== null) {
+            if (strtotime($from) === false) {
+                return $validations;
+            }
+
             $validations[] = 'after:'.$from;
         }
 
         if ($to !== null) {
+            if (strtotime($to) === false) {
+                return $validations;
+            }
+
             $validations[] = 'before:'.$to;
         }
 
@@ -107,7 +119,7 @@ enum FieldType: int
         return ['decimal', 'max:'. $to];
     }
 
-    public function defaultValue(): mixed
+    public function fakerDefaultValue(): mixed
     {
         $defaultValues = collect([
             self::TOGGLE->value => fake()->boolean(),

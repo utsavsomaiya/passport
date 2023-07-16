@@ -13,13 +13,15 @@ class LocaleQueries extends GlobalQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Locale::class)
-            ->defaultSort('-id')
+            ->allowedFields(['name', 'code', 'status'])
+            ->defaultSort('-created_at')
             ->allowedFilters([
                 $this->filter('name'),
                 $this->filter('code'),
             ])
-            ->allowedSorts(['id', 'name', 'code'])
+            ->allowedSorts(['name', 'code', 'created_at'])
             ->where('company_id', app('company_id'))
+            ->mergeSelect('id')
             ->jsonPaginate();
     }
 

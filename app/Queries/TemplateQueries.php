@@ -9,14 +9,16 @@ use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class TemplateQueries
+class TemplateQueries extends GlobalQueries
 {
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Template::class)
-            ->allowedFields(['id', 'name', 'description'])
-            ->defaultSort('-id')
-            ->allowedSorts(['id', 'name'])
+            ->allowedFields(['name', 'description', 'created_at'])
+            ->allowedFilters([$this->filter('name')])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['name', 'created_at'])
+            ->mergeSelect('id')
             ->jsonPaginate();
     }
 
