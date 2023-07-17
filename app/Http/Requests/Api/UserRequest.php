@@ -4,57 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
-use App\Models\User;
-use App\Queries\UserQueries;
-use Closure;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class UserRequest extends FormRequest
 {
-    protected ?User $user = null;
-
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, (ValidationRule | array<int, string> | string)>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
+            'email' => ['required', 'string', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ];
-    }
-
-    /**
-     * Get the "after" validation callables for the request.
-     *
-     * @return array<int, Closure>
-     */
-    public function after(): array
-    {
-        $this->user = resolve(UserQueries::class)->findByEmail($this->email);
-
-        return [
-            function (Validator $validator): void {
-                if (! $this->user || ! Hash::check($this->password, $this->user->password)) {
-                    $validator->errors()->add('email', 'The provided credentials are incorrect');
-                }
-            },
-        ];
-    }
-
-    /**
-     * @param  array<int, string>|int|string|null  $key
-     * @return array<string, mixed>
-     */
-    public function validated($key = null, $default = null): array
-    {
-        return array_merge(parent::validated(), [
-            'user' => $this->user,
-        ]);
     }
 }

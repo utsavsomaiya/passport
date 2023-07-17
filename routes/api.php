@@ -11,7 +11,9 @@ use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
 use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Controllers\Api\TemplateController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\AddCompanyIdInServiceContainer;
+use App\Models\Permission;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +37,15 @@ Route::name('api.')->group(function () {
         ->name('generate_token');
 
     Route::middleware(['auth:sanctum', AddCompanyIdInServiceContainer::class])->group(function (): void {
+        Route::controller(UserController::class)
+            ->name('users.')
+            ->prefix('users')
+            ->group(function (): void {
+                Route::get('fetch', 'fetch')
+                    ->can(PermissionEnum::USERS->can('fetch'))
+                    ->name('fetch');
+            });
+
         Route::controller(LocaleController::class)
             ->name('locales.')
             ->prefix('locales')
