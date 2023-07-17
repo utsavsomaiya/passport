@@ -31,7 +31,7 @@ test('it can fetch locales', function (): void {
                         ->has(
                             '0',
                             fn (AssertableJson $json): AssertableJson => $json
-                                ->where('id', ($locale = $locales->sortByDesc('id')->first())->id)
+                                ->where('id', ($locale = $locales->sortByDesc('created_at')->first())->id)
                                 ->where('name', $locale->name)
                                 ->where('code', $locale->code)
                                 ->etc()

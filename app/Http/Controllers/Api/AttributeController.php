@@ -24,7 +24,7 @@ class AttributeController extends Controller
     {
         $request->validate([
             'filter.options' => ['sometimes', 'array'],
-            'filter.options.*' => ['sometimes', 'string', 'max:255']
+            'filter.options.*' => ['sometimes', 'string', 'max:255'],
         ]);
 
         $attributes = $this->attributeQueries->listQuery($templateId);

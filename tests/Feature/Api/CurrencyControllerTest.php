@@ -25,7 +25,7 @@ test('it can fetch the currencies', function (): void {
                         ->has(
                             '0',
                             fn (AssertableJson $json): AssertableJson => $json
-                                ->where('id', ($currency = $currencies->sortByDesc('id')->first())->id)
+                                ->where('id', ($currency = $currencies->sortByDesc('created_at')->first())->id)
                                 ->where('code', $currency->code)
                                 ->etc()
                         )

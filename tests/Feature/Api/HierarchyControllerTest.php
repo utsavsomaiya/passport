@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Models\Hierarchy;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
@@ -56,7 +55,7 @@ test('it can create a hierarchy', function (): void {
 
     $this->assertDatabaseHas(Hierarchy::class, [
         'name' => 'B2B',
-        'slug' => Str::slug($slug),
+        'slug' => $slug,
     ]);
 });
 
@@ -143,6 +142,6 @@ test('it can update a hierarchy', function (): void {
     $this->assertDatabaseHas(Hierarchy::class, [
         'id' => $hierarchy->id,
         'name' => $name,
-        'slug' => Str::slug($slug),
+        'slug' => $slug,
     ]);
 });

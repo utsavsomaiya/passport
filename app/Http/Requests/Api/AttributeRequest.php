@@ -29,7 +29,7 @@ class AttributeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $fromToValidation = array_merge(['nullable'], $this->basedOnFieldTypeExtraValidation());
+        $fromToValidation = ['nullable', ...$this->basedOnFieldTypeExtraValidation()];
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -49,7 +49,7 @@ class AttributeRequest extends FormRequest
 
     /**
      * @return array<int, string>
-    */
+     */
     private function basedOnFieldTypeExtraValidation(): array
     {
         $validation = [];
