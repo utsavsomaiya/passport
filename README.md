@@ -30,6 +30,7 @@
 - Generate Key: `php artisan key:generate`
 - DB migrate: `php artisan migrate`
 - Please setup the [scheduler](#scheduled-tasks) (cronjob) on the server.
+- Setup [Horizon](#horizon)
 
 
 ### Make commands
