@@ -24,7 +24,7 @@ class HierarchyResource extends JsonResource
             'description' => $hierarchy->description,
             'slug' => $hierarchy->slug,
             'parent_hierarchy_id' => $hierarchy->parent_hierarchy_id,
-            'created_at' => $hierarchy->created_at?->format(config('app.datetime_display_format')),
+            'created_at' => $hierarchy->created_at?->displayFormat(),
             'children' => self::collection($hierarchy->children),
         ];
     }

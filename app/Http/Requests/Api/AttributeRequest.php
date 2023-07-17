@@ -42,7 +42,7 @@ class AttributeRequest extends FormRequest
             'from' => $fromToValidation,
             'to' => $fromToValidation,
             'order' => ['nullable', 'integer'],
-            'default_value' => array_merge(['nullable'], FieldType::tryFrom($this->field_type)?->validation($this->get('from'), $this->get('to'))),
+            'default_value' => $this->defaultValueValidation(),
             'is_required' => ['sometimes', 'boolean'],
         ];
     }
@@ -60,6 +60,20 @@ class AttributeRequest extends FormRequest
 
         if ($this->field_type === FieldType::DATE->value || $this->field_type === FieldType::DATETIME->value) {
             $validation[] = 'date';
+        }
+
+        return $validation;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function defaultValueValidation(): array
+    {
+        $validation = ['nullable'];
+
+        if (($fieldType = FieldType::tryFrom($this->field_type)) instanceof FieldType) {
+            $validation += $fieldType->validation($this->get('from'), $this->get('to'));
         }
 
         return $validation;

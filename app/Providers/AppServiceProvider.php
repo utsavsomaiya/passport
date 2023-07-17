@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\PersonalAccessToken;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\ServiceProvider;
@@ -33,5 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 $this->addSelect($extraFields); // @phpstan-ignore-line
             }
         });
+
+        Carbon::macro('displayFormat', fn () => $this->format('d F Y, h:i A')); // @phpstan-ignore-line
     }
 }

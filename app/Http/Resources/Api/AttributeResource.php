@@ -33,7 +33,7 @@ class AttributeResource extends JsonResource
             ]),
             'is_required' => $attribute->is_required,
             'status' => $attribute->status,
-            'created_at' => $attribute->created_at?->format(config('app.datetime_display_format')),
+            'created_at' => $attribute->created_at?->displayFormat(),
         ];
     }
 }
