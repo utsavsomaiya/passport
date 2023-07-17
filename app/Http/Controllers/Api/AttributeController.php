@@ -6,10 +6,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AttributeRequest;
+use App\Http\Requests\Api\FetchAttributesRequest;
 use App\Http\Resources\Api\AttributeResource;
 use App\Queries\AttributeQueries;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AttributeController extends Controller
@@ -20,13 +20,10 @@ class AttributeController extends Controller
 
     }
 
-    public function fetch(Request $request, string $templateId = null): AnonymousResourceCollection
+    public function fetch(FetchAttributesRequest $request, string $templateId = null): AnonymousResourceCollection
     {
-        $request->validate([
-            'filter.options' => ['sometimes', 'array'],
-            'filter.options.*' => ['sometimes', 'string', 'max:255'],
-        ]);
-
+        $request->validated();
+        
         $attributes = $this->attributeQueries->listQuery($templateId);
 
         return AttributeResource::collection($attributes->getCollection());
