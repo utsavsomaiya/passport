@@ -27,15 +27,15 @@ class LocaleRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('locales', 'name')->ignore($localeId)->where('company_id', app('company_id')),
                 'string',
                 'max:255',
+                Rule::unique('locales', 'name')->ignore($localeId)->where('company_id', app('company_id')),
             ],
             'code' => [
                 'required',
-                Rule::unique('locales', 'code')->ignore($localeId)->where('company_id', app('company_id')),
                 'string',
                 'max:255',
+                Rule::unique('locales', 'code')->ignore($localeId)->where('company_id', app('company_id')),
             ],
         ];
     }

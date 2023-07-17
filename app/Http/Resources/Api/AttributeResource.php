@@ -26,12 +26,14 @@ class AttributeResource extends JsonResource
             'template_name' => $attribute->template?->name,
             'field_type' => $attribute->field_type?->resourceName(),
             'field_description' => $attribute->field_type?->description(),
+            'from' => $attribute->from,
+            'to' => $attribute->to,
             $this->mergeWhen(in_array($attribute->field_type, FieldType::selections()), [
                 'field_options' => $attribute->options,
             ]),
             'is_required' => $attribute->is_required,
             'status' => $attribute->status,
-            'created_at' => $attribute->created_at?->format('d F Y, h:i A'),
+            'created_at' => $attribute->created_at?->format(config('app.datetime_display_format')),
         ];
     }
 }
