@@ -23,7 +23,7 @@ class AttributeController extends Controller
     public function fetch(FetchAttributesRequest $request, string $templateId = null): AnonymousResourceCollection
     {
         $request->validated();
-        
+
         $attributes = $this->attributeQueries->listQuery($templateId);
 
         return AttributeResource::collection($attributes->getCollection());
