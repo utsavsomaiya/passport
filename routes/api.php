@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
 use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Controllers\Api\TemplateController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\AddCompanyIdInServiceContainer;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
@@ -35,6 +36,31 @@ Route::name('api.')->group(function () {
         ->name('generate_token');
 
     Route::middleware(['auth:sanctum', AddCompanyIdInServiceContainer::class])->group(function (): void {
+        Route::controller(UserController::class)
+            ->name('users.')
+            ->prefix('users')
+            ->group(function (): void {
+                Route::get('fetch', 'fetch')
+                    ->can(PermissionEnum::USERS->can('fetch'))
+                    ->name('fetch');
+
+                Route::post('create', 'create')
+                    ->can(PermissionEnum::USERS->can('create'))
+                    ->name('create');
+
+                Route::delete('{id}/delete', 'delete')
+                    ->can(PermissionEnum::USERS->can('delete'))
+                    ->name('delete');
+
+                Route::post('{id}/restore', 'restore')
+                    ->can(PermissionEnum::USERS->can('delete'))
+                    ->name('restore');
+
+                Route::post('{id}/update', 'update')
+                    ->can(PermissionEnum::USERS->can('update'))
+                    ->name('update');
+            });
+
         Route::controller(LocaleController::class)
             ->name('locales.')
             ->prefix('locales')

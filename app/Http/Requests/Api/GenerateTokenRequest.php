@@ -13,9 +13,9 @@ use Illuminate\Validation\Rules\Exists;
 class GenerateTokenRequest extends FormRequest
 {
     public function __construct(
-        public UserRequest $userRequest
+        public CheckCredentialsRequest $checkCredentialsRequest
     ) {
-        $this->userRequest = resolve(UserRequest::class);
+        $this->checkCredentialsRequest = resolve(CheckCredentialsRequest::class);
     }
 
     /**
@@ -25,7 +25,7 @@ class GenerateTokenRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [...$this->userRequest->rules(), 'company_id' => ['required', Rule::exists('companies', 'id')]];
+        return [...$this->checkCredentialsRequest->rules(), 'company_id' => ['required', Rule::exists('companies', 'id')]];
     }
 
     /**
@@ -35,7 +35,7 @@ class GenerateTokenRequest extends FormRequest
      */
     public function after(): array
     {
-        return $this->userRequest->after();
+        return $this->checkCredentialsRequest->after();
     }
 
     /**
@@ -44,6 +44,6 @@ class GenerateTokenRequest extends FormRequest
      */
     public function validated($key = null, $default = null)
     {
-        return array_merge($this->userRequest->validated(), parent::validated());
+        return array_merge($this->checkCredentialsRequest->validated(), parent::validated());
     }
 }

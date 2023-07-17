@@ -4,46 +4,33 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
-use App\Models\User;
-use App\Queries\UserQueries;
-use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rules\Unique;
 
 class UserRequest extends FormRequest
 {
-    protected ?User $user = null;
-
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, (ValidationRule | array<int, string> | string)>
+     * @return array<string, (ValidationRule | array<int, string|Password|Unique|null> | string)>
      */
     public function rules(): array
     {
-        return [
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ];
-    }
+        $userId = null;
 
-    /**
-     * Get the "after" validation callables for the request.
-     *
-     * @return array<int, Closure>
-     */
-    public function after(): array
-    {
-        $this->user = resolve(UserQueries::class)->findByEmail($this->email);
+        if ($this->route()?->getName() === 'api.users.update') {
+            $userId = $this->route()->parameter('id');
+        }
 
         return [
-            function (Validator $validator): void {
-                if (! $this->user || ! Hash::check($this->password, $this->user->password)) {
-                    $validator->errors()->add('email', 'The provided credentials are incorrect');
-                }
-            },
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($userId)],
+            'email' => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($userId)],
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ];
     }
 
@@ -54,7 +41,7 @@ class UserRequest extends FormRequest
     public function validated($key = null, $default = null): array
     {
         return array_merge(parent::validated(), [
-            'user' => $this->user,
+            'password' => bcrypt($this->password),
         ]);
     }
 }
