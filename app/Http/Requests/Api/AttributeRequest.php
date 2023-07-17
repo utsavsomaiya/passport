@@ -29,6 +29,7 @@ class AttributeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $fromToValidation = ['nullable', ...$this->basedOnFieldTypeExtraValidation()];
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -37,22 +38,30 @@ class AttributeRequest extends FormRequest
             'slug' => ['sometimes', 'string', 'max:255'],
             'field_type' => ['required', 'in:'.FieldType::getValidationValues()],
             'options' => ['sometimes', Rule::requiredIf(fn (): bool => in_array($this->field_type, FieldType::selections())), 'array'],
-            'from' => ['nullable', 'numeric'],
-            'to' => ['nullable', 'numeric'],
+            'options.*' => ['sometimes', 'string', 'max:255'],
+            'from' => $fromToValidation,
+            'to' => $fromToValidation,
             'order' => ['nullable', 'integer'],
-            'default_value' => ['nullable'] + FieldType::tryFrom($this->field_type)?->validation($this->get('from'), $this->get('to')),
+            'default_value' => array_merge(['nullable'], FieldType::tryFrom($this->field_type)?->validation($this->get('from'), $this->get('to'))),
             'is_required' => ['sometimes', 'boolean'],
         ];
     }
 
     /**
-     * @param  array<int, string>|int|string|null  $key
-     * @return array<string, mixed>
+     * @return array<int, string>
      */
-    public function validated($key = null, $default = null): array
+    private function basedOnFieldTypeExtraValidation(): array
     {
-        return array_merge(parent::validated(), [
-            'validation' => FieldType::tryFrom($this->field_type)?->validation(),
-        ]);
+        $validation = [];
+
+        if ($this->field_type === FieldType::NUMBER->value || $this->field_type === FieldType::DECIMAL->value) {
+            $validation[] = 'numeric';
+        }
+
+        if ($this->field_type === FieldType::DATE->value || $this->field_type === FieldType::DATETIME->value) {
+            $validation[] = 'date';
+        }
+
+        return $validation;
     }
 }

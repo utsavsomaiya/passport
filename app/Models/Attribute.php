@@ -30,7 +30,8 @@ class Attribute extends Model
         'slug',
         'field_type',
         'default_value',
-        'validation',
+        'from',
+        'to',
         'options',
         'is_required',
         'status',
@@ -44,7 +45,6 @@ class Attribute extends Model
      */
     protected $casts = [
         'field_type' => FieldType::class,
-        'validation' => 'array',
         'options' => 'array',
         'is_required' => 'boolean',
         'status' => 'boolean',

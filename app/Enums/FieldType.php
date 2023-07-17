@@ -62,6 +62,8 @@ enum FieldType: int
             self::TEXT->value => ['string'],
             self::DATE->value => $this->generateDateValidation($from, $to),
             self::DATETIME->value => $this->generateDateValidation($from, $to),
+            // We allow to user the create a options..
+            // If user can select the options which is not in the list it will create a new one...
             self::SELECT->value => ['string'],
             self::LIST->value => ['array'],
         ]);

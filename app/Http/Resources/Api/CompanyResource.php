@@ -22,7 +22,7 @@ class CompanyResource extends JsonResource
             'id' => $company->id,
             'name' => $company->name,
             'email' => $company->email,
-            'created_at' => $company->created_at?->format('d F Y, h:i A'),
+            'created_at' => $company->created_at?->format(config('app.datetime_display_format')),
         ];
     }
 }

@@ -24,10 +24,10 @@ test('it can fetch attributes', function (): void {
                         ->has(
                             '0',
                             fn (AssertableJson $json): AssertableJson => $json
-                                ->where('id', ($attribute = $attributes->sortByDesc('id')->first())->id)
+                                ->where('id', ($attribute = $attributes->sortByDesc('created_at')->first())->id)
                                 ->where('name', $attribute->name)
                                 ->where('description', $attribute->description)
-                                ->where('field', $attribute->field_type->resourceName())
+                                ->where('field_type', $attribute->field_type->resourceName())
                                 ->where('field_description', $attribute->field_type->description())
                                 ->etc()
                         )
@@ -41,7 +41,7 @@ test('it can fetch attributes using template id', function (): void {
 
     $attributes = Attribute::factory($count = 2)->for($template)->create();
 
-    $attribute = $attributes->sortByDesc('id')->first();
+    $attribute = $attributes->sortByDesc('created_at')->first();
 
     $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch', [
         'templateId' => $template->id,

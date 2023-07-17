@@ -74,8 +74,51 @@ fi
 1. [`PersonalAccessToken::findToken()`](./app/Http/Middleware/AddCompanyIdInServiceContainer.php#L24C53-L24C62)
 2. `HasApiTokens` trait has `createToken`. we overwrite [it](./app/Models/User.php#L70-L87).
 
-### [Horizon](https://laravel.com/docs/10.x/horizon) Access
+### [Horizon](https://laravel.com/docs/10.x/horizon)
 - You can access the Horizon dashboard by visiting the following URL:
 - Horizon Dashboard : `APP_URL/horizon/dashboard`
 - Please note that only the Super Admin role has the necessary privileges to access this dashboard.
-- If you have not the Super Admin role, you will not be able to log in or access the Horizon features.
+
+- Install [redis](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-22-04) and [phpredis](https://github.com/phpredis/phpredis):
+    ```shell
+      sudo apt install -y redis-server
+      sudo nano /etc/redis/redis.conf
+   ```
+    - Configure redis as follows:
+
+    ```editorconfig
+    . . .
+
+    # If you run Redis from upstart or systemd, Redis can interact with your
+    # supervision tree. Options:
+    #   supervised no      - no supervision interaction
+    #   supervised upstart - signal upstart by putting Redis into SIGSTOP mode
+    #   supervised systemd - signal systemd by writing READY=1 to $NOTIFY_SOCKET
+    #   supervised auto    - detect upstart or systemd method based on
+    #                        UPSTART_JOB or NOTIFY_SOCKET environment variables
+    # Note: these supervision methods only signal "process is ready."
+    #       They do not enable continuous liveness pings back to your supervisor.
+    supervised systemd
+
+    . . .
+    ```
+    - Restart `redis`
+    ```shell
+    sudo systemctl restart redis.service
+    ```
+
+    - Test `redis`
+    ```shell
+    redis-cli
+    ```
+    - In the prompt that follows, test connectivity with the `ping` command and you should get `pong` response.
+
+- Install [pickle](https://github.com/FriendsOfPHP/pickle):
+```shell
+wget https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar
+```
+- Now install `phpredis` and use all the default settings.
+```shell
+sudo php pickle.phar install redis
+```
+- Setup Horizon, and set .env variables accordingly.

@@ -21,7 +21,8 @@ return new class extends Migration {
             $table->string('slug');
             $table->tinyInteger('field_type')->comment($this->fieldTypeComment());
             $table->string('default_value')->nullable();
-            $table->json('validation');
+            $table->string('from')->nullable();
+            $table->string('to')->nullable();
             $table->json('options')->nullable()->comment('If field type is select or list then user gives its options');
             $table->boolean('is_required')->default(false);
             $table->boolean('status')->default(false);
