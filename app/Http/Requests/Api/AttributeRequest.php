@@ -38,7 +38,7 @@ class AttributeRequest extends FormRequest
             'slug' => ['sometimes', 'string', 'max:255'],
             'field_type' => ['required', 'in:'.FieldType::getValidationValues()],
             'options' => ['sometimes', Rule::requiredIf(fn (): bool => in_array($this->field_type, FieldType::selections())), 'array'],
-            'options.*' => ['sometimes', 'string', 'max:255'],
+            'options.*' => ['required_with:options', 'string', 'max:255'],
             'from' => $fromToValidation,
             'to' => $fromToValidation,
             'order' => ['nullable', 'integer'],
@@ -73,7 +73,13 @@ class AttributeRequest extends FormRequest
         $validation = ['nullable'];
 
         if (($fieldType = FieldType::tryFrom($this->field_type)) instanceof FieldType) {
-            $validation += $fieldType->validation($this->get('from'), $this->get('to'));
+            $fieldTypeValidation = $fieldType->validation($this->get('from'), $this->get('to'));
+
+            if (in_array($this->field_type, FieldType::selections())) {
+                $fieldTypeValidation[] = 'in:'.$this->options;
+            }
+
+            $validation = [...$validation, ...$fieldTypeValidation];
         }
 
         return $validation;
