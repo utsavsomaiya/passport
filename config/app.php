@@ -74,8 +74,6 @@ return [
 
     'timezone' => 'UTC',
 
-    'datetime_display_format' => 'd F Y, h:i A',
-
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
