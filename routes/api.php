@@ -13,7 +13,6 @@ use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\AddCompanyIdInServiceContainer;
-use App\Models\Permission;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +43,22 @@ Route::name('api.')->group(function () {
                 Route::get('fetch', 'fetch')
                     ->can(PermissionEnum::USERS->can('fetch'))
                     ->name('fetch');
+
+                Route::post('create', 'create')
+                    ->can(PermissionEnum::USERS->can('create'))
+                    ->name('create');
+
+                Route::delete('{id}/delete', 'delete')
+                    ->can(PermissionEnum::USERS->can('delete'))
+                    ->name('delete');
+
+                Route::post('{id}/restore', 'restore')
+                    ->can(PermissionEnum::USERS->can('delete'))
+                    ->name('restore');
+
+                Route::post('{id}/update', 'update')
+                    ->can(PermissionEnum::USERS->can('update'))
+                    ->name('update');
             });
 
         Route::controller(LocaleController::class)

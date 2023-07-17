@@ -17,7 +17,7 @@ class UserQueries extends GlobalQueries
         return QueryBuilder::for(User::class)
             ->allowedFields(['first_name', 'last_name', 'username', 'email', 'created_at'])
             ->allowedFilters([
-                AllowedFilter::callback('name', function (Builder $query, $value) {
+                AllowedFilter::callback('name', function (Builder $query, $value): void {
                     $name = explode(' ', $value, 2);
                     $query->where('first_name', 'LIKE', '%' . $name[0] . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $name[0] . '%');
@@ -33,6 +33,34 @@ class UserQueries extends GlobalQueries
                 'roles:id,name',
             ])
             ->jsonPaginate();
+    }
+
+    public function delete(string $id): void
+    {
+        User::query()->where('id', $id)->delete(); // Soft delete
+    }
+
+    public function restore(string $id): void
+    {
+        User::withTrashed()->where('id', $id)->restore();
+    }
+
+    /**
+     * @param  array<string, string>  $data
+     */
+    public function create(array $data): void
+    {
+        User::create($data);
+    }
+
+    /**
+     * @param  array<string, string>  $data
+     */
+    public function update(array $data, string $id): void
+    {
+        User::query()
+            ->where('id', $id)
+            ->update($data);
     }
 
     public function findByEmail(string $email): ?User

@@ -18,7 +18,10 @@ class UserResource extends JsonResource
     {
         $user = $this->resource;
 
-        [$id, $token] = explode('|', $request->bearerToken(), 2);
+        /** @var string $bearerToken */
+        $bearerToken = $request->bearerToken();
+
+        [$id, $token] = explode('|', $bearerToken, 2);
 
         return [
             'id' => $user->id,
