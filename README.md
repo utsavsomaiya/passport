@@ -122,3 +122,5 @@ wget https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar
 sudo php pickle.phar install redis
 ```
 - Setup Horizon, and set .env variables accordingly.
+
+### [Development Principles](./Principles.md)
