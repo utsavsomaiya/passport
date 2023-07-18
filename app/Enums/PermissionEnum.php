@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use ArchTech\Enums\Names;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -13,12 +14,15 @@ enum PermissionEnum: int
     use Names;
 
     case USERS = 1;
-    case LOCALES = 2;
-    case CURRENCIES = 3;
-    case HIERARCHIES = 4;
-    case PRICE_BOOKS = 5;
-    case TEMPLATES = 6;
-    case ATTRIBUTES = 7;
+    case ROLES = 2;
+    case USER_ROLE = 3;
+    case PERMISSIONS = 4;
+    case LOCALES = 5;
+    case CURRENCIES = 6;
+    case HIERARCHIES = 7;
+    case PRICE_BOOKS = 8;
+    case TEMPLATES = 9;
+    case ATTRIBUTES = 10;
 
     public static function getFeatureGates(): Collection
     {
@@ -37,9 +41,9 @@ enum PermissionEnum: int
      */
     private static function generateCrud(string $for): array
     {
-        $crud = collect(['fetch', 'create', 'update', 'delete']);
-
-        return $crud->map(fn ($action): string => self::generateAction($action, $for))->toArray();
+        return collect(['fetch', 'create', 'update', 'delete'])
+            ->map(fn ($action): string => self::generateAction($action, $for))
+            ->toArray();
     }
 
     private static function generateAction(string $action, string $for): string
