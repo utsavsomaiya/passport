@@ -26,7 +26,8 @@ test('it can fetch users', function (): void {
                             '0',
                             fn (AssertableJson $json): AssertableJson => $json
                                 ->where('id', ($user = User::latest()->first())->id)
-                                ->where('name', $user->first_name . ' ' . $user->last_name)
+                                ->where('first_name', $user->first_name)
+                                ->where('last_name', $user->last_name)
                                 ->where('roles', $user->roles->pluck('name')->toArray())
                                 ->etc()
                         )

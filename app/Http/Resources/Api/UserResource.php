@@ -25,7 +25,8 @@ class UserResource extends JsonResource
 
         return [
             'id' => $user->id,
-            'name' => $user->first_name && $user->last_name ? $user->first_name . ' ' . $user->last_name : null,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
             'email' => $user->email,
             'username' => $user->username,
             'roles' => $user->roles->pluck('name')->toArray(),
