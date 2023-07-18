@@ -6,8 +6,8 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
-use App\Enums\PermissionEnum;
 use App\Models\User;
+use App\Permission;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        PermissionEnum::getFeatureGates()->each(function ($gate): void {
+        Permission::getFeatureGates()->each(function ($gate): void {
             Gate::define($gate, function (User $user) use ($gate) {
                 $user->load('roles');
                 $user->roles->load('permissions');
