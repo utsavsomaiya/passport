@@ -12,6 +12,7 @@ test('it cannot perform any action without any proper permission', function ($da
     $response->assertStatus(Response::HTTP_FORBIDDEN);
 })->with(getRoutes([
     'users',
+    'roles',
     'locales',
     'currencies',
     'hierarchies',

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Enums\PermissionEnum;
 use App\Models\Locale;
+use App\Permission;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithPermissions(
-        ['title' => PermissionEnum::LOCALES->can('create')],
-        ['title' => PermissionEnum::LOCALES->can('update')],
-        ['title' => PermissionEnum::LOCALES->can('delete')],
-        ['title' => PermissionEnum::LOCALES->can('fetch')]
+        ['title' => Permission::ability('create', 'locales')],
+        ['title' => Permission::ability('update', 'locales')],
+        ['title' => Permission::ability('delete', 'locales')],
+        ['title' => Permission::ability('fetch', 'locales')]
     );
 });
 

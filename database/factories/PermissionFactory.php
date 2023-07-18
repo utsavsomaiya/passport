@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\PermissionEnum;
 use App\Models\Role;
 use App\Models\RolePermission;
+use App\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,7 +25,7 @@ class PermissionFactory extends Factory
     {
         return [
             'role_id' => fn (): Collection|Model => Role::factory()->create(),
-            'title' => fake()->randomElement(PermissionEnum::getFeatureGates()->toArray()),
+            'title' => fake()->randomElement(Permission::getFeatureGates()->toArray()),
         ];
     }
 }
