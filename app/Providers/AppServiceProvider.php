@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        Carbon::macro('displayFormat', fn () => resolve(Carbon::class)->format('d F Y, h:i A'));
+        Carbon::macro('displayFormat', fn () => $this->format('d F Y, h:i A')); // @phpstan-ignore-line
 
         Password::defaults(
             fn (): Password => Password::min(8) // Required at least 8 characters...
