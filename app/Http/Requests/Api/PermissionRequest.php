@@ -22,7 +22,7 @@ class PermissionRequest extends FormRequest
         return [
             'role' => ['required', 'string', 'uuid', 'exists:roles,id'],
             'permissions' => ['required', 'array'],
-            'permissions.*' => ['required_with:permissions', 'string', Rule::in(Permission::getFeatureGates()->toArray())],
+            'permissions.*' => ['required', 'string', Rule::in(Permission::getFeatureGates()->toArray())],
         ];
     }
 }

@@ -29,11 +29,8 @@ final readonly class Permission
          * @var array<int, string>
          */
         protected array $permissions = [
-            'assign-user-roles',
-            'dissociate-user-roles',
-            'fetch-permissions',
-            'give-permissions',
-            'revoke-permissions',
+            'manage-user-roles',
+            'manage-role-permissions',
         ]
     ) {
 

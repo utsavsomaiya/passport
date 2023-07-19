@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoleUserController;
 use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\RolePermissionController;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 
@@ -41,14 +42,14 @@ Route::name('api.')->group(function () {
         });
 
         Route::controller(RoleUserController::class)->name('role_user.')->group(function (): void {
-            Route::post('assign-roles', 'assignRoles')->can('assign-user-roles')->name('assign_roles');
-            Route::post('dissociate-roles', 'dissociateRoles')->can('dissociate-user-roles')->name('dissociate_roles');
+            Route::post('assign-roles', 'assignRoles')->can('manage-user-roles')->name('assign_roles');
+            Route::post('dissociate-roles', 'dissociateRoles')->can('manage-user-roles')->name('dissociate_roles');
         });
 
-        Route::controller(PermissionController::class)->name('permissions.')->prefix('permissions')->group(function (): void {
-            Route::get('fetch', 'fetch')->can('fetch-permissions')->name('fetch');
-            Route::post('give-permissions', 'givePermissions')->can('give-permissions')->name('give');
-            Route::post('revoke-permissions', 'revokePermissions')->can('revoke-permissions')->name('revoke');
+        Route::name('permissions.')->prefix('permissions')->group(function (): void {
+            Route::get('fetch', [PermissionController::class, 'fetch'])->can('manage-role-permissions')->name('fetch');
+            Route::post('give-permissions', [RolePermissionController::class, 'givePermissions'])->can('manage-role-permissions')->name('give');
+            Route::post('revoke-permissions', [RolePermissionController::class, 'revokePermissions'])->can('manage-role-permissions')->name('revoke');
         });
 
         Route::controller(LocaleController::class)->name('locales.')->prefix('locales')->group(function (): void {
