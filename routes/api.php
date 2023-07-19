@@ -13,7 +13,6 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoleUserController;
 use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
-use App\Permission;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 
@@ -26,161 +25,66 @@ Route::name('api.')->group(function () {
 
     Route::middleware(['auth:sanctum', 'set.company'])->group(function (): void {
         Route::controller(UserController::class)->name('users.')->prefix('users')->group(function (): void {
-            Route::get('fetch', 'fetch')
-                ->can(Permission::ability('fetch', 'users'))
-                ->name('fetch');
-
-            Route::post('create', 'create')
-                ->can(Permission::ability('create', 'users'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'users'))
-                ->name('delete');
-
-            Route::post('{id}/restore', 'restore')
-                ->can(Permission::ability('delete', 'users'))
-                ->name('restore');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'users'))
-                ->name('update');
+            Route::get('fetch', 'fetch')->can('fetch-users')->name('fetch');
+            Route::get('fetch/{roleId}', 'fetchByRole')->can('fetch-users')->name('fetch_by_role');
+            Route::post('create', 'create')->can('create-user')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-user')->name('delete');
+            Route::post('{id}/restore', 'restore')->can('delete-user')->name('restore');
+            Route::post('{id}/update', 'update')->can('update-user')->name('update');
         });
 
         Route::controller(RoleController::class)->name('roles.')->prefix('roles')->group(function (): void {
-            Route::get('fetch', 'fetch')
-                ->can(Permission::ability('fetch', 'roles'))
-                ->name('fetch');
-
-            Route::post('create', 'create')
-                ->can(Permission::ability('create', 'roles'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'roles'))
-                ->name('delete');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'roles'))
-                ->name('update');
+            Route::get('fetch', 'fetch')->can('fetch-roles')->name('fetch');
+            Route::post('create', 'create')->can('create-role')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-role')->name('delete');
+            Route::post('{id}/update', 'update')->can('update-role')->name('update');
         });
 
         Route::controller(RoleUserController::class)->name('role_user.')->group(function (): void {
-            Route::post('assign-roles', 'assignRoles')
-                ->can('assign-user-roles')
-                ->name('assign_roles');
-
-            Route::post('dissociate-roles', 'dissociateRoles')
-                ->can('dissociate-user-roles')
-                ->name('dissociate_roles');
+            Route::post('assign-roles', 'assignRoles')->can('assign-user-roles')->name('assign_roles');
+            Route::post('dissociate-roles', 'dissociateRoles')->can('dissociate-user-roles')->name('dissociate_roles');
         });
 
         Route::controller(LocaleController::class)->name('locales.')->prefix('locales')->group(function (): void {
-            Route::get('fetch', 'fetch')
-                ->can(Permission::ability('fetch', 'locales'))
-                ->name('fetch');
-
-            Route::post('create', 'create')
-                ->can(Permission::ability('create', 'locales'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'locales'))
-                ->name('delete');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'locales'))
-                ->name('update');
+            Route::get('fetch', 'fetch')->can('fetch-locales')->name('fetch');
+            Route::post('create', 'create')->can('create-locale')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-locale')->name('delete');
+            Route::post('{id}/update', 'update')->can('update-locale')->name('update');
         });
 
         Route::controller(CurrencyController::class)->name('currencies.')->prefix('currencies')->group(function (): void {
-            Route::get('fetch', 'fetch')
-                ->can(Permission::ability('fetch', 'currencies'))
-                ->name('fetch');
-
-            Route::post('create', 'create')
-                ->can(Permission::ability('create', 'currencies'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'currencies'))
-                ->name('delete');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'currencies'))
-                ->name('update');
+            Route::get('fetch', 'fetch')->can('fetch-currencies')->name('fetch');
+            Route::post('create', 'create')->can('create-currency')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-currency')->name('delete');
+            Route::post('{id}/update', 'update')->can('update-currency')->name('update');
         });
 
         Route::controller(HierarchyController::class)->name('hierarchies.')->prefix('hierarchies')->group(function (): void {
-            Route::get('fetch', 'fetch')
-                ->can(Permission::ability('fetch', 'hierarchies'))
-                ->name('fetch');
-
-            Route::post('create/{parent?}', 'create')
-                ->can(Permission::ability('create', 'hierarchies'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'hierarchies'))
-                ->name('delete');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'hierarchies'))
-                ->name('update');
+            Route::get('fetch', 'fetch')->can('fetch-hierarchies')->name('fetch');
+            Route::post('create/{parent?}', 'create')->can('create-hierarchy')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-hierarchy')->name('delete');
+            Route::post('{id}/update', 'update')->can('update-hierarchy')->name('update');
         });
 
         Route::controller(PriceBookController::class)->name('price_books.')->prefix('price-books')->group(function (): void {
-            Route::get('fetch', 'fetch')
-                ->can(Permission::ability('fetch', 'price-books'))
-                ->name('fetch');
-
-            Route::post('create', 'create')
-                ->can(Permission::ability('create', 'price-books'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'price-books'))
-                ->name('delete');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'price-books'))
-                ->name('update');
+            Route::get('fetch', 'fetch')->can('fetch-price-books')->name('fetch');
+            Route::post('create', 'create')->can('create-price-book')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-price-book')->name('delete');
+            Route::post('{id}/update', 'update')->can('update-price-book')->name('update');
         });
 
         Route::controller(TemplateController::class)->name('templates.')->prefix('templates')->group(function (): void {
-            Route::get('fetch', 'fetch')
-                ->can(Permission::ability('fetch', 'templates'))
-                ->name('fetch');
-
-            Route::post('create', 'create')
-                ->can(Permission::ability('create', 'templates'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'templates'))
-                ->name('delete');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'templates'))
-                ->name('update');
+            Route::get('fetch', 'fetch')->can('fetch-templates')->name('fetch');
+            Route::post('create', 'create')->can('create-template')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-template')->name('delete');
+            Route::post('{id}/update', 'update')->can('update-template')->name('update');
         });
 
         Route::controller(AttributeController::class)->name('attributes.')->prefix('attributes')->group(function (): void {
-            Route::get('fetch/{templateId?}', 'fetch')
-                ->can(Permission::ability('fetch', 'attributes'))
-                ->name('fetch');
-
-            Route::post('create', 'create')
-                ->can(Permission::ability('create', 'attributes'))
-                ->name('create');
-
-            Route::delete('{id}/delete', 'delete')
-                ->can(Permission::ability('delete', 'attributes'))
-                ->name('delete');
-
-            Route::post('{id}/update', 'update')
-                ->can(Permission::ability('update', 'attributes'))
-                ->name('update');
+            Route::get('fetch/{templateId?}', 'fetch')->can('fetch-attributes')->name('fetch');
+            Route::post('create', 'create')->can('create-attribute')->name('create');
+            Route::delete('{id}/delete', 'delete')->can('delete-attribute')->name('delete');
+            Route::post('{id}/update', 'update')->can('update-attribute')->name('update');
         });
     });
 });

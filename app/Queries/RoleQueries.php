@@ -32,7 +32,7 @@ class RoleQueries extends GlobalQueries
 
     public function delete(string $id): void
     {
-        abort_if(resolve(RoleUserQueries::class)->exists($id), Response::HTTP_NOT_ACCEPTABLE, 'This role assign to the user.');
+        abort_if(resolve(RoleUserQueries::class)->exists($id), Response::HTTP_NOT_ACCEPTABLE, 'This role is assigned to one or more users already. Cannot be deleted.');
 
         Role::query()
             ->where('id', $id)
