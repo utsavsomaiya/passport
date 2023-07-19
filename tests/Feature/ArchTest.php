@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Models\Model;
+
 test('laravel model can use only on base model')
-    ->expect('App\Models\Model')
-    ->toUse('Illuminate\Database\Eloquent\Model');
+    ->expect(Model::class)
+    ->toUse(\Illuminate\Database\Eloquent\Model::class);
 
 test('model can extends base model not laravel default model')
     ->expect('App\Models')
-    ->not->toUse('Illuminate\Database\Eloquent\Model')
-    ->ignoring('App\Models\Model');
+    ->not->toUse(\Illuminate\Database\Eloquent\Model::class)
+    ->ignoring(Model::class);
 
 test('model only used in the query class not in controller')
     ->expect('App\Models')
@@ -16,7 +20,7 @@ test('model only used in the query class not in controller')
         'Database\Seeders',
         'Database\Factories',
         'App\Providers',
-        'App\Models'
+        'App\Models',
     ]);
 
 it('will not use debugging functions')
