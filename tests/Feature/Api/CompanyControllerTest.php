@@ -25,7 +25,7 @@ test('it can fetch all users companies', function (): void {
                         ->has(
                             '0',
                             fn (AssertableJson $json): AssertableJson => $json
-                                ->where('id', ($user = $user->companies()->first())->id)
+                                ->where('id', ($user = $user->companies->sortByDesc('created_at')->first())->id)
                                 ->where('name', $user->name)
                                 ->where('email', $user->email)
                                 ->etc()
