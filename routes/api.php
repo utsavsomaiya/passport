@@ -46,6 +46,7 @@ Route::name('api.')->group(function () {
         });
 
         Route::controller(PermissionController::class)->name('permissions.')->prefix('permissions')->group(function (): void {
+            Route::get('fetch', 'fetch')->can('fetch-permissions')->name('fetch');
             Route::post('give-permissions', 'givePermissions')->can('give-permissions')->name('give');
             Route::post('revoke-permissions', 'revokePermissions')->can('revoke-permissions')->name('revoke');
         });
