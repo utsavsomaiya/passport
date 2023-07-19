@@ -11,7 +11,7 @@ class GlobalQueries
 {
     public function filter(string $columnName): AllowedFilter
     {
-        return AllowedFilter::callback($columnName, function (Builder $query, $value) use ($columnName): void {
+        return AllowedFilter::callback($columnName, function (Builder $query, string $value) use ($columnName): void {
             $filterMethod = request()->get('filter_method', []);
 
             if (array_key_exists($columnName, $filterMethod)) {

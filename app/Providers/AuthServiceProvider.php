@@ -6,6 +6,7 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Permission;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -27,12 +28,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Permission::getFeatureGates()->each(function ($gate): void {
+        Permission::getFeatureGates()->each(function (string $gate): void {
             Gate::define($gate, function (User $user) use ($gate) {
                 $user->load('roles');
                 $user->roles->load('permissions');
 
-                $userPermissions = $user->roles->map(function ($role) use ($gate): bool {
+                $userPermissions = $user->roles->map(function (Role $role) use ($gate): bool {
                     if (str($role->name)->title->value === 'Super Admin') {
                         return true;
                     }

@@ -15,7 +15,7 @@ class LocaleResource extends JsonResource
      * @param  Request  $request
      * @return array<string, mixed>
      */
-    public function toArray($request): array
+    public function toArray(Request $request): array
     {
         $locale = $this->resource;
 

@@ -42,7 +42,7 @@ class GenerateTokenRequest extends FormRequest
      * @param  array<int, string>|int|string|null  $key
      * @return array<string, mixed>
      */
-    public function validated($key = null, $default = null)
+    public function validated($key = null, $default = null): array
     {
         return array_merge($this->checkCredentialsRequest->validated(), parent::validated());
     }

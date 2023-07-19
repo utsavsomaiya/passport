@@ -6,6 +6,7 @@ namespace App\Queries;
 
 use App\Models\Attribute;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as DatabaseQueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -20,7 +21,7 @@ class AttributeQueries extends GlobalQueries
             ->allowedSorts(['name', 'is_required', 'created_at'])
             ->allowedFilters([
                 $this->filter('name'),
-                AllowedFilter::callback('template_name', function (Builder $query, $value): void {
+                AllowedFilter::callback('template_name', function (Builder $query, string $value): void {
                     $query->whereHas('template', function (Builder $query) use ($value): void {
                         $query->where('name', $value);
                     });
@@ -31,7 +32,7 @@ class AttributeQueries extends GlobalQueries
             ])
             ->mergeSelect('id', 'template_id')
             ->with('template:id,name')
-            ->when($templateId, function ($query) use ($templateId): void {
+            ->when($templateId, function (DatabaseQueryBuilder $query) use ($templateId): void {
                 $query->where('template_id', $templateId);
             })
             ->jsonPaginate();

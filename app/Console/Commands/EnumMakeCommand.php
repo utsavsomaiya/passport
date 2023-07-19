@@ -37,7 +37,7 @@ class EnumMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return $this->resolveStubPath('/stubs/enum.stub');
     }
@@ -48,7 +48,7 @@ class EnumMakeCommand extends GeneratorCommand
      * @param  string  $stub
      * @return string
      */
-    protected function resolveStubPath($stub)
+    protected function resolveStubPath(string $stub): string
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
@@ -61,7 +61,7 @@ class EnumMakeCommand extends GeneratorCommand
      * @param  string  $name
      * @return string
      */
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         return str_replace('{{ enum }}', Str::of($name)->classBasename()->value(), parent::buildClass($name));
     }
@@ -72,7 +72,7 @@ class EnumMakeCommand extends GeneratorCommand
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'\Enums';
     }

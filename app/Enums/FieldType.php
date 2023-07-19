@@ -8,6 +8,7 @@ use App\Enums\MetaProperties\Description;
 use ArchTech\Enums\Meta\Meta;
 use ArchTech\Enums\Metadata;
 use ArchTech\Enums\Values;
+use BackedEnum;
 use Illuminate\Support\Str;
 
 #[Meta(Description::class)]
@@ -45,7 +46,7 @@ enum FieldType: int
      */
     public static function fetchTheValueForUI(): array
     {
-        return collect(self::cases())->mapWithKeys(fn ($case): array => [
+        return collect(self::cases())->mapWithKeys(fn (BackedEnum $case): array => [
             Str::title($case->name) => $case->value,
         ])->toArray();
     }

@@ -46,7 +46,7 @@ final readonly class Permission
         $self = app(self::class);
 
         return collect($self->modules)
-            ->map(fn ($name): array => self::generateCrud(Str::singular($name)))
+            ->map(fn (string $name): array => self::generateCrud(Str::singular($name)))
             ->push($self->permissions)
             ->flatten();
     }
@@ -57,7 +57,7 @@ final readonly class Permission
     private static function generateCrud(string $for): array
     {
         return collect(['fetch', 'create', 'update', 'delete'])
-            ->map(fn ($action): string => self::generateAction($action, $for))
+            ->map(fn (string $action): string => self::generateAction($action, $for))
             ->toArray();
     }
 

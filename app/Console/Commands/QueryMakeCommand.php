@@ -38,7 +38,7 @@ class QueryMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return $this->resolveStubPath('/stubs/query.stub');
     }
@@ -49,7 +49,7 @@ class QueryMakeCommand extends GeneratorCommand
      * @param  string  $stub
      * @return string
      */
-    protected function resolveStubPath($stub)
+    protected function resolveStubPath(string $stub): string
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
@@ -62,7 +62,7 @@ class QueryMakeCommand extends GeneratorCommand
      * @param  string  $name
      * @return string
      */
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $replace = $this->buildModelReplacements();
 
@@ -101,7 +101,7 @@ class QueryMakeCommand extends GeneratorCommand
      *
      * @throws InvalidArgumentException
      */
-    protected function parseModel($model)
+    protected function parseModel(string $model): string
     {
         if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
             throw new InvalidArgumentException('Model name contains invalid characters.');
@@ -116,7 +116,7 @@ class QueryMakeCommand extends GeneratorCommand
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'\Queries';
     }
