@@ -20,7 +20,7 @@ class RoleUserQueries
     {
         $user = $data['user'];
 
-        /** @var array<int, string> $roles*/
+        /** @var array<int, string> $roles */
         $roles = $data['roles'];
 
         $insertData = [];

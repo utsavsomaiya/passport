@@ -76,7 +76,7 @@ class UserQueries extends GlobalQueries
             ->defaultSort('-created_at')
             ->allowedSorts(['first_name', 'last_name', 'created_at'])
             ->mergeSelect('id')
-            ->withWhereHas('roles', function ($query) use($roleId) {
+            ->withWhereHas('roles', function ($query) use ($roleId): void {
                 $query->where('role_id', $roleId);
             })
             ->jsonPaginate();

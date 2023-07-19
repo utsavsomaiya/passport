@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RoleRequest;
 use App\Http\Resources\Api\RoleResource;
 use App\Queries\RoleQueries;
-use App\Queries\RoleUserQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
