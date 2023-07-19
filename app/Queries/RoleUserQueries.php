@@ -19,11 +19,13 @@ class RoleUserQueries
     public function assignRoles(array $data): void
     {
         $user = $data['user'];
+
+        /** @var array<int, string> $roles */
         $roles = $data['roles'];
 
         $insertData = [];
 
-        foreach ($roles as $role) { // @phpstan-ignore-line
+        foreach ($roles as $role) {
             $insertData[] = [
                 'role_id' => $role,
                 'user_id' => $user,

@@ -19,9 +19,9 @@ class UserController extends Controller
 
     }
 
-    public function fetch(): AnonymousResourceCollection
+    public function fetch(string $roleId = null): AnonymousResourceCollection
     {
-        $users = $this->userQueries->listQuery();
+        $users = $this->userQueries->listQuery($roleId);
 
         return UserResource::collection($users->getCollection());
     }

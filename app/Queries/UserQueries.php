@@ -10,7 +10,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class UserQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(?string $roleId): LengthAwarePaginator
     {
         return QueryBuilder::for(User::class)
             ->allowedFields(['first_name', 'last_name', 'username', 'email', 'created_at'])
@@ -27,6 +27,11 @@ class UserQueries extends GlobalQueries
                 'tokens:id,tokenable_id,tokenable_type,last_used_at',
                 'roles:id,name',
             ])
+            ->when($roleId, function ($query) use ($roleId): void {
+                $query->whereHas('roles', function ($query) use ($roleId): void {
+                    $query->where('role_id', $roleId);
+                });
+            })
             ->jsonPaginate();
     }
 

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -11,10 +12,12 @@ beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
 });
 
-test('it can fetch users', function (): void {
+test('it can fetch users', function ($role): void {
     User::factory(2)->create();
 
-    $response = $this->withToken($this->token)->getJson(route('api.users.fetch'));
+    $response = $this->withToken($this->token)->getJson(route('api.users.fetch', [
+        'roleId' => $role,
+    ]));
 
     $response->assertOk()
         ->assertJson(
@@ -34,7 +37,10 @@ test('it can fetch users', function (): void {
                         ->etc()
                 )
         );
-});
+})->with([
+    fn () => null,
+    fn () => Role::min('id'),
+]);
 
 test('it throw an exception when sort by the fields which is not allow..', function (): void {
     $response = $this->withToken($this->token)->getJson(route('api.users.fetch', [
