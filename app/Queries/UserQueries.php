@@ -62,4 +62,23 @@ class UserQueries extends GlobalQueries
     {
         return User::query()->firstWhere('email', $email);
     }
+
+    public function fetchByRole(string $roleId): LengthAwarePaginator
+    {
+        return QueryBuilder::for(User::class)
+            ->allowedFields(['first_name', 'last_name', 'username', 'email', 'created_at'])
+            ->allowedFilters([
+                $this->filter('first_name'),
+                $this->filter('last_name'),
+                $this->filter('username'),
+                $this->filter('email'),
+            ])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['first_name', 'last_name', 'created_at'])
+            ->mergeSelect('id')
+            ->withWhereHas('roles', function ($query) use($roleId) {
+                $query->where('role_id', $roleId);
+            })
+            ->jsonPaginate();
+    }
 }

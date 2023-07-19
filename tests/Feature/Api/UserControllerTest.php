@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -110,4 +111,33 @@ test('it can update a user', function (): void {
         'first_name' => $firstName,
         'email' => $email,
     ]);
+});
+
+test('it can fetch users by role', function (): void {
+    $role = Role::first();
+
+    $user = $role->users->sortByDesc('created_at')->first();
+
+    $response = $this->withToken($this->token)->getJson(route('api.users.fetch_by_role', [
+        'roleId' => $role->id,
+    ]));
+
+    $response->assertOk()
+        ->assertJson(
+            fn (AssertableJson $json): AssertableJson => $json
+                ->has(
+                    'data',
+                    fn (AssertableJson $json): AssertableJson => $json
+                        ->has(
+                            '0',
+                            fn (AssertableJson $json): AssertableJson => $json
+                                ->where('id', $user->id)
+                                ->where('first_name', $user->first_name)
+                                ->where('last_name', $user->last_name)
+                                ->where('roles', $user->roles->pluck('name')->toArray())
+                                ->etc()
+                        )
+                        ->etc()
+                )
+        );
 });

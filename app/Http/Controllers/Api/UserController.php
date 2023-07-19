@@ -61,4 +61,11 @@ class UserController extends Controller
             'success' => __('User updated successfully.'),
         ]);
     }
+
+    public function fetchByRole(string $roleId): AnonymousResourceCollection
+    {
+        $users = $this->userQueries->fetchByRole($roleId);
+
+        return UserResource::collection($users->getCollection());
+    }
 }
