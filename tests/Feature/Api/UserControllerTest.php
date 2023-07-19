@@ -12,10 +12,12 @@ beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
 });
 
-test('it can fetch users', function (): void {
+test('it can fetch users', function ($role): void {
     User::factory(2)->create();
 
-    $response = $this->withToken($this->token)->getJson(route('api.users.fetch'));
+    $response = $this->withToken($this->token)->getJson(route('api.users.fetch', [
+        'roleId' => $role,
+    ]));
 
     $response->assertOk()
         ->assertJson(
@@ -35,7 +37,10 @@ test('it can fetch users', function (): void {
                         ->etc()
                 )
         );
-});
+})->with([
+    fn () => null,
+    fn () => Role::min('id'),
+]);
 
 test('it throw an exception when sort by the fields which is not allow..', function (): void {
     $response = $this->withToken($this->token)->getJson(route('api.users.fetch', [
@@ -111,33 +116,4 @@ test('it can update a user', function (): void {
         'first_name' => $firstName,
         'email' => $email,
     ]);
-});
-
-test('it can fetch users by role', function (): void {
-    $role = Role::first();
-
-    $user = $role->users->sortByDesc('created_at')->first();
-
-    $response = $this->withToken($this->token)->getJson(route('api.users.fetch_by_role', [
-        'roleId' => $role->id,
-    ]));
-
-    $response->assertOk()
-        ->assertJson(
-            fn (AssertableJson $json): AssertableJson => $json
-                ->has(
-                    'data',
-                    fn (AssertableJson $json): AssertableJson => $json
-                        ->has(
-                            '0',
-                            fn (AssertableJson $json): AssertableJson => $json
-                                ->where('id', $user->id)
-                                ->where('first_name', $user->first_name)
-                                ->where('last_name', $user->last_name)
-                                ->where('roles', $user->roles->pluck('name')->toArray())
-                                ->etc()
-                        )
-                        ->etc()
-                )
-        );
 });

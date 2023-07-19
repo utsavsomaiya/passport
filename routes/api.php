@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\GenerateTokenController;
 use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
+use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoleUserController;
@@ -25,8 +26,7 @@ Route::name('api.')->group(function () {
 
     Route::middleware(['auth:sanctum', 'set.company'])->group(function (): void {
         Route::controller(UserController::class)->name('users.')->prefix('users')->group(function (): void {
-            Route::get('fetch', 'fetch')->can('fetch-users')->name('fetch');
-            Route::get('fetch/{roleId}', 'fetchByRole')->can('fetch-users')->name('fetch_by_role');
+            Route::get('fetch/{roleId?}', 'fetch')->can('fetch-users')->name('fetch');
             Route::post('create', 'create')->can('create-user')->name('create');
             Route::delete('{id}/delete', 'delete')->can('delete-user')->name('delete');
             Route::post('{id}/restore', 'restore')->can('delete-user')->name('restore');
@@ -43,6 +43,11 @@ Route::name('api.')->group(function () {
         Route::controller(RoleUserController::class)->name('role_user.')->group(function (): void {
             Route::post('assign-roles', 'assignRoles')->can('assign-user-roles')->name('assign_roles');
             Route::post('dissociate-roles', 'dissociateRoles')->can('dissociate-user-roles')->name('dissociate_roles');
+        });
+
+        Route::controller(PermissionController::class)->name('permissions.')->prefix('permissions')->group(function (): void {
+            Route::post('give-permissions', 'givePermissions')->can('give-permissions')->name('give');
+            Route::post('revoke-permissions', 'revokePermissions')->can('revoke-permissions')->name('revoke');
         });
 
         Route::controller(LocaleController::class)->name('locales.')->prefix('locales')->group(function (): void {
