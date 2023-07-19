@@ -3,9 +3,17 @@
 declare(strict_types=1);
 
 use App\Models\Permission;
+use App\Permission as AppPermission;
 
 beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
+});
+
+test('it can fetch the static permission list', function (): void {
+    $response = $this->withToken($this->token)->getJson(route('api.permissions.fetch'));
+
+    $response->assertOk()
+        ->assertJson(['permissions' => AppPermission::getFeatureGates()->toArray()]);
 });
 
 test('it can give the permissions', function (): void {

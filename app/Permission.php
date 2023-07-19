@@ -31,6 +31,7 @@ final readonly class Permission
         protected array $permissions = [
             'assign-user-roles',
             'dissociate-user-roles',
+            'fetch-permissions',
             'give-permissions',
             'revoke-permissions',
         ]

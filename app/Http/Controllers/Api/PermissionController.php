@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PermissionRequest;
+use App\Permission;
 use App\Queries\PermissionQueries;
 use Illuminate\Http\JsonResponse;
 
@@ -15,6 +16,13 @@ class PermissionController extends Controller
         protected PermissionQueries $permissionQueries
     ) {
 
+    }
+
+    public function fetch(): JsonResponse
+    {
+        return response()->json([
+            'permissions' => Permission::getFeatureGates()->toArray(),
+        ]);
     }
 
     public function givePermissions(PermissionRequest $request): JsonResponse
