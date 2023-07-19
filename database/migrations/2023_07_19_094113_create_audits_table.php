@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->nullableUuidMorphs('user');
             $table->uuidMorphs('auditable');
             $table->string('event');
-            $table->text('old_values')->nullable();
-            $table->text('new_values')->nullable();
+            $table->json('old_values')->nullable();
+            $table->json('new_values')->nullable();
             $table->text('url')->nullable();
             $table->ipAddress('ip_address')->nullable();
             $table->string('user_agent', 1023)->nullable();

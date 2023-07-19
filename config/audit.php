@@ -33,6 +33,7 @@ return [
     */
 
     'user' => [
+        // We can not use below config because when we do the squash migration then it will no more changeable.
         'morph_prefix' => 'user',
         'guards' => ['sanctum'],
         'resolver' => UserResolver::class,
@@ -73,11 +74,13 @@ return [
     | Strict Mode
     |--------------------------------------------------------------------------
     |
-    | Enable the strict mode when auditing?
+    | By default, the `$hidden` and `$visible` values of a model aren't considered when including/excluding audited properties.
+    | When the $auditStrict property is set to true, the $hidden and $visible properties will be used in the same fashion as
+    | the `$auditExclude` and `$auditInclude`, respectively.
     |
     */
 
-    'strict' => false,
+    'strict' => true,
 
     /*
     |--------------------------------------------------------------------------
