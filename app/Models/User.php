@@ -18,8 +18,10 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
 use Laravel\Sanctum\PersonalAccessToken;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableInterface;
 
-class User extends Authenticatable
+class User extends Authenticatable implements AuditableInterface
 {
     use HasApiTokens;
     use HasFactory;
@@ -27,6 +29,7 @@ class User extends Authenticatable
     use HasUuids;
     use SoftDeletes;
     use HasRoles;
+    use Auditable;
 
     /**
      * The attributes that are mass assignable.
