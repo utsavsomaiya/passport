@@ -19,7 +19,7 @@ class RoleUserRequest extends FormRequest
         return [
             'user' => ['required', 'exists:users,id'],
             'roles' => ['required', 'array', 'exists:roles,id'],
-            'roles.*' => ['required_with:roles', 'uuid', 'string'],
+            'roles.*' => ['required', 'uuid', 'string'],
         ];
     }
 }
