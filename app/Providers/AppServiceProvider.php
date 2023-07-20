@@ -7,7 +7,6 @@ namespace App\Providers;
 use App\Models\PersonalAccessToken;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Sanctum\Sanctum;
@@ -29,12 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         Model::preventLazyLoading(! $this->app->isProduction());
-
-        Builder::macro('mergeSelect', function (...$extraFields): void {
-            if (request()->input('fields')) {
-                $this->addSelect($extraFields); // @phpstan-ignore-line
-            }
-        });
 
         Carbon::macro('displayFormat', fn () => $this->format('d F Y, h:i A')); // @phpstan-ignore-line
 

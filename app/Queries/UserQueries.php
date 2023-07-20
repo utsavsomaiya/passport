@@ -13,7 +13,6 @@ class UserQueries extends GlobalQueries
     public function listQuery(?string $roleId): LengthAwarePaginator
     {
         return QueryBuilder::for(User::class)
-            ->allowedFields(['first_name', 'last_name', 'username', 'email', 'created_at'])
             ->allowedFilters([
                 $this->filter('first_name'),
                 $this->filter('last_name'),
@@ -22,7 +21,7 @@ class UserQueries extends GlobalQueries
             ])
             ->defaultSort('-created_at')
             ->allowedSorts(['first_name', 'last_name', 'created_at'])
-            ->mergeSelect('id')
+            ->select('id', 'first_name', 'last_name', 'username', 'email', 'created_at')
             ->with([
                 'tokens:id,tokenable_id,tokenable_type,last_used_at',
                 'roles:id,name',

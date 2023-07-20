@@ -24,7 +24,7 @@ class AttributeController extends Controller
     {
         $request->validated();
 
-        $attributes = $this->attributeQueries->listQuery($templateId);
+        $attributes = $this->attributeQueries->listQuery($templateId, $request);
 
         return AttributeResource::collection($attributes);
     }

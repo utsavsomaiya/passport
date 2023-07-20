@@ -5,16 +5,21 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use App\Enums\MetaProperties\Description;
+use ArchTech\Enums\From;
 use ArchTech\Enums\Meta\Meta;
 use ArchTech\Enums\Metadata;
+use ArchTech\Enums\Names;
 use ArchTech\Enums\Values;
+use BackedEnum;
 use Illuminate\Support\Str;
 
 #[Meta(Description::class)]
 enum FieldType: int
 {
+    use Names;
     use Values;
     use Metadata;
+    use From;
 
     #[Description("For 'status' like fields: Yes/No or Enable/Disable")]
     case TOGGLE = 1;
@@ -100,23 +105,34 @@ enum FieldType: int
      */
     private function generateNumberValidation(mixed $from, mixed $to): array
     {
-        if ($from === null && $to === null) {
-            return [$this->value === self::NUMBER->value ? 'integer' : 'decimal'];
-        }
-
-        if ($from !== null) {
-            if ($this->value === self::NUMBER->value) {
-                return ['integer', 'min_digits:' . $from];
-            }
-
-            return ['decimal', 'min:'. $from];
-        }
+        $validations = [];
 
         if ($this->value === self::NUMBER->value) {
-            return ['integer', 'max_digits:' . $to];
+            $validations[] = 'integer';
+            if ($from !== null) {
+                $validations[] = 'min_digits:' . $from;
+            }
+
+            if ($to !== null) {
+                $validations[] = 'max_digits:' . $to;
+            }
         }
 
-        return ['decimal', 'max:'. $to];
+        if ($this->value === self::DECIMAL->value) {
+            $validations[] = 'decimal';
+
+            if ($from !== null) {
+                $validations[] = 'min:'. $from;
+            }
+
+            if ($to !== null) {
+                $validations[] = 'max_digits:' . $to;
+            }
+
+            $validations[] = 'max:'. $to;
+        }
+
+        return $validations;
     }
 
     public function fakerDefaultValue(): mixed
@@ -139,15 +155,23 @@ enum FieldType: int
     }
 
     /**
-     * @return array<int, self>
+     * @return array<int, BackedEnum>
      */
     public static function selections(): array
     {
         return [self::SELECT, self::LIST];
     }
 
-    public static function getValidationValues(): string
+    /**
+     * @return array<int, BackedEnum>
+     */
+    public static function allowFromToFunctionalityFields(): array
     {
-        return collect(self::values())->implode(',');
+        return [self::DECIMAL, self::NUMBER, self::DATE, self::DATETIME];
+    }
+
+    public static function getValidationNames(): string
+    {
+        return collect(self::names())->map(fn (string $name): string => Str::title($name))->implode(',');
     }
 }

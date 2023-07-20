@@ -14,11 +14,10 @@ class RoleQueries extends GlobalQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Role::class)
-            ->allowedFields(['name', 'description', 'created_at'])
             ->allowedFilters([$this->filter('name')])
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
-            ->mergeSelect('id')
+            ->select('id', 'name', 'description', 'created_at')
             ->jsonPaginate();
     }
 

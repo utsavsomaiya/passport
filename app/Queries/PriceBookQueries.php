@@ -13,13 +13,12 @@ class PriceBookQueries extends GlobalQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(PriceBook::class)
-            ->allowedFields(['name', 'description', 'created_at'])
             ->allowedFilters([
                 $this->filter('name'),
             ])
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
-            ->mergeSelect('id')
+            ->select('id', 'name', 'description', 'created_at')
             ->where('company_id', app('company_id'))
             ->jsonPaginate();
     }

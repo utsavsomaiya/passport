@@ -25,7 +25,11 @@ class GenerateTokenRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [...$this->checkCredentialsRequest->rules(), 'company_id' => ['required', Rule::exists('companies', 'id')]];
+        return [
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+            'company_id' => ['required', Rule::exists('companies', 'id')],
+        ];
     }
 
     /**

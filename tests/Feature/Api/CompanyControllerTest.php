@@ -32,5 +32,6 @@ test('it can fetch all users companies', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
