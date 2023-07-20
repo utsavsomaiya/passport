@@ -6,12 +6,12 @@ namespace App\Queries;
 
 use App\Models\Company;
 use App\Models\User;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class CompanyQueries extends GlobalQueries
 {
-    public function listQuery(User $user): LengthAwarePaginator
+    public function listQuery(User $user): Collection
     {
         $userCompaniesIds = $user->companies->pluck('id')->toArray();
 
@@ -24,6 +24,6 @@ class CompanyQueries extends GlobalQueries
             ->allowedSorts(['name', 'created_at'])
             ->select('id', 'name', 'email', 'created_at')
             ->whereIn('id', $userCompaniesIds)
-            ->jsonPaginate();
+            ->get();
     }
 }
