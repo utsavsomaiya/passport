@@ -15,7 +15,7 @@ class AttributeQueries extends GlobalQueries
     public function listQuery(?string $templateId): LengthAwarePaginator
     {
         return QueryBuilder::for(Attribute::class)
-            ->allowedFields(['name', 'description', 'from', 'to', 'field_type', 'options', 'is_required', 'status', 'created_at'])
+            ->allowedFields(['name', 'description', 'from', 'to', 'field_type', 'options', 'is_required', 'status', 'order', 'created_at'])
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'is_required', 'created_at'])
             ->allowedFilters([

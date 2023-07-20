@@ -35,6 +35,7 @@ class AttributeResource extends JsonResource
             ]),
             'is_required' => $attribute->is_required,
             'status' => $attribute->status,
+            'order' => $attribute->order,
             'created_at' => $attribute->created_at?->displayFormat(),
         ];
     }
