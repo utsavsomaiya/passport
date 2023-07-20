@@ -20,8 +20,19 @@ class AttributeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $attributeId = null;
+
+        if ('api.attributes.update' === $this->route()?->getName()) {
+            $attributeId = $this->route()->parameter('id');
+        }
+
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('attributes', 'name')->ignore($attributeId)->where('template_id', $this->template_id)
+            ],
             'template_id' => ['required', Rule::exists('templates', 'id')->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
             'slug' => ['sometimes', 'string', 'max:255'],
