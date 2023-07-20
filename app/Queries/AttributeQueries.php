@@ -17,7 +17,7 @@ class AttributeQueries extends GlobalQueries
         return QueryBuilder::for(Attribute::class)
             ->allowedFields(['name', 'description', 'from', 'to', 'field_type', 'options', 'is_required', 'status', 'order', 'created_at'])
             ->defaultSort('-created_at')
-            ->allowedSorts(['name', 'is_required', 'created_at'])
+            ->allowedSorts(['name', 'is_required', 'order', 'created_at'])
             ->allowedFilters([
                 $this->filter('name'),
                 AllowedFilter::callback('template_name', function (Builder $query, $value): void {
