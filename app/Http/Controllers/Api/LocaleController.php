@@ -24,7 +24,7 @@ class LocaleController extends Controller
     {
         $locales = $this->localeQueries->listQuery();
 
-        return LocaleResource::collection($locales->getCollection());
+        return LocaleResource::collection($locales);
     }
 
     public function create(LocaleRequest $request): JsonResponse

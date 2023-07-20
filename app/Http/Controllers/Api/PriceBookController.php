@@ -23,7 +23,7 @@ class PriceBookController extends Controller
     {
         $priceBooks = $this->priceBookQueries->listQuery();
 
-        return PriceBookResource::collection($priceBooks->getCollection());
+        return PriceBookResource::collection($priceBooks);
     }
 
     public function create(PriceBookRequest $request): JsonResponse

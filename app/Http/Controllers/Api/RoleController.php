@@ -23,7 +23,7 @@ class RoleController extends Controller
     {
         $roles = $this->roleQueries->listQuery();
 
-        return RoleResource::collection($roles->getCollection());
+        return RoleResource::collection($roles);
     }
 
     public function create(RoleRequest $request): JsonResponse

@@ -23,7 +23,7 @@ class HierarchyController extends Controller
     {
         $hierarchies = $this->hierarchyQueries->listQuery();
 
-        return HierarchyResource::collection($hierarchies->getCollection());
+        return HierarchyResource::collection($hierarchies);
     }
 
     public function create(HierarchyRequest $request, string $parent = null): JsonResponse

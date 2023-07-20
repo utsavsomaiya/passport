@@ -26,7 +26,7 @@ class AttributeController extends Controller
 
         $attributes = $this->attributeQueries->listQuery($templateId);
 
-        return AttributeResource::collection($attributes->getCollection());
+        return AttributeResource::collection($attributes);
     }
 
     public function create(AttributeRequest $request): JsonResponse

@@ -23,7 +23,7 @@ class UserController extends Controller
     {
         $users = $this->userQueries->listQuery($roleId);
 
-        return UserResource::collection($users->getCollection());
+        return UserResource::collection($users);
     }
 
     public function create(UserRequest $request): JsonResponse

@@ -23,7 +23,7 @@ class TemplateController extends Controller
     {
         $templates = $this->templateQueries->listQuery();
 
-        return TemplateResource::collection($templates->getCollection());
+        return TemplateResource::collection($templates);
     }
 
     public function create(TemplateRequest $request): JsonResponse

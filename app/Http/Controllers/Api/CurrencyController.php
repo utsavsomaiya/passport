@@ -22,7 +22,7 @@ class CurrencyController extends Controller
     {
         $currencies = $this->currencyQueries->listQuery();
 
-        return CurrencyResource::collection($currencies->getCollection());
+        return CurrencyResource::collection($currencies);
     }
 
     public function create(CurrencyRequest $request): JsonResponse

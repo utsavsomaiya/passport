@@ -24,6 +24,6 @@ class CompanyController extends Controller
 
         $companies = $this->companyQueries->listQuery($validatedData['user']);
 
-        return CompanyResource::collection($companies->getCollection());
+        return CompanyResource::collection($companies);
     }
 }
