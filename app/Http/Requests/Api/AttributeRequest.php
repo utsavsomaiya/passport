@@ -29,7 +29,7 @@ class AttributeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $fromToValidation = ['nullable', ...$this->basedOnFieldTypeExtraValidation()];
+        $fromToValidation = ['sometimes', ...$this->basedOnFieldTypeExtraValidation()];
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -41,9 +41,9 @@ class AttributeRequest extends FormRequest
             'options.*' => ['required_with:options', 'string', 'max:255'],
             'from' => $fromToValidation,
             'to' => $fromToValidation,
-            'order' => ['nullable', 'integer'],
+            'order' => ['sometimes', 'integer'],
             'default_value' => $this->defaultValueValidation(),
-            'is_required' => ['sometimes', 'boolean'],
+            'is_required' => ['required', 'boolean'],
         ];
     }
 
@@ -70,7 +70,7 @@ class AttributeRequest extends FormRequest
      */
     private function defaultValueValidation(): array
     {
-        $validation = ['nullable'];
+        $validation = ['sometimes'];
 
         if (($fieldType = FieldType::tryFrom($this->field_type)) instanceof FieldType) {
             $fieldTypeValidation = $fieldType->validation($this->get('from'), $this->get('to'));

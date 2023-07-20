@@ -22,12 +22,14 @@ class AttributeResource extends JsonResource
         return [
             'id' => $attribute->id,
             'name' => $attribute->name,
-            'description' => $attribute->description ?? 'N/A',
+            'description' => $attribute->description,
             'template_name' => $attribute->template?->name,
             'field_type' => $attribute->field_type?->resourceName(),
             'field_description' => $attribute->field_type?->description(),
-            'from' => $attribute->from,
-            'to' => $attribute->to,
+            'validation' => [
+                'from' => $attribute->from,
+                'to' => $attribute->to,
+            ],
             $this->mergeWhen(in_array($attribute->field_type, FieldType::selections()), [
                 'field_options' => $attribute->options,
             ]),
