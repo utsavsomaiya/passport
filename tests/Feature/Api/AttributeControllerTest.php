@@ -33,15 +33,14 @@ test('it can fetch attributes', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
 
 test('it can fetch attributes using template id', function (): void {
     $template = Template::factory()->create();
 
-    $attributes = Attribute::factory($count = 2)->for($template)->create();
-
-    $attribute = $attributes->sortByDesc('created_at')->first();
+    Attribute::factory($count = 2)->for($template)->create();
 
     $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch', [
         'templateId' => $template->id,
@@ -57,8 +56,8 @@ test('it can create an attribute', function (): void {
         'name' => 'Brand',
         'template_id' => $template->id,
         'description' => 'This is for choose the brand of the items',
-        'field_type' => '6',
-        'options' => $options = ['Nike', "Levi's", 'Ralph Lauren', 'Tommy Hilfiger', 'Calvin Klein'],
+        'field_type' => 'Select',
+        'options' => ['Nike', "Levi's", 'Ralph Lauren', 'Tommy Hilfiger', 'Calvin Klein'],
         'is_required' => '1',
     ]);
 
@@ -90,9 +89,9 @@ test('it can update an attribute', function (): void {
         'name' => 'Brand',
         'template_id' => $template->id,
         'description' => 'This is for choose the brand of the items',
-        'field_type' => '6',
+        'field_type' => 'Select',
         'options' => $options = ['Nike', "Levi's", 'Ralph Lauren', 'Tommy Hilfiger', 'Calvin Klein'],
-        'is_require' => '0',
+        'is_required' => '0',
     ]);
 
     $response->assertOk()->assertJsonStructure(['success']);

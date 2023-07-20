@@ -15,16 +15,15 @@ class HierarchyQueries extends GlobalQueries
     public function listQuery(): LengthAwarePaginator
     {
         return QueryBuilder::for(Hierarchy::class)
-            ->allowedFields(['name', 'description', 'slug', 'created_at'])
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
             ->allowedFilters([
                 $this->filter('name'),
                 $this->filter('id'),
             ])
+            ->select('id', 'parent_hierarchy_id', 'name', 'description', 'slug', 'created_at')
             ->where('company_id', app('company_id'))
-            ->mergeSelect('id', 'parent_hierarchy_id')
-            ->with('children')
+            ->with('children:id,parent_hierarchy_id,name,description,slug,created_at')
             ->jsonPaginate();
     }
 

@@ -20,10 +20,9 @@ class CompanyQueries extends GlobalQueries
                 $this->filter('name'),
                 $this->filter('email'),
             ])
-            ->allowedFields(['name', 'email', 'created_at'])
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
-            ->mergeSelect('id')
+            ->select('id', 'name', 'email', 'created_at')
             ->whereIn('id', $userCompaniesIds)
             ->jsonPaginate();
     }

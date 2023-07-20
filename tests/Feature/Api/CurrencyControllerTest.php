@@ -31,6 +31,7 @@ test('it can fetch the currencies', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
 

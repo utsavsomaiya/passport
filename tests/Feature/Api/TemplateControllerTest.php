@@ -31,6 +31,7 @@ test('it can fetch templates', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
 

@@ -6,6 +6,7 @@ namespace App\Http\Requests\Api;
 
 use App\Enums\FieldType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\RequiredIf;
@@ -13,34 +14,23 @@ use Illuminate\Validation\Rules\RequiredIf;
 class AttributeRequest extends FormRequest
 {
     /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'field_type' => (int) $this->field_type,
-        ]);
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, (array<int, (Exists | RequiredIf | string)> | null)>
      */
     public function rules(): array
     {
-        $fromToValidation = ['sometimes', ...$this->basedOnFieldTypeExtraValidation()];
-
         return [
             'name' => ['required', 'string', 'max:255'],
             'template_id' => ['required', Rule::exists('templates', 'id')->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
             'slug' => ['sometimes', 'string', 'max:255'],
-            'field_type' => ['required', 'in:'.FieldType::getValidationValues()],
+            'field_type' => ['required', 'string', 'in:'.FieldType::getValidationNames()],
             'options' => ['sometimes', Rule::requiredIf(fn (): bool => in_array($this->field_type, FieldType::selections())), 'array'],
             'options.*' => ['required_with:options', 'string', 'max:255'],
-            'from' => $fromToValidation,
-            'to' => $fromToValidation,
+            'validation' => ['sometimes', 'array', 'max:2'],
+            'validation.from' => ['required_with:validation', ...$this->basedOnFieldTypeExtraValidation()],
+            'validation.to' => ['required_with:validation', ...$this->basedOnFieldTypeExtraValidation()],
             'order' => ['sometimes', 'integer'],
             'default_value' => $this->defaultValueValidation(),
             'is_required' => ['required', 'boolean'],
@@ -72,7 +62,7 @@ class AttributeRequest extends FormRequest
     {
         $validation = ['sometimes'];
 
-        if (($fieldType = FieldType::tryFrom($this->field_type)) instanceof FieldType) {
+        if (($fieldType = FieldType::tryFromName(Str::upper($this->field_type))) instanceof FieldType) {
             $fieldTypeValidation = $fieldType->validation($this->get('from'), $this->get('to'));
 
             if (in_array($this->field_type, FieldType::selections())) {
@@ -83,5 +73,16 @@ class AttributeRequest extends FormRequest
         }
 
         return $validation;
+    }
+
+    /**
+     * @param  array<int, string>|int|string|null  $key
+     * @return array<string, mixed>
+     */
+    public function validated($key = null, $default = null): array
+    {
+        return array_merge(parent::validated(), [
+            'field_type' => FieldType::tryFromName(Str::upper($this->field_type))?->value,
+        ]);
     }
 }

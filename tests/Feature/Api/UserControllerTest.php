@@ -36,6 +36,7 @@ test('it can fetch users', function ($role): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 })->with([
     fn () => null,

@@ -28,6 +28,7 @@ test('it can fetch roles', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
 

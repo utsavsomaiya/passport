@@ -13,7 +13,3 @@ parameters:
     level: 8
     checkModelProperties: true
     checkGenericClassInNonGenericObjectType: false
-
-    ignoreErrors:
-        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::mergeSelect#'
-        - '#Call to an undefined method Spatie\\QueryBuilder\\QueryBuilder::mergeSelect#'

@@ -37,6 +37,7 @@ test('it can fetch hierarchies', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
 
