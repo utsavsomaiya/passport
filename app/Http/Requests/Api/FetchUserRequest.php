@@ -18,8 +18,10 @@ class FetchUserRequest extends FormRequest
     {
         return [
             'filter' => ['sometimes', 'array', 'max:4'],
-            'filter.*' => ['sometimes', 'string', 'max:255'],
-            'filter.email' => ['email'],
+            'filter.first_name' => ['sometimes', 'string', 'max:255'],
+            'filter.last_name' => ['sometimes', 'string', 'max:255'],
+            'filter.username' => ['sometimes', 'string', 'max:255'],
+            'filter.email' => ['sometimes', 'email', 'max:255'],
             'sort' => ['sometimes', 'string'],
         ];
     }

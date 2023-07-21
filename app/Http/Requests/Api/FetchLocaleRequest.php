@@ -18,7 +18,8 @@ class FetchLocaleRequest extends FormRequest
     {
         return [
             'filter' => ['sometimes', 'array', 'max:2'],
-            'filter.*' => ['sometimes', 'string', 'max:255'],
+            'filter.name' => ['sometimes', 'string', 'max:255'],
+            'filter.code' => ['sometimes', 'string', 'max:255'],
             'sort' => ['sometimes', 'string'],
         ];
     }
