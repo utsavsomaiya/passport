@@ -26,10 +26,6 @@ class CheckCredentialsRequest extends FormRequest
         return [
             'email' => ['required', 'email'],
             'password' => ['required'],
-            'filter' => ['sometimes', 'array', 'max:2'],
-            'filter.name' => ['sometimes', 'string', 'max:255'],
-            'filter.email' => ['sometimes', 'string', 'email'],
-            'sort' => ['sometimes', 'string'],
         ];
     }
 

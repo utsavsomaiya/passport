@@ -4,20 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
-use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 
-class GenerateTokenRequest extends FormRequest
+class GenerateTokenRequest extends CheckCredentialsRequest
 {
-    public function __construct(
-        public CheckCredentialsRequest $checkCredentialsRequest
-    ) {
-        $this->checkCredentialsRequest = resolve(CheckCredentialsRequest::class);
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,28 +18,10 @@ class GenerateTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
+            ...parent::rules(),
             'email' => ['required', 'email'],
             'password' => ['required'],
             'company_id' => ['required', Rule::exists('companies', 'id')],
         ];
-    }
-
-    /**
-     * Get the "after" validation callables for the request.
-     *
-     * @return array<int, Closure>
-     */
-    public function after(): array
-    {
-        return $this->checkCredentialsRequest->after();
-    }
-
-    /**
-     * @param  array<int, string>|int|string|null  $key
-     * @return array<string, mixed>
-     */
-    public function validated($key = null, $default = null)
-    {
-        return array_merge($this->checkCredentialsRequest->validated(), parent::validated());
     }
 }
