@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Currency;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class CurrencyQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
-        return QueryBuilder::for(Currency::class)
+        return QueryBuilder::for(Currency::class, $request)
             ->allowedFilters([
                 $this->filter('code'),
                 $this->filter('format'),

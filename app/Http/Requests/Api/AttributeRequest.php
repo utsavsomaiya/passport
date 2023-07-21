@@ -10,13 +10,14 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\RequiredIf;
+use Illuminate\Validation\Rules\Unique;
 
 class AttributeRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, (array<int, (Exists | RequiredIf | string)> | null)>
+     * @return array<string, (array<int, (Exists | RequiredIf | string | Unique)> | null)>
      */
     public function rules(): array
     {
@@ -31,7 +32,7 @@ class AttributeRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('attributes', 'name')->ignore($attributeId)->where('template_id', $this->template_id)
+                Rule::unique('attributes', 'name')->ignore($attributeId)->where('template_id', $this->template_id),
             ],
             'template_id' => ['required', Rule::exists('templates', 'id')->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\FetchHierarchyRequest;
 use App\Http\Requests\Api\HierarchyRequest;
 use App\Http\Resources\Api\HierarchyResource;
 use App\Queries\HierarchyQueries;
@@ -19,9 +20,11 @@ class HierarchyController extends Controller
 
     }
 
-    public function fetch(): AnonymousResourceCollection
+    public function fetch(FetchHierarchyRequest $request): AnonymousResourceCollection
     {
-        $hierarchies = $this->hierarchyQueries->listQuery();
+        $request->validated();
+
+        $hierarchies = $this->hierarchyQueries->listQuery($request);
 
         return HierarchyResource::collection($hierarchies);
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Hierarchy;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -12,9 +13,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class HierarchyQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
-        return QueryBuilder::for(Hierarchy::class)
+        return QueryBuilder::for(Hierarchy::class, $request)
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
             ->allowedFilters([

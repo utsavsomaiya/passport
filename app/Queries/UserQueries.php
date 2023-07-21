@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserQueries extends GlobalQueries
 {
-    public function listQuery(?string $roleId): LengthAwarePaginator
+    public function listQuery(Request $request, ?string $roleId): LengthAwarePaginator
     {
-        return QueryBuilder::for(User::class)
+        return QueryBuilder::for(User::class, $request)
             ->allowedFilters([
                 $this->filter('first_name'),
                 $this->filter('last_name'),

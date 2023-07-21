@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\FetchTemplateRequest;
 use App\Http\Requests\Api\TemplateRequest;
 use App\Http\Resources\Api\TemplateResource;
 use App\Queries\TemplateQueries;
@@ -19,9 +20,11 @@ class TemplateController extends Controller
 
     }
 
-    public function fetch(): AnonymousResourceCollection
+    public function fetch(FetchTemplateRequest $request): AnonymousResourceCollection
     {
-        $templates = $this->templateQueries->listQuery();
+        $request->validated();
+
+        $templates = $this->templateQueries->listQuery($request);
 
         return TemplateResource::collection($templates);
     }
