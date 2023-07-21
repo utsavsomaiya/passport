@@ -59,7 +59,7 @@ class HierarchyQueries extends GlobalQueries
             ->firstOrFail();
 
         // @phpstan-ignore-next-line
-        abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted %s.', $hierarchy->name));
+        abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted - %s.', $hierarchy->name));
 
         $hierarchy->delete();
     }
@@ -69,8 +69,6 @@ class HierarchyQueries extends GlobalQueries
      */
     public function update(array $data, string $id): void
     {
-        $data['company_id'] ??= app('company_id');
-
         Hierarchy::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)

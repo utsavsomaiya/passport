@@ -51,8 +51,6 @@ class TemplateQueries extends GlobalQueries
      */
     public function update(array $data, string $id): void
     {
-        $data['company_id'] ??= app('company_id');
-
         Template::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)

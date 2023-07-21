@@ -37,6 +37,7 @@ class LocaleRequest extends FormRequest
                 'max:255',
                 Rule::unique('locales')->ignore($localeId)->where('company_id', app('company_id')),
             ],
+            'status' => ['required', 'boolean'],
         ];
     }
 }
