@@ -22,8 +22,6 @@ class LocaleController extends Controller
 
     public function fetch(FetchLocaleRequest $request): AnonymousResourceCollection
     {
-        $request->validated();
-
         $locales = $this->localeQueries->listQuery($request);
 
         return LocaleResource::collection($locales);

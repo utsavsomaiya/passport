@@ -22,8 +22,6 @@ class HierarchyController extends Controller
 
     public function fetch(FetchHierarchyRequest $request): AnonymousResourceCollection
     {
-        $request->validated();
-
         $hierarchies = $this->hierarchyQueries->listQuery($request);
 
         return HierarchyResource::collection($hierarchies);

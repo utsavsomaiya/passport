@@ -24,7 +24,7 @@ class TemplateRequest extends FormRequest
         }
 
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('templates', 'name')->ignore($templateId)->where('company_id', app('company_id'))],
+            'name' => ['required', 'string', 'max:255', Rule::unique('templates')->ignore($templateId)->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
             'slug' => ['sometimes', 'string', 'max:255'],
         ];

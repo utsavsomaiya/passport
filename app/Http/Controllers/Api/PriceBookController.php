@@ -22,8 +22,6 @@ class PriceBookController extends Controller
 
     public function fetch(FetchPriceBookRequest $request): AnonymousResourceCollection
     {
-        $request->validated();
-
         $priceBooks = $this->priceBookQueries->listQuery($request);
 
         return PriceBookResource::collection($priceBooks);

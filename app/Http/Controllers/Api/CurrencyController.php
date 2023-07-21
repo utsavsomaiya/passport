@@ -21,8 +21,6 @@ class CurrencyController extends Controller
 
     public function fetch(FetchCurrencyRequest $request): AnonymousResourceCollection
     {
-        $request->validated();
-
         $currencies = $this->currencyQueries->listQuery($request);
 
         return CurrencyResource::collection($currencies);

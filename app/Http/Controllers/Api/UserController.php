@@ -22,8 +22,6 @@ class UserController extends Controller
 
     public function fetch(FetchUserRequest $request, string $roleId = null): AnonymousResourceCollection
     {
-        $request->validated();
-
         $users = $this->userQueries->listQuery($request, $roleId);
 
         return UserResource::collection($users);

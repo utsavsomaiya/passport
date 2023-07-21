@@ -22,8 +22,6 @@ class RoleController extends Controller
 
     public function fetch(FetchRoleRequest $request): AnonymousResourceCollection
     {
-        $request->validated();
-
         $roles = $this->roleQueries->listQuery($request);
 
         return RoleResource::collection($roles);

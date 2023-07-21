@@ -22,8 +22,6 @@ class TemplateController extends Controller
 
     public function fetch(FetchTemplateRequest $request): AnonymousResourceCollection
     {
-        $request->validated();
-
         $templates = $this->templateQueries->listQuery($request);
 
         return TemplateResource::collection($templates);

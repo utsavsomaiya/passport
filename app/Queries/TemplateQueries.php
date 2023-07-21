@@ -19,6 +19,7 @@ class TemplateQueries extends GlobalQueries
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
             ->select('id', 'name', 'description', 'created_at')
+            ->where('company_id', app('company_id'))
             ->jsonPaginate();
     }
 

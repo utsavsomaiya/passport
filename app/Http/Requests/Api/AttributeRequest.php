@@ -32,7 +32,7 @@ class AttributeRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('attributes', 'name')->ignore($attributeId)->where('template_id', $this->template_id),
+                Rule::unique('attributes')->ignore($attributeId)->where('template_id', $this->template_id),
             ],
             'template_id' => ['required', Rule::exists('templates', 'id')->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
