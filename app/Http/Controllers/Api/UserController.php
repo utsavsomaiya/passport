@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\FetchUserRequest;
 use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Queries\UserQueries;
@@ -19,9 +20,11 @@ class UserController extends Controller
 
     }
 
-    public function fetch(string $roleId = null): AnonymousResourceCollection
+    public function fetch(FetchUserRequest $request, string $roleId = null): AnonymousResourceCollection
     {
-        $users = $this->userQueries->listQuery($roleId);
+        $request->validated();
+
+        $users = $this->userQueries->listQuery($request, $roleId);
 
         return UserResource::collection($users);
     }

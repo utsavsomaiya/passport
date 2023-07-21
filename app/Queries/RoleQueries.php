@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Role;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class RoleQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
-        return QueryBuilder::for(Role::class)
+        return QueryBuilder::for(Role::class, $request)
             ->allowedFilters([$this->filter('name')])
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])

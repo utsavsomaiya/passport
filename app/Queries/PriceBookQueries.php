@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\PriceBook;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class PriceBookQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
-        return QueryBuilder::for(PriceBook::class)
+        return QueryBuilder::for(PriceBook::class, $request)
             ->allowedFilters([
                 $this->filter('name'),
             ])

@@ -22,7 +22,7 @@ class CompanyController extends Controller
     {
         $validatedData = $request->validated();
 
-        $companies = $this->companyQueries->listQuery($validatedData['user']);
+        $companies = $this->companyQueries->listQuery($request, $validatedData['user']);
 
         return CompanyResource::collection($companies);
     }
