@@ -19,8 +19,6 @@ class GenerateTokenRequest extends CheckCredentialsRequest
     {
         return [
             ...parent::rules(),
-            'email' => ['required', 'email'],
-            'password' => ['required'],
             'company_id' => ['required', Rule::exists('companies', 'id')],
         ];
     }
