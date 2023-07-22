@@ -19,7 +19,7 @@ class GenerateTokenController extends Controller
         $validatedData = $request->validated();
 
         return [
-            'token' => $validatedData['user']->createToken($request->get('device_name', 'frontend'), $request->company_id)->plainTextToken,
+            'token' => $validatedData['user']->createToken($request->get('device_name', 'Frontend'), $request->company_id)->plainTextToken,
         ];
     }
 }

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\FetchLocaleRequest;
 use App\Http\Requests\Api\LocaleRequest;
 use App\Http\Resources\Api\LocaleResource;
 use App\Queries\LocaleQueries;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class LocaleController extends Controller
@@ -20,11 +20,11 @@ class LocaleController extends Controller
 
     }
 
-    public function fetch(Request $request): AnonymousResourceCollection
+    public function fetch(FetchLocaleRequest $request): AnonymousResourceCollection
     {
-        $locales = $this->localeQueries->listQuery();
+        $locales = $this->localeQueries->listQuery($request);
 
-        return LocaleResource::collection($locales->getCollection());
+        return LocaleResource::collection($locales);
     }
 
     public function create(LocaleRequest $request): JsonResponse

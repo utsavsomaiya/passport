@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Currency;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class CurrencyQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
-        return QueryBuilder::for(Currency::class)
-            ->allowedFields(['code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status', 'created_at'])
+        return QueryBuilder::for(Currency::class, $request)
             ->allowedFilters([
                 $this->filter('code'),
                 $this->filter('format'),
             ])
             ->defaultSort('-created_at')
             ->allowedSorts(['code', 'created_at'])
+            ->select('id', 'code', 'exchange_rate', 'format', 'decimal_places', 'decimal_point', 'thousand_separator', 'is_default', 'status', 'created_at')
             ->where('company_id', app('company_id'))
-            ->mergeSelect('id')
             ->jsonPaginate();
     }
 

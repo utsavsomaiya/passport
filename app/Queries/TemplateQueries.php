@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Template;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TemplateQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
-        return QueryBuilder::for(Template::class)
-            ->allowedFields(['name', 'description', 'created_at'])
+        return QueryBuilder::for(Template::class, $request)
             ->allowedFilters([$this->filter('name')])
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
-            ->mergeSelect('id')
+            ->select('id', 'name', 'description', 'created_at')
+            ->where('company_id', app('company_id'))
             ->jsonPaginate();
     }
 
@@ -50,8 +51,6 @@ class TemplateQueries extends GlobalQueries
      */
     public function update(array $data, string $id): void
     {
-        $data['company_id'] ??= app('company_id');
-
         Template::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)

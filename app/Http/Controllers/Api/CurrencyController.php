@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CurrencyRequest;
+use App\Http\Requests\Api\FetchCurrencyRequest;
 use App\Http\Resources\Api\CurrencyResource;
 use App\Queries\CurrencyQueries;
 use Illuminate\Http\JsonResponse;
@@ -18,11 +19,11 @@ class CurrencyController extends Controller
     ) {
     }
 
-    public function fetch(): AnonymousResourceCollection
+    public function fetch(FetchCurrencyRequest $request): AnonymousResourceCollection
     {
-        $currencies = $this->currencyQueries->listQuery();
+        $currencies = $this->currencyQueries->listQuery($request);
 
-        return CurrencyResource::collection($currencies->getCollection());
+        return CurrencyResource::collection($currencies);
     }
 
     public function create(CurrencyRequest $request): JsonResponse

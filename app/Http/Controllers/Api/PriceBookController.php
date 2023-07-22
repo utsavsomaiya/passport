@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\FetchPriceBookRequest;
 use App\Http\Requests\Api\PriceBookRequest;
 use App\Http\Resources\Api\PriceBookResource;
 use App\Queries\PriceBookQueries;
@@ -19,11 +20,11 @@ class PriceBookController extends Controller
 
     }
 
-    public function fetch(): AnonymousResourceCollection
+    public function fetch(FetchPriceBookRequest $request): AnonymousResourceCollection
     {
-        $priceBooks = $this->priceBookQueries->listQuery();
+        $priceBooks = $this->priceBookQueries->listQuery($request);
 
-        return PriceBookResource::collection($priceBooks->getCollection());
+        return PriceBookResource::collection($priceBooks);
     }
 
     public function create(PriceBookRequest $request): JsonResponse

@@ -28,8 +28,8 @@ class UserRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($userId)],
-            'email' => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($userId)],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($userId)],
+            'email' => ['required', 'string', 'email', Rule::unique('users')->ignore($userId)],
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ];
     }

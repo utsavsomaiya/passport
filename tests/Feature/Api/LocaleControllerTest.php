@@ -38,6 +38,7 @@ test('it can fetch locales', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Hierarchy;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -12,19 +13,18 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class HierarchyQueries extends GlobalQueries
 {
-    public function listQuery(): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
-        return QueryBuilder::for(Hierarchy::class)
-            ->allowedFields(['name', 'description', 'slug', 'created_at'])
+        return QueryBuilder::for(Hierarchy::class, $request)
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
             ->allowedFilters([
                 $this->filter('name'),
                 $this->filter('id'),
             ])
+            ->select('id', 'parent_hierarchy_id', 'name', 'description', 'slug', 'created_at')
             ->where('company_id', app('company_id'))
-            ->mergeSelect('id', 'parent_hierarchy_id')
-            ->with('children')
+            ->with('children:id,parent_hierarchy_id,name,description,slug,created_at')
             ->jsonPaginate();
     }
 
@@ -59,7 +59,7 @@ class HierarchyQueries extends GlobalQueries
             ->firstOrFail();
 
         // @phpstan-ignore-next-line
-        abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted %s.', $hierarchy->name));
+        abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted - %s.', $hierarchy->name));
 
         $hierarchy->delete();
     }
@@ -69,8 +69,6 @@ class HierarchyQueries extends GlobalQueries
      */
     public function update(array $data, string $id): void
     {
-        $data['company_id'] ??= app('company_id');
-
         Hierarchy::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)

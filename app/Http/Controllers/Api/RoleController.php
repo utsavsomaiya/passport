@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\FetchRoleRequest;
 use App\Http\Requests\Api\RoleRequest;
 use App\Http\Resources\Api\RoleResource;
 use App\Queries\RoleQueries;
@@ -19,11 +20,11 @@ class RoleController extends Controller
 
     }
 
-    public function fetch(): AnonymousResourceCollection
+    public function fetch(FetchRoleRequest $request): AnonymousResourceCollection
     {
-        $roles = $this->roleQueries->listQuery();
+        $roles = $this->roleQueries->listQuery($request);
 
-        return RoleResource::collection($roles->getCollection());
+        return RoleResource::collection($roles);
     }
 
     public function create(RoleRequest $request): JsonResponse

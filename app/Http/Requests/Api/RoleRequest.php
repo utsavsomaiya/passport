@@ -24,7 +24,7 @@ class RoleRequest extends FormRequest
         }
 
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')->ignore($roleId)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($roleId)],
             'description' => ['nullable', 'string'],
         ];
     }

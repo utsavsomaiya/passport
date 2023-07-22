@@ -23,7 +23,7 @@ class AddCompanyIdInServiceContainer
 
         $personalAccessToken = PersonalAccessToken::findToken($bearerToken);
 
-        abort_if(! $personalAccessToken, Response::HTTP_FORBIDDEN);
+        abort_if(! $personalAccessToken, Response::HTTP_FORBIDDEN, 'Unauthenticated.');
 
         app()->bind('company_id', fn () => $personalAccessToken->company_id);
 

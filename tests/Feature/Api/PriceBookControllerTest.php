@@ -29,6 +29,7 @@ test('it can fetch price books', function (): void {
                         )
                         ->etc()
                 )
+                ->etc()
         );
 });
 
