@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RoleUserRequest;
 use App\Queries\RoleUserQueries;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 
 class RoleUserController extends Controller
 {
@@ -23,9 +24,7 @@ class RoleUserController extends Controller
 
         $this->roleUserQueries->assignRoles($validatedData);
 
-        return response()->json([
-            'success' => __('Roles assigned successfully.'),
-        ]);
+        return Response::api('Roles assigned successfully.');
     }
 
     public function dissociateRoles(RoleUserRequest $request): JsonResponse
@@ -34,8 +33,6 @@ class RoleUserController extends Controller
 
         $this->roleUserQueries->removeRoles($validatedData);
 
-        return response()->json([
-            'success' => __('Roles removed successfully.'),
-        ]);
+        return Response::api('Roles removed successfully.');
     }
 }

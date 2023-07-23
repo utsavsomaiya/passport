@@ -11,6 +11,7 @@ use App\Http\Resources\Api\LocaleResource;
 use App\Queries\LocaleQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class LocaleController extends Controller
 {
@@ -33,18 +34,14 @@ class LocaleController extends Controller
 
         $this->localeQueries->create($validatedData);
 
-        return response()->json([
-            'success' => __('Locale created successfully.'),
-        ]);
+        return Response::api('Locale created successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->localeQueries->delete($id);
 
-        return response()->json([
-            'success' => __('Locale deleted successfully.'),
-        ]);
+        return Response::api('Locale deleted successfully.');
     }
 
     public function update(LocaleRequest $request, string $id): JsonResponse
@@ -53,8 +50,6 @@ class LocaleController extends Controller
 
         $this->localeQueries->update($id, $validatedData);
 
-        return response()->json([
-            'success' => __('Locale updated successfully.'),
-        ]);
+        return Response::api('Locale updated successfully.');
     }
 }

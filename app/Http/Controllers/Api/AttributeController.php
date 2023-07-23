@@ -11,6 +11,7 @@ use App\Http\Resources\Api\AttributeResource;
 use App\Queries\AttributeQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class AttributeController extends Controller
 {
@@ -20,9 +21,9 @@ class AttributeController extends Controller
 
     }
 
-    public function fetch(FetchAttributesRequest $request, string $templateId = null): AnonymousResourceCollection
+    public function fetch(FetchAttributesRequest $request): AnonymousResourceCollection
     {
-        $attributes = $this->attributeQueries->listQuery($templateId, $request);
+        $attributes = $this->attributeQueries->listQuery($request);
 
         return AttributeResource::collection($attributes);
     }
@@ -33,18 +34,14 @@ class AttributeController extends Controller
 
         $this->attributeQueries->create($validatedData);
 
-        return response()->json([
-            'success' => __('Attribute created successfully.'),
-        ]);
+        return Response::api('Attribute created successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->attributeQueries->delete($id);
 
-        return response()->json([
-            'success' => __('Attribute deleted successfully'),
-        ]);
+        return Response::api('Attribute deleted successfully');
     }
 
     public function update(AttributeRequest $request, string $id): JsonResponse
@@ -53,8 +50,6 @@ class AttributeController extends Controller
 
         $this->attributeQueries->update($validatedData, $id);
 
-        return response()->json([
-            'success' => __('Attribute updated successfully'),
-        ]);
+        return Response::api('Attribute updated successfully');
     }
 }

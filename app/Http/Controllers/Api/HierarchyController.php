@@ -11,6 +11,7 @@ use App\Http\Resources\Api\HierarchyResource;
 use App\Queries\HierarchyQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class HierarchyController extends Controller
 {
@@ -27,26 +28,20 @@ class HierarchyController extends Controller
         return HierarchyResource::collection($hierarchies);
     }
 
-    public function create(HierarchyRequest $request, string $parent = null): JsonResponse
+    public function create(HierarchyRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
 
-        $validatedData['parent_hierarchy_id'] = $parent;
-
         $this->hierarchyQueries->create($validatedData);
 
-        return response()->json([
-            'success' => __('Hierarchy created successfully.'),
-        ]);
+        return Response::api('Hierarchy created successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->hierarchyQueries->delete($id);
 
-        return response()->json([
-            'success' => __('Hierarchy deleted successfully.'),
-        ]);
+        return Response::api('Hierarchy deleted successfully.');
     }
 
     public function update(HierarchyRequest $request, string $id): JsonResponse
@@ -55,8 +50,6 @@ class HierarchyController extends Controller
 
         $this->hierarchyQueries->update($validatedData, $id);
 
-        return response()->json([
-            'success' => __('Hierarchy updated successfully.'),
-        ]);
+        return Response::api('Hierarchy updated successfully.');
     }
 }

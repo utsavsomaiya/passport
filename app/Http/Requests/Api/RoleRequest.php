@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Role;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -19,12 +20,13 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         $roleId = null;
+
         if ($this->route()?->getName() === 'api.roles.update') {
             $roleId = $this->route()->parameter('id');
         }
 
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($roleId)],
+            'name' => ['required', 'string', 'max:255', Rule::unique(Role::class)->ignore($roleId)->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
         ];
     }

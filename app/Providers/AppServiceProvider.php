@@ -7,6 +7,8 @@ namespace App\Providers;
 use App\Models\PersonalAccessToken;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Sanctum\Sanctum;
@@ -38,5 +40,7 @@ class AppServiceProvider extends ServiceProvider
                 ->symbols() // Required at least one symbol...
                 ->uncompromised() // Must not compromised in data leaks...
         );
+
+        Response::macro('api', fn (string $message, array $extras = []): JsonResponse => Response::json(['success' => __($message), ...$extras]));
     }
 }

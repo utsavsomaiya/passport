@@ -19,6 +19,7 @@ class RoleQueries extends GlobalQueries
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at'])
             ->select('id', 'name', 'description', 'created_at')
+            ->where('company_id', app('company_id'))
             ->jsonPaginate();
     }
 
@@ -27,6 +28,8 @@ class RoleQueries extends GlobalQueries
      */
     public function create(array $data): Role
     {
+        $data['company_id'] ??= app('company_id');
+
         return Role::create($data);
     }
 
@@ -35,6 +38,7 @@ class RoleQueries extends GlobalQueries
         abort_if(resolve(RoleUserQueries::class)->exists($id), Response::HTTP_NOT_ACCEPTABLE, 'This role is assigned to one or more users already. Cannot be deleted.');
 
         Role::query()
+            ->where('company_id', app('company_id'))
             ->where('id', $id)
             ->delete();
     }
@@ -45,6 +49,7 @@ class RoleQueries extends GlobalQueries
     public function update(array $data, string $id): void
     {
         Role::query()
+            ->where('company_id', app('company_id'))
             ->where('id', $id)
             ->update($data);
     }

@@ -35,8 +35,6 @@ class QueryMakeCommand extends GeneratorCommand
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
     protected function getStub(): string
     {
@@ -45,9 +43,6 @@ class QueryMakeCommand extends GeneratorCommand
 
     /**
      * Resolve the fully-qualified path to the stub.
-     *
-     * @param  string  $stub
-     * @return string
      */
     protected function resolveStubPath(string $stub): string
     {
@@ -60,7 +55,6 @@ class QueryMakeCommand extends GeneratorCommand
      * Replace the class name for the given stub.
      *
      * @param  string  $name
-     * @return string
      */
     protected function buildClass($name): string
     {
@@ -96,8 +90,6 @@ class QueryMakeCommand extends GeneratorCommand
     /**
      * Get the fully-qualified model class name.
      *
-     * @param  string  $model
-     * @return string
      *
      * @throws InvalidArgumentException
      */
@@ -114,7 +106,6 @@ class QueryMakeCommand extends GeneratorCommand
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
-     * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
     {

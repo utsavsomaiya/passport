@@ -25,6 +25,8 @@ class AddCompanyIdInServiceContainer
 
         abort_if(! $personalAccessToken, Response::HTTP_FORBIDDEN, 'Unauthenticated.');
 
+        abort_if(! $personalAccessToken->company_id, Response::HTTP_FORBIDDEN, 'Please set the company before making this request.');
+
         app()->bind('company_id', fn () => $personalAccessToken->company_id);
 
         return $next($request);

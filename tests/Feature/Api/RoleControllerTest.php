@@ -45,7 +45,7 @@ test('it can create role', function (): void {
 });
 
 test('it can delete the role', function (): void {
-    $role = Role::factory()->named('Access Manager')->create();
+    $role = Role::factory()->for($this->company)->named('Access Manager')->create();
 
     $response = $this->withToken($this->token)->deleteJson(route('api.roles.delete', [
         'id' => $role->id,

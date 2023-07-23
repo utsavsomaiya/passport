@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Locale;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,18 +26,8 @@ class LocaleRequest extends FormRequest
         }
 
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('locales')->ignore($localeId)->where('company_id', app('company_id')),
-            ],
-            'code' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('locales')->ignore($localeId)->where('company_id', app('company_id')),
-            ],
+            'name' => ['required', 'string', 'max:255', Rule::unique(Locale::class)->ignore($localeId)->where('company_id', app('company_id'))],
+            'code' => ['required', 'string', 'max:255', Rule::unique(Locale::class)->ignore($localeId)->where('company_id', app('company_id'))],
             'status' => ['required', 'boolean'],
         ];
     }

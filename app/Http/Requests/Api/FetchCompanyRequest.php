@@ -7,7 +7,7 @@ namespace App\Http\Requests\Api;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FetchCompanyRequest extends CheckCredentialsRequest
+class FetchCompanyRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,7 +17,6 @@ class FetchCompanyRequest extends CheckCredentialsRequest
     public function rules(): array
     {
         return [
-            ...parent::rules(),
             'filter' => ['sometimes', 'array', 'max:2'],
             'filter.name' => ['sometimes', 'string', 'max:255'],
             'filter.email' => ['sometimes', 'string', 'email'],

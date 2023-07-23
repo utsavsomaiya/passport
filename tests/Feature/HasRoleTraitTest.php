@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\User;
 
 test('it can assign role using name', function (): void {
@@ -12,7 +13,7 @@ test('it can assign role using name', function (): void {
 
     $user->assignRole([$name]);
 
-    $this->assertDatabaseHas($user->roles()->getTable(), [
+    $this->assertDatabaseHas(RoleUser::class, [
         'user_id' => $user->id,
         'role_id' => $role->id,
     ]);
@@ -25,7 +26,7 @@ test('it can remove the roles', function (): void {
 
     $user->removeRole([$roles->first()->getKey(), $roles->last()->getKey()]);
 
-    $this->assertDatabaseCount($user->roles()->getTable(), 0);
+    $this->assertDatabaseCount(RoleUser::class, 0);
 });
 
 test('it can assign multiple roles', function (): void {
@@ -35,7 +36,7 @@ test('it can assign multiple roles', function (): void {
 
     $user->assignRole([$roles->first()->getKey(), $roles->last()->getKey()]);
 
-    $this->assertDatabaseCount($user->roles()->getTable(), 2);
+    $this->assertDatabaseCount(RoleUser::class, 2);
 });
 
 test('it can assign multiple roles using name', function (): void {
@@ -45,5 +46,5 @@ test('it can assign multiple roles using name', function (): void {
 
     $user->assignRole($roles->pluck('name')->toArray());
 
-    $this->assertDatabaseCount($user->roles()->getTable(), 2);
+    $this->assertDatabaseCount(RoleUser::class, 2);
 });

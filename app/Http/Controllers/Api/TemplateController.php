@@ -11,6 +11,7 @@ use App\Http\Resources\Api\TemplateResource;
 use App\Queries\TemplateQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class TemplateController extends Controller
 {
@@ -33,18 +34,14 @@ class TemplateController extends Controller
 
         $this->templateQueries->create($validatedData);
 
-        return response()->json([
-            'success' => __('Template created successfully.'),
-        ]);
+        return Response::api('Template created successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->templateQueries->delete($id);
 
-        return response()->json([
-            'success' => __('Template deleted successfully.'),
-        ]);
+        return Response::api('Template deleted successfully.');
     }
 
     public function update(TemplateRequest $request, string $id): JsonResponse
@@ -53,8 +50,6 @@ class TemplateController extends Controller
 
         $this->templateQueries->update($validatedData, $id);
 
-        return response()->json([
-            'success' => __('Template updated successfully.'),
-        ]);
+        return Response::api('Template updated successfully.');
     }
 }

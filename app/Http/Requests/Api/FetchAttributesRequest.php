@@ -17,7 +17,7 @@ class FetchAttributesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'templateId' => ['sometimes', 'string', 'uuid', 'exists:templates,id'],
+            'template_id' => ['sometimes', 'string', 'uuid'],
             'filter' => ['sometimes', 'array', 'max:3'],
             'filter.name' => ['sometimes', 'string', 'max:255'],
             'filter.template_name' => ['sometimes', 'string', 'max:255'],

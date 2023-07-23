@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +23,8 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->randomElement(['Access Manager', 'Super Admin']),
+            'company_id' => fn (): Collection|Model => Company::factory()->create(),
+            'name' => fake()->randomElement(['Access Manager', 'Super Admin']),
             'description' => fake()->sentence(),
         ];
     }

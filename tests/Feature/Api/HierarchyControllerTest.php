@@ -63,9 +63,8 @@ test('it can create a hierarchy', function (): void {
 test('it can create a child hierarchy', function (): void {
     $hierarchy = Hierarchy::factory()->for($this->company)->create();
 
-    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.create', [
-        'parent' => $hierarchy->id,
-    ]), [
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.create'), [
+        'parent_hierarchy_id' => $hierarchy->id,
         'name' => 'B2B',
         'description' => 'This is for the B2B channel',
         'slug' => 'Business to business',
@@ -84,15 +83,14 @@ test('it can create a child hierarchy', function (): void {
 });
 
 test('it cannot create a child hierarchy if parent does not exist', function (): void {
-    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.create', [
-        'parent' => fake()->uuid(),
-    ]), [
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.create'), [
+        'parent_hierarchy_id' => fake()->uuid(),
         'name' => 'B2B',
         'description' => 'This is for the B2B channel',
         'slug' => 'Business to business',
     ]);
 
-    $response->assertStatus(Response::HTTP_NOT_ACCEPTABLE);
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure(['message', 'errors' => ['parent_hierarchy_id']]);
 });
 
 test('it can delete a hierarchy', function (): void {

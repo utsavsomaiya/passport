@@ -13,8 +13,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('personal_access_tokens', function (Blueprint $table): void {
-            $table->foreignIdFor(Company::class, 'company_id')->change()->nullable()->constrained('companies');
+        Schema::table('roles', function (Blueprint $table): void {
+            $table->foreignIdFor(Company::class, 'company_id')->change()->constrained('companies');
         });
     }
 };

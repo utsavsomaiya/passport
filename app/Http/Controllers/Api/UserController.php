@@ -11,6 +11,7 @@ use App\Http\Resources\Api\UserResource;
 use App\Queries\UserQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -20,9 +21,9 @@ class UserController extends Controller
 
     }
 
-    public function fetch(FetchUserRequest $request, string $roleId = null): AnonymousResourceCollection
+    public function fetch(FetchUserRequest $request): AnonymousResourceCollection
     {
-        $users = $this->userQueries->listQuery($request, $roleId);
+        $users = $this->userQueries->listQuery($request);
 
         return UserResource::collection($users);
     }
@@ -31,35 +32,27 @@ class UserController extends Controller
     {
         $this->userQueries->create($request->validated());
 
-        return response()->json([
-            'success' => __('User created successfully.'),
-        ]);
+        return Response::api('User created successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->userQueries->delete($id);
 
-        return response()->json([
-            'success' => __('User deleted successfully.'),
-        ]);
+        return Response::api('User deleted successfully.');
     }
 
     public function restore(string $id): JsonResponse
     {
         $this->userQueries->restore($id);
 
-        return response()->json([
-            'success' => __('User restored successfully.'),
-        ]);
+        return Response::api('User restored successfully.');
     }
 
     public function update(UserRequest $request, string $id): JsonResponse
     {
         $this->userQueries->update($request->validated(), $id);
 
-        return response()->json([
-            'success' => __('User updated successfully.'),
-        ]);
+        return Response::api('User updated successfully.');
     }
 }

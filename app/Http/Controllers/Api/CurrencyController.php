@@ -11,6 +11,7 @@ use App\Http\Resources\Api\CurrencyResource;
 use App\Queries\CurrencyQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class CurrencyController extends Controller
 {
@@ -32,18 +33,14 @@ class CurrencyController extends Controller
 
         $this->currencyQueries->create($validatedData);
 
-        return response()->json([
-            'success' => __('Currency created successfully.'),
-        ]);
+        return Response::api('Currency created successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->currencyQueries->delete($id);
 
-        return response()->json([
-            'success' => __('Currency deleted successfully.'),
-        ]);
+        return Response::api('Currency deleted successfully.');
     }
 
     public function update(CurrencyRequest $request, string $id): JsonResponse
@@ -52,8 +49,6 @@ class CurrencyController extends Controller
 
         $this->currencyQueries->update($id, $validatedData);
 
-        return response()->json([
-            'success' => __('Currency updated successfully.'),
-        ]);
+        return Response::api('Currency updated successfully.');
     }
 }

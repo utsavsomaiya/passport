@@ -21,7 +21,7 @@ use Tests\TestCase;
 |
 */
 
-uses(TestCase::class)->beforeEach(fn () => $this->withoutVite())->in('Feature', 'Unit');
+uses(TestCase::class)->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------
@@ -49,17 +49,26 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 function frontendApiLoginWithPermissions(...$permissions)
 {
+    $company = Company::factory()->create();
+
     $user = User::factory()
         ->has(
             Role::factory()
+                ->for($company)
                 ->has(Permission::factory(count(Arr::flatten($permissions)))->sequence(...$permissions))
                 ->named('Access Manager')
         )
         ->create();
 
-    $company = Company::factory()->create();
+    $token = $user->createToken('test')->plainTextToken;
 
-    $token = $user->createToken('test', $company->id)->plainTextToken;
+    [$id, $personalAccessToken] = explode('|', $token, 2);
+
+    $personalAccessToken = $user->tokens->find($id);
+
+    $personalAccessToken->company_id = $company->id;
+
+    $personalAccessToken->save();
 
     $user = Sanctum::actingAs($user);
 
@@ -68,13 +77,21 @@ function frontendApiLoginWithPermissions(...$permissions)
 
 function frontendApiLoginWithUser(string $roleName)
 {
-    $user = User::factory()
-        ->has(Role::factory()->named($roleName))
-        ->create();
-
     $company = Company::factory()->create();
 
-    $token = $user->createToken('test', $company->id)->plainTextToken;
+    $user = User::factory()
+        ->has(Role::factory()->for($company)->named($roleName))
+        ->create();
+
+    $token = $user->createToken('test')->plainTextToken;
+
+    [$id, $personalAccessToken] = explode('|', $token, 2);
+
+    $personalAccessToken = $user->tokens->find($id);
+
+    $personalAccessToken->company_id = $company->id;
+
+    $personalAccessToken->save();
 
     $user = Sanctum::actingAs($user);
 

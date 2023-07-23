@@ -17,6 +17,7 @@ class FetchUserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'role_id' => ['sometimes', 'string', 'uuid'],
             'filter' => ['sometimes', 'array', 'max:4'],
             'filter.first_name' => ['sometimes', 'string', 'max:255'],
             'filter.last_name' => ['sometimes', 'string', 'max:255'],

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\CurrencyStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -36,7 +35,7 @@ class Currency extends Model
      */
     protected $casts = [
         'is_default' => 'boolean',
-        'status' => CurrencyStatus::class,
+        'status' => 'boolean',
     ];
 
     public function company(): BelongsTo

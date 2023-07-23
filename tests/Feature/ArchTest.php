@@ -2,19 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Http\Requests\Api\FetchCompanyRequest;
-use App\Http\Requests\Api\GenerateTokenRequest;
 use App\Models\Model;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
 test('laravel model can use only on base model')
     ->expect(Model::class)
     ->toUse(BaseModel::class);
-
-test('it can extends not form request')
-    ->expect([FetchCompanyRequest::class, GenerateTokenRequest::class])
-    ->not->toUse(Request::class);
 
 test('model can extends base model not laravel default model')
     ->expect('App\Models')
