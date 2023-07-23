@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Currency;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,13 +26,9 @@ class CurrencyRequest extends FormRequest
         }
 
         return [
-            'code' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('currencies')->ignore($currencyId)->where('company_id', app('company_id')),
-            ],
+            'code' => ['required', 'string', 'max:255', Rule::unique(Currency::class)->ignore($currencyId)->where('company_id', app('company_id'))],
             'format' => ['required', 'string', 'max:255'],
+            'is_default' => ['required', 'boolean'],
             'status' => ['required', 'boolean'],
         ];
     }

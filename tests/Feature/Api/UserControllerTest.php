@@ -15,9 +15,9 @@ beforeEach(function (): void {
 test('it can fetch users', function ($role): void {
     User::factory(2)->create();
 
-    $response = $this->withToken($this->token)->getJson(route('api.users.fetch', [
-        'roleId' => $role,
-    ]));
+    $response = $this->withToken($this->token)->getJson(route('api.users.fetch'), [
+        'role_id' => $role,
+    ]);
 
     $response->assertOk()
         ->assertJson(
@@ -38,10 +38,7 @@ test('it can fetch users', function ($role): void {
                 )
                 ->etc()
         );
-})->with([
-    fn () => null,
-    fn () => Role::min('id'),
-]);
+})->with([null, fn () => Role::min('id')]);
 
 test('it throw an exception when sort by the fields which is not allow..', function (): void {
     $response = $this->withToken($this->token)->getJson(route('api.users.fetch', [

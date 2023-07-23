@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Permission;
 use App\Permission as AppPermission;
+use Illuminate\Support\Str;
 
 beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
@@ -12,8 +13,12 @@ beforeEach(function (): void {
 test('it can fetch the static permission list', function (): void {
     $response = $this->withToken($this->token)->getJson(route('api.permissions.fetch'));
 
+    $permissions = AppPermission::getFeatureGates()->mapWithKeys(fn ($name, $key): array => [
+        $name => Str::of($name)->replaceFirst('-', ' ')->title()->value(),
+    ])->toArray();
+
     $response->assertOk()
-        ->assertJson(['permissions' => AppPermission::getFeatureGates()->toArray()]);
+        ->assertJson(['permissions' => $permissions]);
 });
 
 test('it can give the permissions', function (): void {

@@ -50,6 +50,7 @@ test('it can create locale', function (): void {
     $response = $this->withToken($this->token)->postJson(route('api.locales.create'), [
         'name' => $locale->name,
         'code' => $locale->code,
+        'status' => '0',
     ]);
 
     $response->assertOk()
@@ -86,7 +87,7 @@ test('it can update locale', function (): void {
 
     $response = $this->withToken($this->token)->postJson(route('api.locales.update', [
         'id' => $locale->id,
-    ]), ['name' => 'Malay', 'code' => 'ms']);
+    ]), ['name' => 'Malay', 'code' => 'ms', 'status' => '0']);
 
     $response->assertOk()
         ->assertJson(

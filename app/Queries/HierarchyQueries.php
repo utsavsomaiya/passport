@@ -35,15 +35,6 @@ class HierarchyQueries extends GlobalQueries
     {
         $data['company_id'] ??= app('company_id');
 
-        $hierarchyExists = Hierarchy::query()
-            ->where('company_id', app('company_id'))
-            ->where('id', $data['parent_hierarchy_id'])
-            ->exists();
-
-        if ($data['parent_hierarchy_id'] && ! $hierarchyExists) {
-            abort(Response::HTTP_NOT_ACCEPTABLE, 'Parent hierarchy does not exist in database');
-        }
-
         Hierarchy::create($data);
     }
 

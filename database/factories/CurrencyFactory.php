@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\CurrencyStatus;
 use App\Models\Company;
 use App\Models\Currency;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,7 +30,7 @@ class CurrencyFactory extends Factory
             'thousand_separator' => ',',
             'decimal_places' => '2',
             'is_default' => false,
-            'status' => fake()->randomElement(CurrencyStatus::values()),
+            'status' => fake()->boolean(),
         ];
     }
 }

@@ -39,11 +39,14 @@ trait HasRoles
 
             $roles = array_diff($roles, $currentRoles);
 
-            if ($roles !== []) {
-                $this->roles()->attach(array_combine(
-                    $roles,
-                    array_map(fn (): array => ['created_at' => now(), 'updated_at' => now()], $roles)
-                ));
+            $prepareRoles = [];
+
+            foreach ($roles as $role) {
+                $prepareRoles[$role] = ['created_at' => now(), 'updated_at' => now()];
+            }
+
+            if ($prepareRoles !== []) {
+                $this->roles()->attach($prepareRoles);
 
                 $model->unsetRelation('roles');
             }

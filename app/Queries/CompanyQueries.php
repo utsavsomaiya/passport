@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Company;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class CompanyQueries extends GlobalQueries
 {
-    public function listQuery(Request $request, User $user): Collection
+    public function listQuery(Request $request): Collection
     {
-        $userCompaniesIds = $user->companies->pluck('id')->toArray();
+        $userCompaniesIds = $request->user()?->companies->pluck('id')->toArray();
 
         return QueryBuilder::for(Company::class, $request)
             ->allowedFilters([

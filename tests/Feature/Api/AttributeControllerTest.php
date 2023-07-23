@@ -42,9 +42,9 @@ test('it can fetch attributes using template id', function (): void {
 
     Attribute::factory($count = 2)->for($template)->create();
 
-    $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch', [
-        'templateId' => $template->id,
-    ]));
+    $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch'), [
+        'template_id' => $template->id,
+    ]);
 
     $response->assertOk()->assertJsonCount($count, 'data');
 });
@@ -59,6 +59,7 @@ test('it can create an attribute', function (): void {
         'field_type' => 'Select',
         'options' => ['Nike', "Levi's", 'Ralph Lauren', 'Tommy Hilfiger', 'Calvin Klein'],
         'is_required' => '1',
+        'status' => '1',
     ]);
 
     $response->assertOk()->assertJsonStructure(['success']);
@@ -92,6 +93,7 @@ test('it can update an attribute', function (): void {
         'field_type' => 'Select',
         'options' => $options = ['Nike', "Levi's", 'Ralph Lauren', 'Tommy Hilfiger', 'Calvin Klein'],
         'is_required' => '0',
+        'status' => '1',
     ]);
 
     $response->assertOk()->assertJsonStructure(['success']);

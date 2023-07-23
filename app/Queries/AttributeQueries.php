@@ -6,7 +6,6 @@ namespace App\Queries;
 
 use App\Models\Attribute;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as DatabaseQueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -14,7 +13,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class AttributeQueries extends GlobalQueries
 {
-    public function listQuery(?string $templateId, Request $request): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
         return QueryBuilder::for(Attribute::class, $request)
             ->defaultSort('-created_at')
@@ -32,8 +31,8 @@ class AttributeQueries extends GlobalQueries
             ])
             ->select('id', 'template_id', 'name', 'description', 'from', 'to', 'field_type', 'options', 'is_required', 'status', 'order', 'created_at')
             ->with('template:id,name')
-            ->when($templateId, function (DatabaseQueryBuilder $query) use ($templateId): void {
-                $query->where('template_id', $templateId);
+            ->when($request->template_id, function (Builder $query) use ($request): void {
+                $query->where('template_id', $request->template_id);
             })
             ->jsonPaginate();
     }

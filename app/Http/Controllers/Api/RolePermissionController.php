@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PermissionRequest;
 use App\Queries\PermissionQueries;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 
 class RolePermissionController extends Controller
 {
@@ -22,9 +24,7 @@ class RolePermissionController extends Controller
 
         $this->permissionQueries->givePermissions($validatedData);
 
-        return response()->json([
-            'success' => __('Permission given successfully.'),
-        ]);
+        return Response::api('Permission given successfully.');
     }
 
     public function revokePermissions(PermissionRequest $request): JsonResponse
@@ -33,8 +33,6 @@ class RolePermissionController extends Controller
 
         $this->permissionQueries->revokePermissions($validatedData);
 
-        return response()->json([
-            'success' => __('Permission revoked successfully.'),
-        ]);
+        return Response::api('Permission revoked successfully.');
     }
 }

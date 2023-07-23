@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,8 +29,8 @@ class UserRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($userId)],
-            'email' => ['required', 'string', 'email', Rule::unique('users')->ignore($userId)],
+            'username' => ['required', 'string', 'max:255', Rule::unique(User::class)->ignore($userId)],
+            'email' => ['required', 'string', 'email', Rule::unique(User::class)->ignore($userId)],
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ];
     }

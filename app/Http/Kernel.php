@@ -91,6 +91,6 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
-        'set.company' => AddCompanyIdInServiceContainer::class,
+        'check.company' => AddCompanyIdInServiceContainer::class,
     ];
 }

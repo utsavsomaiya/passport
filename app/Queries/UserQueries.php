@@ -11,7 +11,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class UserQueries extends GlobalQueries
 {
-    public function listQuery(Request $request, ?string $roleId): LengthAwarePaginator
+    public function listQuery(Request $request): LengthAwarePaginator
     {
         return QueryBuilder::for(User::class, $request)
             ->allowedFilters([
@@ -27,9 +27,9 @@ class UserQueries extends GlobalQueries
                 'tokens:id,tokenable_id,tokenable_type,last_used_at',
                 'roles:id,name',
             ])
-            ->when($roleId, function ($query) use ($roleId): void {
-                $query->whereHas('roles', function ($query) use ($roleId): void {
-                    $query->where('role_id', $roleId);
+            ->when($request->role_id, function ($query) use ($request): void {
+                $query->whereHas('roles', function ($query) use ($request): void {
+                    $query->where('role_id', $request->role_id);
                 });
             })
             ->jsonPaginate();

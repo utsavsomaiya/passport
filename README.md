@@ -73,7 +73,6 @@ fi
 
 - Methods Using Sanctum Tokens In our application, there are two methods that utilize Sanctum tokens:
 1. [`PersonalAccessToken::findToken()`](./app/Http/Middleware/AddCompanyIdInServiceContainer.php#L24C53-L24C62)
-2. `HasApiTokens` trait has `createToken`. we overwrite [it](./app/Models/User.php#L70-L87).
 
 ### [Horizon](https://laravel.com/docs/10.x/horizon)
 - You can access the Horizon dashboard by visiting the following URL:

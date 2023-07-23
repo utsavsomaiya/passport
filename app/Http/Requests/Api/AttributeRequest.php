@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api;
 
 use App\Enums\FieldType;
+use App\Models\Attribute;
+use App\Models\Template;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -28,13 +30,8 @@ class AttributeRequest extends FormRequest
         }
 
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('attributes')->ignore($attributeId)->where('template_id', $this->template_id),
-            ],
-            'template_id' => ['required', Rule::exists('templates', 'id')->where('company_id', app('company_id'))],
+            'name' => ['required', 'string', 'max:255', Rule::unique(Attribute::class)->ignore($attributeId)->where('template_id', $this->template_id)],
+            'template_id' => ['required', Rule::exists(Template::class, 'id')->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
             'slug' => ['sometimes', 'string', 'max:255'],
             'field_type' => ['required', 'string', 'in:'.FieldType::getValidationNames()],
@@ -46,6 +43,7 @@ class AttributeRequest extends FormRequest
             'order' => ['sometimes', 'integer'],
             'default_value' => $this->defaultValueValidation(),
             'is_required' => ['required', 'boolean'],
+            'status' => ['required', 'boolean'],
         ];
     }
 

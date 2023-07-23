@@ -11,6 +11,7 @@ use App\Http\Resources\Api\RoleResource;
 use App\Queries\RoleQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class RoleController extends Controller
 {
@@ -33,8 +34,7 @@ class RoleController extends Controller
 
         $role = $this->roleQueries->create($validatedData);
 
-        return response()->json([
-            'success' => __('Role created successfully.'),
+        return Response::api('Role created successfully.', [
             'role_id' => $role->id,
         ]);
     }
@@ -43,9 +43,7 @@ class RoleController extends Controller
     {
         $this->roleQueries->delete($id);
 
-        return response()->json([
-            'success' => __('Role deleted successfully'),
-        ]);
+        return Response::api('Role deleted successfully');
     }
 
     public function update(RoleRequest $request, string $id): JsonResponse
@@ -54,8 +52,6 @@ class RoleController extends Controller
 
         $this->roleQueries->update($validatedData, $id);
 
-        return response()->json([
-            'success' => __('Role updated successfully'),
-        ]);
+        return Response::api('Role updated successfully');
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Resources\Api\PriceBookResource;
 use App\Queries\PriceBookQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Response;
 
 class PriceBookController extends Controller
 {
@@ -33,18 +34,14 @@ class PriceBookController extends Controller
 
         $this->priceBookQueries->create($validatedData);
 
-        return response()->json([
-            'success' => __('Price book created successfully.'),
-        ]);
+        return Response::api('Price book created successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->priceBookQueries->delete($id);
 
-        return response()->json([
-            'success' => __('Price book deleted successfully.'),
-        ]);
+        return Response::api('Price book deleted successfully.');
     }
 
     public function update(PriceBookRequest $request, string $id): JsonResponse
@@ -53,8 +50,6 @@ class PriceBookController extends Controller
 
         $this->priceBookQueries->update($validatedData, $id);
 
-        return response()->json([
-            'success' => __('Price book updated successfully.'),
-        ]);
+        return Response::api('Price book updated successfully.');
     }
 }

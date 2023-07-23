@@ -39,6 +39,8 @@ test('it can create currency', function (): void {
     $response = $this->withToken($this->token)->postJson(route('api.currencies.create'), [
         'code' => 'USD',
         'format' => '${price}',
+        'is_default' => '1',
+        'status' => '1',
     ]);
 
     $response->assertOk()
@@ -71,7 +73,7 @@ test('it can update currency', function (): void {
 
     $response = $this->withToken($this->token)->postJson(route('api.currencies.update', [
         'id' => $currency->id,
-    ]), ['code' => $code = fake()->currencyCode(), 'format' => 'RM{price}']);
+    ]), ['code' => $code = fake()->currencyCode(), 'format' => 'RM{price}', 'status' => '1', 'is_default' => '1']);
 
     $response->assertOk()
         ->assertJson(
