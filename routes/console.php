@@ -32,12 +32,8 @@ Artisan::command('dd {code*}', function () {
     }
 
     return collect($this->argument('code'))
-        ->map(function (string $command) {
-            return rtrim($command, ';');
-        })
-        ->map(function (string $sanitizedCommand) {
-            return eval("dump({$sanitizedCommand});");
-        })
+        ->map(fn (string $command) => rtrim($command, ';'))
+        ->map(fn (string $sanitizedCommand) => eval("dump({$sanitizedCommand});"))
         ->implode(PHP_EOL);
 
 })->purpose('Run the given code and dump the result');

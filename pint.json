@@ -26,6 +26,8 @@
                 "allow_single_line_empty_anonymous_classes": false,
                 "allow_single_line_anonymous_functions": false
         },
-        "declare_strict_types": true
+        "declare_strict_types": true,
+        "get_class_to_class_keyword" : true,
+        "use_arrow_functions": true
     }
 }
