@@ -43,6 +43,6 @@ class CompanyController extends Controller
 
         $token->save();
 
-        return Response::api('Successfully set the company ID in the token!');
+        return Response::api('Company set successfully. You may access other API endpoints now.');
     }
 }

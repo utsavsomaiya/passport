@@ -25,7 +25,7 @@ Route::name('api.')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function (): void {
         Route::controller(CompanyController::class)->name('companies.')->prefix('companies')->group(function (): void {
-            Route::post('fetch', 'fetchCompanies')->name('fetch');
+            Route::get('fetch-current-user-companies', 'fetchCompanies')->name('fetch_current_user_companies');
             Route::post('set', 'setCompany')->name('set');
         });
 
