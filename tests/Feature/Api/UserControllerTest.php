@@ -28,7 +28,7 @@ test('it can fetch users', function ($role): void {
                         ->has(
                             '0',
                             fn (AssertableJson $json): AssertableJson => $json
-                                ->where('id', ($user = User::latest()->first())->id)
+                                ->where('id', ($user = User::has('roles', '>', 0)->latest()->first())->id)
                                 ->where('first_name', $user->first_name)
                                 ->where('last_name', $user->last_name)
                                 ->where('roles', $user->roles->pluck('name')->toArray())

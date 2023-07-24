@@ -4,10 +4,46 @@ declare(strict_types=1);
 
 use App\Models\Attribute;
 use App\Models\Template;
+use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
+});
+
+test('it give an error when the wrong `template id` is provided.', function (): void {
+    $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch'), [
+        'template_id' => fake()->uuid(),
+    ]);
+
+    $response->assertOk();
+});
+
+test('it give an error when `filter[name]` is ', function ($data): void {
+    $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch', [
+        'filter[name]' => $data,
+    ]));
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['filter.name']]);
+})->with('string field validation check');
+
+test('it give an error when filter `filter[template_name]` is ', function ($data): void {
+    $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch', [
+        'filter[template_name]' => $data,
+    ]));
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['filter.template_name']]);
+})->with('string field validation check');
+
+test('it give an error `sort` cannot be a string', function (): void {
+    $response = $this->withToken($this->token)->getJson(route('api.attributes.fetch', [
+        'sort' => fake()->words(),
+    ]));
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['sort']]);
 });
 
 test('it can fetch attributes', function (): void {
