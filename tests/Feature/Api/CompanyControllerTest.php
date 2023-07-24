@@ -14,7 +14,7 @@ beforeEach(function (): void {
 test('it can fetch all users companies', function (): void {
     Company::factory(2)->hasAttached($this->user)->create();
 
-    $response = $this->withToken($this->token)->postJson(route('api.companies.fetch_current_user_companies'));
+    $response = $this->withToken($this->token)->getJson(route('api.companies.fetch_current_user_companies'));
 
     $response->assertOk()
         ->assertJson(

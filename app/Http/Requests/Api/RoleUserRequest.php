@@ -9,13 +9,14 @@ use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 
 class RoleUserRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, (ValidationRule | array<int, string> | string)>
+     * @return array<string, (ValidationRule | array<int, string | Exists> | string)>
      */
     public function rules(): array
     {

@@ -26,13 +26,18 @@ class UserRequest extends FormRequest
             $userId = $this->route()->parameter('id');
         }
 
-        return [
+        $rules = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', Rule::unique(User::class)->ignore($userId)],
             'email' => ['required', 'string', 'email', Rule::unique(User::class)->ignore($userId)],
-            'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ];
+
+        if ($this->route()?->getName() === 'api.users.create') {
+            $rules['password'] = ['required', 'string', 'confirmed', Password::defaults()];
+        }
+
+        return $rules;
     }
 
     /**
@@ -41,8 +46,12 @@ class UserRequest extends FormRequest
      */
     public function validated($key = null, $default = null): array
     {
-        return array_merge(parent::validated(), [
-            'password' => bcrypt($this->password),
-        ]);
+        if ($this->route()?->getName() === 'api.users.create') {
+            return array_merge(parent::validated(), [
+                'password' => bcrypt($this->password),
+            ]);
+        }
+
+        return parent::validated();
     }
 }

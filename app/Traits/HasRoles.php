@@ -28,7 +28,7 @@ trait HasRoles
      * @param  array<int, string>  $roles
      * @return $this
      */
-    public function assignRole(array $roles)
+    public function assignRoles(array $roles)
     {
         $roles = $this->collectRoles($roles);
 

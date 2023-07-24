@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Spatie\QueryBuilder\Exceptions\InvalidSortQuery;
 
@@ -114,4 +115,51 @@ test('it can update a user', function (): void {
         'first_name' => $firstName,
         'email' => $email,
     ]);
+});
+
+test('it can update the password', function (): void {
+    $response = $this->withToken($this->token)->postJson(route('api.users.change_password'), [
+        'current_password' => 'password',
+        'new_password' => $password = 'test@654',
+        'new_password_confirmation' => 'test@654',
+    ]);
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $user = $this->user->refresh();
+
+    $this->assertTrue(Hash::check($password, $user->password));
+});
+
+test('it cannot use the current password as a new password', function (): void {
+    $response = $this->withToken($this->token)->postJson(route('api.users.change_password'), [
+        'current_password' => 'password',
+        'new_password' => 'password',
+        'new_password_confirmation' => 'password',
+    ]);
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['new_password']]);
+});
+
+test('it can check the password to be at least symbol and all the stuff...', function (): void {
+    $response = $this->withToken($this->token)->postJson(route('api.users.change_password'), [
+        'current_password' => 'password',
+        'new_password' => 'Ahh!!',
+        'new_password_confirmation' => 'Ahh!!',
+    ]);
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['new_password']]);
+});
+
+test('it can check the password needs to be confirmed', function (): void {
+    $response = $this->withToken($this->token)->postJson(route('api.users.change_password'), [
+        'current_password' => 'password',
+        'new_password' => 'test@853',
+        'new_password_confirmation' => 'test@854',
+    ]);
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['new_password']]);
 });

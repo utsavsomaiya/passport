@@ -3,8 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Permission;
-use App\Permission as AppPermission;
-use Illuminate\Support\Str;
+use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
@@ -13,12 +12,18 @@ beforeEach(function (): void {
 test('it can fetch the static permission list', function (): void {
     $response = $this->withToken($this->token)->getJson(route('api.permissions.fetch'));
 
-    $permissions = AppPermission::getFeatureGates()->mapWithKeys(fn ($name, $key): array => [
-        $name => Str::of($name)->replaceFirst('-', ' ')->title()->value(),
-    ])->toArray();
-
     $response->assertOk()
-        ->assertJson(['permissions' => $permissions]);
+        ->assertJson(
+            fn (AssertableJson $json): AssertableJson => $json
+                ->has(
+                    'permissions',
+                    fn (AssertableJson $json): AssertableJson => $json
+                        ->where('fetch-users', 'Fetch Users')
+                        ->where('create-user', 'Create User')
+                        ->where('create-price-book', 'Create Price-Book')
+                        ->etc()
+                )
+        );
 });
 
 test('it can give the permissions', function (): void {

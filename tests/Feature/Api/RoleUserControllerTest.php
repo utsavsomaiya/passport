@@ -10,7 +10,7 @@ beforeEach(function (): void {
 });
 
 test('it can assign the roles', function (): void {
-    $role = Role::factory()->named('Access Manager')->create();
+    $role = Role::factory()->for($this->company)->named('Access Manager')->create();
 
     $response = $this->withToken($this->token)->postJson(route('api.role_user.assign_roles'), [
         'user' => $this->user->id,
@@ -28,7 +28,7 @@ test('it can assign the roles', function (): void {
 test('it can dissociate the roles', function (): void {
     $response = $this->withToken($this->token)->postJson(route('api.role_user.dissociate_roles'), [
         'user' => $this->user->id,
-        'roles' => [$roleId = Role::min('id')],
+        'roles' => [Role::min('id')],
     ]);
 
     $response->assertOk()->assertJsonStructure(['success']);

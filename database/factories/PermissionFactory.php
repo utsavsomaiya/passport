@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\Permission;
 use App\Models\Role;
 use App\Models\RolePermission;
-use App\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;

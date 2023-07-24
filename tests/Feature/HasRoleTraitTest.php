@@ -11,7 +11,7 @@ test('it can assign role using name', function (): void {
 
     $role = Role::factory()->named($name = 'Developer')->create();
 
-    $user->assignRole([$name]);
+    $user->assignRoles([$name]);
 
     $this->assertDatabaseHas(RoleUser::class, [
         'user_id' => $user->id,
@@ -34,7 +34,7 @@ test('it can assign multiple roles', function (): void {
 
     $roles = Role::factory(2)->create();
 
-    $user->assignRole([$roles->first()->getKey(), $roles->last()->getKey()]);
+    $user->assignRoles([$roles->first()->getKey(), $roles->last()->getKey()]);
 
     $this->assertDatabaseCount(RoleUser::class, 2);
 });
@@ -42,9 +42,9 @@ test('it can assign multiple roles', function (): void {
 test('it can assign multiple roles using name', function (): void {
     $user = User::factory()->create();
 
-    $roles = Role::factory(2)->create();
+    $roles = Role::factory(2)->sequence(['name' => 'Access Manager'], ['name' => 'Super Admin'])->create();
 
-    $user->assignRole($roles->pluck('name')->toArray());
+    $user->assignRoles($roles->pluck('name')->toArray());
 
     $this->assertDatabaseCount(RoleUser::class, 2);
 });
