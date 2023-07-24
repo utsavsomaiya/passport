@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Role;
 use App\Permission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,7 +21,7 @@ class PermissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role' => ['required', 'string', 'uuid', 'exists:roles,id'],
+            'role' => ['required', 'string', 'uuid', Rule::exists(Role::class, 'id')->where('company_id', app('company_id'))],
             'permissions' => ['required', 'array'],
             'permissions.*' => ['required', 'string', Rule::in(Permission::getFeatureGates()->toArray())],
         ];

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RoleUserRequest extends FormRequest
 {
@@ -17,8 +20,8 @@ class RoleUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user' => ['required', 'exists:users,id'],
-            'roles' => ['required', 'array', 'exists:roles,id'],
+            'user' => ['required', Rule::exists(User::class, 'id')],
+            'roles' => ['required', 'array', Rule::exists(Role::class, 'id')->where('company_id', app('company_id'))],
             'roles.*' => ['required', 'uuid', 'string'],
         ];
     }
