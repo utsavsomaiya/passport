@@ -38,7 +38,7 @@ final readonly class Permission
 
     /**
      * @return array<string, string>
-    */
+     */
     public static function listOfPermissions(): array
     {
         return self::getFeatureGates()->mapWithKeys(fn (string $name): array => [

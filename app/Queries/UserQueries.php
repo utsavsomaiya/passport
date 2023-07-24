@@ -16,8 +16,6 @@ class UserQueries extends GlobalQueries
         /** @var string $bearerToken */
         $bearerToken = $request->bearerToken();
 
-        $tokenId = explode('|', $bearerToken, 2)[0];
-
         return QueryBuilder::for(User::class, $request)
             ->allowedFilters([
                 $this->filter('first_name'),
@@ -28,13 +26,7 @@ class UserQueries extends GlobalQueries
             ->defaultSort('-created_at')
             ->allowedSorts(['first_name', 'last_name', 'created_at'])
             ->select('id', 'first_name', 'last_name', 'username', 'email', 'created_at')
-            ->with([
-                'tokens' => function ($query) use ($tokenId): void {
-                    $query->select('id', 'tokenable_id', 'tokenable_type', 'last_used_at')
-                        ->where('id', $tokenId);
-                },
-                'roles:id,name',
-            ])
+            ->with('roles:id,name')
             ->when($request->role_id, function ($query) use ($request): void {
                 $query->whereHas('roles', function ($query) use ($request): void {
                     $query->where('role_id', $request->role_id);

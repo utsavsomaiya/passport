@@ -25,7 +25,6 @@ class UserResource extends JsonResource
             'email' => $user->email,
             'username' => $user->username,
             'roles' => $user->roles->pluck('name')->toArray(),
-            'token_last_used_at' => $user->tokens->first()?->last_used_at?->displayFormat(),
             'created_at' => $user->created_at?->displayFormat(),
         ];
     }
