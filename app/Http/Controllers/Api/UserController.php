@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ChangePasswordRequest;
 use App\Http\Requests\Api\FetchUserRequest;
 use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\Api\UserResource;
@@ -54,5 +55,12 @@ class UserController extends Controller
         $this->userQueries->update($request->validated(), $id);
 
         return Response::api('User updated successfully.');
+    }
+
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $this->userQueries->changePassword($request);
+
+        return Response::api('Password updated successfully.');
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Enums;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -34,6 +34,16 @@ final readonly class Permission
         ]
     ) {
 
+    }
+
+    /**
+     * @return array<string, string>
+    */
+    public static function listOfPermissions(): array
+    {
+        return self::getFeatureGates()->mapWithKeys(fn (string $name): array => [
+            $name => Str::of($name)->replaceFirst('-', ' ')->title()->value(),
+        ])->toArray();
     }
 
     public static function ability(string $action, string $for): string

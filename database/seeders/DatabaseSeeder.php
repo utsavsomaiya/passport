@@ -28,7 +28,7 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
         $this->seedDataFromCsvFile(database_path('/seeders/csv/roles.csv'));
 
         User::cursor()->each(function (User $user): void {
-            $user->assignRole(['Super Admin']);
+            $user->assignRoles(['Super Admin']);
             $user->companies()->attach(Company::min('id'), ['created_at' => now(), 'updated_at' => now()]);
         });
 

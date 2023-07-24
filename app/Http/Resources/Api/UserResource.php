@@ -18,11 +18,6 @@ class UserResource extends JsonResource
     {
         $user = $this->resource;
 
-        /** @var string $bearerToken */
-        $bearerToken = $request->bearerToken();
-
-        [$id, $token] = explode('|', $bearerToken, 2);
-
         return [
             'id' => $user->id,
             'first_name' => $user->first_name,
@@ -30,7 +25,7 @@ class UserResource extends JsonResource
             'email' => $user->email,
             'username' => $user->username,
             'roles' => $user->roles->pluck('name')->toArray(),
-            'token_last_used_at' => $user->tokens->find($id)?->last_used_at?->displayFormat(),
+            'token_last_used_at' => $user->tokens->first()?->last_used_at?->displayFormat(),
             'created_at' => $user->created_at?->displayFormat(),
         ];
     }

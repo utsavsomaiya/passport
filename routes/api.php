@@ -36,6 +36,7 @@ Route::name('api.')->group(function () {
                 Route::delete('{id}/delete', 'delete')->can('delete-user')->name('delete');
                 Route::post('{id}/restore', 'restore')->can('delete-user')->name('restore');
                 Route::post('{id}/update', 'update')->can('update-user')->name('update');
+                Route::post('change-password', 'changePassword')->name('change_password');
             });
 
             Route::controller(RoleController::class)->name('roles.')->prefix('roles')->group(function (): void {

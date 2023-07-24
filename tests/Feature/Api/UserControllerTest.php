@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Spatie\QueryBuilder\Exceptions\InvalidSortQuery;
 
@@ -114,4 +115,18 @@ test('it can update a user', function (): void {
         'first_name' => $firstName,
         'email' => $email,
     ]);
+});
+
+test('it can update the password', function (): void {
+    $response = $this->withToken($this->token)->postJson(route('api.users.change_password'), [
+        'current_password' => 'password',
+        'new_password' => $password = 'test@654',
+        'new_password_confirmation' => 'test@654',
+    ]);
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $user = $this->user->refresh();
+
+    $this->assertTrue(Hash::check($password, $user->password));
 });
