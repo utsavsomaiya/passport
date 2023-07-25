@@ -144,3 +144,91 @@ test('it can update a hierarchy', function (): void {
         'slug' => $slug,
     ]);
 });
+
+test('it can not update the name because of there is a children available for the same name', function (): void {
+    $hierarchy = Hierarchy::factory()
+        ->has(
+            Hierarchy::factory(2)->company($this->company->id)->sequence(
+                ['name' => 'B2B'],
+                ['name' => 'C2C']
+            ),
+            'children'
+        )
+        ->for($this->company)
+        ->create(['name' => 'B2B']);
+
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.update', [
+        'id' => $hierarchy->id,
+    ]), [
+        'name' => 'B2B',
+        'parent_hierarchy_id' => $hierarchy->id,
+        'description' => fake()->sentence(),
+    ]);
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure(['message', 'errors' => ['name']]);
+});
+
+test('it cannot create a hierarchy because of there is a children available for the same name', function (): void {
+    $hierarchy = Hierarchy::factory()
+        ->has(
+            Hierarchy::factory(2)->company($this->company->id)->sequence(
+                ['name' => 'B2B'],
+                ['name' => 'C2C']
+            ),
+            'children'
+        )
+        ->for($this->company)
+        ->create(['name' => 'B2B']);
+
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.create'), [
+        'name' => $hierarchy->name,
+    ]);
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure(['message', 'errors' => ['name']]);
+});
+
+test('it can change the parent while update', function (): void {
+    $cars = Hierarchy::factory()
+        ->has(Hierarchy::factory()->for($this->company)->state(fn (): array => ['name' => 'Kia Seltos']), 'children')
+        ->for($this->company)->create([
+            'name' => 'Cars',
+        ]);
+
+    $suvCars = Hierarchy::factory()->for($this->company)->create(['name' => 'SUV Cars']);
+
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.update', [
+        'id' => $cars->children->first()->id,
+    ]), [
+        'name' => 'Kia Seltos',
+        'parent_hierarchy_id' => $suvCars->id,
+    ]);
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertDatabaseHas(Hierarchy::class, [
+        'name' => 'Kia Seltos',
+        'parent_hierarchy_id' => $suvCars->id,
+    ]);
+});
+
+test('it can create a same name hierarchy in different parents', function (): void {
+    Hierarchy::factory()
+        ->has(Hierarchy::factory()->for($this->company)->state(fn (): array => ['name' => 'Kia Seltos']), 'children')
+        ->for($this->company)->create([
+            'name' => 'Cars',
+        ]);
+
+    $suvCars = Hierarchy::factory()->for($this->company)->create(['name' => 'SUV Cars']);
+
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchies.create'), [
+        'name' => 'Kia Seltos',
+        'parent_hierarchy_id' => $suvCars->id,
+    ]);
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertDatabaseHas(Hierarchy::class, [
+        'name' => 'Kia seltos',
+        'parent_hierarchy_id' => $suvCars->id,
+    ]);
+});
