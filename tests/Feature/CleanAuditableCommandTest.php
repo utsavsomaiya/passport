@@ -12,7 +12,7 @@ test('it can clean auditable entries after 30 days', function (): void {
         'old_values' => [],
         'new_values' => [],
         'url' => fake()->url(),
-        'created_at' => now()->subDays(32)
+        'created_at' => now()->subDays(32),
     ]);
 
     $this->artisan('audit:clean')
