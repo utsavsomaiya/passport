@@ -19,6 +19,8 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
     {
         $time = microtime(true);
 
+        $this->call(PostmanSeeder::class);
+
         $this->fakerCompanySeeding();
 
         $companyMinimumId = Company::min('id');
