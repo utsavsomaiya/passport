@@ -39,7 +39,7 @@ class PostmanSeeder extends Seeder
 
                 $response = Http::postman()->put('/environments/'. $environmentId, [
                     'environment' => [
-                        'values' => $environmentVariables,
+                        'values' => array_values($environmentVariables),
                     ],
                 ]);
 
