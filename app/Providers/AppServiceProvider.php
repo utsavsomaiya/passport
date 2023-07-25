@@ -7,7 +7,9 @@ namespace App\Providers;
 use App\Models\PersonalAccessToken;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -42,5 +44,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         Response::macro('api', fn (string $message, array $extras = []): JsonResponse => Response::json(['success' => __($message), ...$extras]));
+
+        Http::macro('postman', fn (): PendingRequest => Http::withHeaders(['X-Api-Key' => env('POSTMAN_API_KEY')])->baseUrl(env('POSTMAN_URL')));
     }
 }

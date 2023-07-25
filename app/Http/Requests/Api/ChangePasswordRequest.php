@@ -21,17 +21,4 @@ class ChangePasswordRequest extends FormRequest
             'new_password' => ['required', 'string', 'confirmed', 'different:current_password', Password::defaults()],
         ];
     }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'new_password' => 'A password must be at least 8 characters long and include a combination of uppercase and lowercase letters, numbers, and symbols.',
-            'new_password.confirmed' => 'The confirmed password does not match the original password. Please re-enter your password and confirm it.',
-        ];
-    }
 }
