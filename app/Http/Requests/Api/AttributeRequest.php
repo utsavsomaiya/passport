@@ -34,7 +34,7 @@ class AttributeRequest extends FormRequest
             'template_id' => ['required', Rule::exists(Template::class, 'id')->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
             'slug' => ['sometimes', 'string', 'max:255'],
-            'field_type' => ['required', 'string', 'in:'.FieldType::getValidationNames()],
+            'field_type' => ['required', 'string', 'in:' . FieldType::getValidationNames()],
             'options' => ['sometimes', Rule::requiredIf(fn (): bool => in_array($this->field_type, FieldType::selections())), 'array'],
             'options.*' => ['required_with:options', 'string', 'max:255'],
             'validation' => ['sometimes', 'array', 'max:2'],
@@ -76,7 +76,7 @@ class AttributeRequest extends FormRequest
             $fieldTypeValidation = $fieldType->validation($this->get('from'), $this->get('to'));
 
             if (in_array($this->field_type, FieldType::selections())) {
-                $fieldTypeValidation[] = 'in:'.$this->options;
+                $fieldTypeValidation[] = 'in:' . $this->options;
             }
 
             $validation = [...$validation, ...$fieldTypeValidation];

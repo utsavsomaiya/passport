@@ -86,7 +86,7 @@ enum FieldType: int
                 return $validations;
             }
 
-            $validations[] = 'after:'.$from;
+            $validations[] = 'after:' . $from;
         }
 
         if ($to !== null) {
@@ -94,7 +94,7 @@ enum FieldType: int
                 return $validations;
             }
 
-            $validations[] = 'before:'.$to;
+            $validations[] = 'before:' . $to;
         }
 
         return $validations;
@@ -122,14 +122,14 @@ enum FieldType: int
             $validations[] = 'decimal';
 
             if ($from !== null) {
-                $validations[] = 'min:'. $from;
+                $validations[] = 'min:' . $from;
             }
 
             if ($to !== null) {
                 $validations[] = 'max_digits:' . $to;
             }
 
-            $validations[] = 'max:'. $to;
+            $validations[] = 'max:' . $to;
         }
 
         return $validations;
