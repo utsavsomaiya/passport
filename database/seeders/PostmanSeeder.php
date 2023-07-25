@@ -37,7 +37,7 @@ class PostmanSeeder extends Seeder
                 $environmentData = $responseData['environment'];
                 $environmentVariables = Arr::where($environmentData['values'], fn ($value): bool => $value['key'] !== 'token');
 
-                $response = Http::postman()->put('/environments/'. $environmentId, [
+                $response = Http::postman()->put('/environments/' . $environmentId, [
                     'environment' => [
                         'values' => array_values($environmentVariables),
                     ],
