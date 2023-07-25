@@ -13,9 +13,6 @@ class UserQueries extends GlobalQueries
 {
     public function listQuery(Request $request): LengthAwarePaginator
     {
-        /** @var string $bearerToken */
-        $bearerToken = $request->bearerToken();
-
         return QueryBuilder::for(User::class, $request)
             ->allowedFilters([
                 $this->filter('first_name'),
