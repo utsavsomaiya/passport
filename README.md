@@ -69,6 +69,9 @@ fi
 ```
 - `chmod +x .git/hooks/pre-push` (to make the hook file executable)
 
+### Postman
+- Generate postman API Keys: https://learning.postman.com/docs/developer/postman-api/authentication/
+
 ### Upgrade
 - When updating [Laravel Sanctum](https://laravel.com/docs/10.x/sanctum), it is important to consider any changes related to the Sanctum token. If the token implementation or behavior has been modified in the update, corresponding changes should be made in your code.
 
