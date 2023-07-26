@@ -1,0 +1,66 @@
+name: Pest and Larastan
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # This cron expression triggers the workflow at midnight (UTC) every Sunday
+
+jobs:
+  pest-and-larastan:
+    runs-on: ubuntu-latest
+
+    name: Run Pest tests and larastan
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: testing_new_pxm
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@2.24.0
+      with:
+        php-version: 8.2
+        coverage: none
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+    - name: Cache PHP dependencies
+      uses: actions/cache@v3
+      id: vendor-cache
+      with:
+        path: vendor
+        key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+    - name: Install Dependencies
+      if: steps.vendor-cache.outputs.cache-hit != 'true'
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Prepare Laravel Application
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+
+    - name: Check Code By PHPSTAN
+      run: ./vendor/bin/phpstan analyse --no-progress $(git diff --diff-filter=MA --name-only origin/main origin/${SOURCE_BRANCH} | grep '^app/')
+
+    - name: Check code by pest tests
+      run: ./vendor/bin/pest
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Logs
+        path: ./storage/logs
