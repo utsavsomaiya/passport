@@ -24,6 +24,8 @@ class RolePermissionController extends Controller
 
         $this->permissionQueries->givePermissions($validatedData);
 
+        cache()->forget($request->user()?->id);
+
         return Response::api('Permission given successfully.');
     }
 
@@ -32,6 +34,8 @@ class RolePermissionController extends Controller
         $validatedData = $request->validated();
 
         $this->permissionQueries->revokePermissions($validatedData);
+
+        cache()->forget($request->user()?->id);
 
         return Response::api('Permission revoked successfully.');
     }
