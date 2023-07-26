@@ -52,8 +52,8 @@ jobs:
         cp .env.example .env
         php artisan key:generate
 
-    - name: Check Code By PHPSTAN
-      run: ./vendor/bin/phpstan analyse --no-progress $(git diff --diff-filter=MA --name-only origin/main origin/${SOURCE_BRANCH} | grep '^app/')
+    - name: Check Code By Larastan
+      run: ./vendor/bin/phpstan analyse --no-progress
 
     - name: Check code by pest tests
       run: ./vendor/bin/pest
