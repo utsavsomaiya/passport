@@ -26,7 +26,9 @@ class PostmanSeeder extends Seeder
         $environmentId = null;
 
         if ($response->ok()) {
-            $environmentId = $response->collect()->get('environments')[0]['id'];
+            $environmentId = $response->collect('environments')
+                ->filter(fn ($environment) => $environment['name'] === 'Local')
+                ->first()['id'];
         }
 
         if ($environmentId) {
@@ -44,7 +46,7 @@ class PostmanSeeder extends Seeder
                 ]);
 
                 if ($response->ok()) {
-                    $this->command->info('Token reset successfully..');
+                    $this->command->info('Token removed from the Postman Environment successfully.');
                 }
             }
         }
