@@ -52,7 +52,7 @@ class AuthServiceProvider extends ServiceProvider
                     return in_array($gate, $permissions);
                 });
 
-                Cache::put($user->id, [
+                Cache::put('roles_and_permissions_of_user_' . $user->id, [
                     'roles' => $user->roles->pluck('id', 'name')->toArray(),
                     'permissions' => $user->roles
                         ->map(fn (Role $role) => $role->permissions()->pluck('title')->toArray())

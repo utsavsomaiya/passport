@@ -77,3 +77,5 @@ test('it can update the role', function (): void {
         'name' => $name,
     ]);
 });
+
+todo('it cannot delete the role because of there are assigned the permissions.. Can we remove this permissions from database?');

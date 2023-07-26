@@ -40,6 +40,8 @@ class UserController extends Controller
     {
         $this->userQueries->delete($id);
 
+        cache()->forget('roles_and_permissions_of_user_' . $id);
+
         return Response::api('User deleted successfully.');
     }
 

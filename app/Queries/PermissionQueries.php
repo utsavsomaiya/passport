@@ -38,4 +38,11 @@ class PermissionQueries
             ->whereIn('title', $data['permissions'])
             ->delete();
     }
+
+    public function existsByRole(string $roleId): bool
+    {
+        return Permission::query()
+            ->where('role_id', $roleId)
+            ->exists();
+    }
 }

@@ -43,6 +43,8 @@ class RoleController extends Controller
     {
         $this->roleQueries->delete($id);
 
+        cache()->forget('roles_and_permissions_of_user_' . auth()->id());
+
         return Response::api('Role deleted successfully');
     }
 

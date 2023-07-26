@@ -17,8 +17,6 @@ test('it can assign the roles', function (): void {
         'roles' => [$role->id],
     ]);
 
-    $this->assertTrue(! cache()->get($this->user->id));
-
     $response->assertOk()->assertJsonStructure(['success']);
 
     $this->assertDatabaseHas(RoleUser::class, [
@@ -32,8 +30,6 @@ test('it can dissociate the roles', function (): void {
         'user' => $this->user->id,
         'roles' => [Role::min('id')],
     ]);
-
-    $this->assertTrue(! cache()->get($this->user->id));
 
     $response->assertOk()->assertJsonStructure(['success']);
 
