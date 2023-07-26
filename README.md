@@ -86,6 +86,15 @@ If you intend to remove the token while seeding the data, please ensure the foll
 - Methods Using Sanctum Tokens In our application, there are two methods that utilize Sanctum tokens:
 1. [`PersonalAccessToken::findToken()`](./app/Http/Middleware/AddCompanyIdInServiceContainer.php#L24C53-L24C62)
 
+### Role and Permission Caching
+- **Caching on First Client Request**: When a client sends a request that requires role or permission verification, the system will fetch the necessary roles and permissions from the database and store them in the cache. This cache will be used for subsequent authorization checks to avoid hitting the database every time
+
+- **Authorization on Subsequent Requests**: For the subsequent client requests that require role or permission checks, the system will look into the cache to determine if the user has the required role or permission. This eliminates the need for frequent database queries, resulting in improved performance and response times.
+
+- **Important Note** : If any changes are made to the roles or permissions, such as adding or modifying them via `tinker`, it's crucial to clear the cache to reflect the updated data. To do this, simply run the following command in tinker: `cache()->flush()` or you can run `php artisan cache:clear`
+
+- There is another way to improve the performance without clearing the entire cache. We can selectively clear the cache for only the `$user->id` that is assigned these roles and has specific permissions associated with them. While this approach may be more critical to implement, it will result in significant performance improvements. However, if necessary, we can still consider clearing cache blocks as a fallback option, though it might have a broader impact on performance
+
 ### [Horizon](https://laravel.com/docs/10.x/horizon)
 - You can access the Horizon dashboard by visiting the following URL:
 - Horizon Dashboard : `APP_URL/horizon/dashboard`

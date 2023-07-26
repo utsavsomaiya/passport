@@ -24,6 +24,8 @@ class RoleUserController extends Controller
 
         $this->roleUserQueries->assignRoles($validatedData);
 
+        cache()->forget($request->user()?->id);
+
         return Response::api('Roles assigned successfully.');
     }
 
@@ -32,6 +34,8 @@ class RoleUserController extends Controller
         $validatedData = $request->validated();
 
         $this->roleUserQueries->removeRoles($validatedData);
+
+        cache()->forget($request->user()?->id);
 
         return Response::api('Roles removed successfully.');
     }

@@ -36,6 +36,8 @@ test('it can give the permissions', function (): void {
         'permissions' => ['create-user'],
     ]);
 
+    $this->assertTrue(! cache()->get($this->user->id));
+
     $response->assertOk()->assertJsonStructure(['success']);
 
     $this->assertDatabaseHas(Permission::class, [
@@ -47,7 +49,7 @@ test('it can give the permissions', function (): void {
 test('it can revoke the permissions', function (): void {
     $role = $this->user->roles->first();
 
-    $permissions = Permission::factory(3)->for($role)->sequence(
+    Permission::factory(3)->for($role)->sequence(
         ['title' => 'create-user'],
         ['title' => 'delete-user'],
         ['title' => 'fetch-users']
@@ -57,6 +59,8 @@ test('it can revoke the permissions', function (): void {
         'role' => $role->id,
         'permissions' => ['create-user', 'delete-user', 'fetch-users'],
     ]);
+
+    $this->assertTrue(! cache()->get($this->user->id));
 
     $response->assertOk()->assertJsonStructure(['success']);
 

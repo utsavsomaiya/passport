@@ -8,6 +8,7 @@ use App\Enums\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
@@ -28,6 +29,16 @@ class AuthServiceProvider extends ServiceProvider
     {
         Permission::getFeatureGates()->each(function (string $gate): void {
             Gate::define($gate, function (User $user) use ($gate) {
+                if (Cache::has($user->id)) {
+                    ['roles' => $roles, 'permissions' => $permissions] = Cache::get($user->id);
+
+                    if (array_key_exists('Super Admin', $roles)) {
+                        return true;
+                    }
+
+                    return in_array($gate, $permissions);
+                }
+
                 $user->load('roles');
                 $user->roles->load('permissions');
 
@@ -41,11 +52,20 @@ class AuthServiceProvider extends ServiceProvider
                     return in_array($gate, $permissions);
                 });
 
+                Cache::put($user->id, [
+                    'roles' => $user->roles->pluck('id', 'name')->toArray(),
+                    'permissions' => $user->roles
+                        ->map(fn (Role $role) => $role->permissions()->pluck('title')->toArray())
+                        ->flatten()
+                        ->toArray(),
+                ]);
+
                 if ($userPermissions->isNotEmpty()) {
-                    return $userPermissions->doesntContain(false);
+                    return $userPermissions->contains(true);
                 }
 
                 return false;
+
             });
         });
     }
