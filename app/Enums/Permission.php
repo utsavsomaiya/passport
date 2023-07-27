@@ -9,6 +9,9 @@ use Illuminate\Support\Str;
 
 final readonly class Permission
 {
+    // Whenever any change is made to the list of permissions below, we need to fire the
+    // queued job to forget all the cache entries of roles and permissions of all users.
+
     public function __construct(
         /**
          * @var array<int, string>
