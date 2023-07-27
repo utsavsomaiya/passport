@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -16,7 +17,10 @@ use Illuminate\Validation\ValidationException;
 
 class ResetPasswordController extends Controller
 {
-    public function __invoke(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function __invoke(Request $request): JsonResponse
     {
         $this->validate($request, [
             'token' => ['required'],
@@ -26,7 +30,7 @@ class ResetPasswordController extends Controller
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
+            function (User $user, string $password): void {
                 $user->forceFill(['password' => Hash::make($password)])->setRememberToken(Str::random(60));
                 $user->save();
                 event(new PasswordReset($user));
