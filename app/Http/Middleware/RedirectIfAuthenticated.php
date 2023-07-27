@@ -16,10 +16,12 @@ class RedirectIfAuthenticated
      * Handle an incoming request.
      *
      * @param  Closure(Request):Response  $next
-     * @param  array<int, ?string>  $guards
+     * @param  array<int, string>  $guards
      */
-    public function handle(Request $request, Closure $next, array $guards = [null]): Response
+    public function handle(Request $request, Closure $next, array $guards = []): Response
     {
+        $guards = $guards === [] ? [null] : $guards;
+
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);
