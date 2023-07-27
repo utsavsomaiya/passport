@@ -15,13 +15,17 @@ use App\Http\Controllers\Api\RolePermissionController;
 use App\Http\Controllers\Api\RoleUserController;
 use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::name('api.')->group(function () {
-    Route::middleware(ThrottleRequests::with(5, 1))
-        ->post('generate-token', [GenerateTokenController::class, 'generateToken'])
-        ->name('generate_token');
+    Route::middleware(ThrottleRequests::with(5, 1))->group(function (): void {
+        Route::post('generate-token', [GenerateTokenController::class, 'generateToken'])->name('generate_token');
+        Route::post('forgot-password', ForgotPasswordController::class)->name('forgot_password');
+        Route::post('reset-password', ResetPasswordController::class)->name('reset_password');
+    });
 
     Route::middleware('auth:sanctum')->group(function (): void {
         Route::controller(CompanyController::class)->name('companies.')->prefix('companies')->group(function (): void {
