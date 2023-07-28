@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Jobs\FlushCaching;
+use App\Jobs\ForgetUsersCacheEntriesJob;
 use App\Models\Role;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Queue;
@@ -55,7 +55,7 @@ test('it can delete the role', function (): void {
         'id' => $role->id,
     ]));
 
-    Queue::assertPushed(FlushCaching::class);
+    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
@@ -79,7 +79,7 @@ test('it can update the role', function (): void {
         'name' => $name = 'Access Manager',
     ]);
 
-    Queue::assertPushed(FlushCaching::class);
+    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 

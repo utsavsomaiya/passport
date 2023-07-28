@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RoleUserRequest;
-use App\Jobs\FlushCaching;
+use App\Jobs\ForgetUsersCacheEntriesJob;
 use App\Queries\RoleUserQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
@@ -25,7 +25,7 @@ class RoleUserController extends Controller
 
         $this->roleUserQueries->assignRoles($validatedData);
 
-        FlushCaching::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch();
 
         return Response::api('Roles assigned successfully.');
     }
@@ -36,7 +36,7 @@ class RoleUserController extends Controller
 
         $this->roleUserQueries->removeRoles($validatedData);
 
-        FlushCaching::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch();
 
         return Response::api('Roles removed successfully.');
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Jobs\FlushCaching;
+use App\Jobs\ForgetUsersCacheEntriesJob;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -40,7 +40,7 @@ test('it can give the permissions', function (): void {
         'permissions' => ['create-user'],
     ]);
 
-    Queue::assertPushed(FlushCaching::class);
+    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
@@ -66,7 +66,7 @@ test('it can revoke the permissions', function (): void {
         'permissions' => ['create-user', 'delete-user', 'fetch-users'],
     ]);
 
-    Queue::assertPushed(FlushCaching::class);
+    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 

@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sanctum:prune-expired --hours=24')->daily();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
-        // $schedule->command('audit:clean')->daily();
+        $schedule->command('audit:clean')->daily();
     }
 
     /**

@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\FetchRoleRequest;
 use App\Http\Requests\Api\RoleRequest;
 use App\Http\Resources\Api\RoleResource;
-use App\Jobs\FlushCaching;
+use App\Jobs\ForgetUsersCacheEntriesJob;
 use App\Queries\RoleQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -44,7 +44,7 @@ class RoleController extends Controller
     {
         $this->roleQueries->delete($id);
 
-        FlushCaching::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch();
 
         return Response::api('Role deleted successfully');
     }
@@ -55,7 +55,7 @@ class RoleController extends Controller
 
         $this->roleQueries->update($validatedData, $id);
 
-        FlushCaching::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch();
 
         return Response::api('Role updated successfully');
     }

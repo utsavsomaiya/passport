@@ -9,6 +9,7 @@ use App\Http\Requests\Api\ChangePasswordRequest;
 use App\Http\Requests\Api\FetchUserRequest;
 use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\Api\UserResource;
+use App\Jobs\ForgetUsersCacheEntriesJob;
 use App\Queries\UserQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -40,7 +41,7 @@ class UserController extends Controller
     {
         $this->userQueries->delete($id);
 
-        cache()->forget('roles_and_permissions_of_user_' . $id);
+        ForgetUsersCacheEntriesJob::dispatch($id);
 
         return Response::api('User deleted successfully.');
     }

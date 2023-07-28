@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Jobs\FlushCaching;
+use App\Jobs\ForgetUsersCacheEntriesJob;
 use App\Models\Role;
 use App\Models\RoleUser;
 use Illuminate\Support\Facades\Queue;
@@ -21,7 +21,7 @@ test('it can assign the roles', function (): void {
         'roles' => [$role->id],
     ]);
 
-    Queue::assertPushed(FlushCaching::class);
+    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
@@ -39,7 +39,7 @@ test('it can dissociate the roles', function (): void {
         'roles' => [Role::min('id')],
     ]);
 
-    Queue::assertPushed(FlushCaching::class);
+    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
