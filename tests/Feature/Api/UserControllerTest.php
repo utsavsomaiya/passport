@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Jobs\ForgetUsersCacheEntriesJob;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -79,7 +79,7 @@ test('it can delete a user', function (): void {
         'id' => $user->id,
     ]));
 
-    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
+    expect(Cache::get('roles_and_permissions_of_user_' . $user->id))->toBeNull();
 
     $response->assertOk()->assertJsonStructure(['success']);
 
