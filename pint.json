@@ -37,6 +37,7 @@
         },
         "declare_strict_types": true,
         "get_class_to_class_keyword" : true,
-        "use_arrow_functions": true
+        "use_arrow_functions": true,
+        "single_trait_insert_per_statement": true
     }
 }

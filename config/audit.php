@@ -179,5 +179,5 @@ return [
      * When the clean-command is executed, all recording audits older than
      * the number of days specified here will be deleted.
      */
-    'delete_records_older_than_days' => 30,
+    'delete_records_older_than_days' => env('DELETE_AUDITABLE_RECORDS_OLDER_THAN_DAYS', 30),
 ];

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PermissionRequest;
+use App\Jobs\FlushCaching;
 use App\Queries\PermissionQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
@@ -24,7 +25,7 @@ class RolePermissionController extends Controller
 
         $this->permissionQueries->givePermissions($validatedData);
 
-        cache()->forget('roles_and_permissions_of_user_' . $request->user()?->id);
+        FlushCaching::dispatch();
 
         return Response::api('Permission given successfully.');
     }
@@ -35,7 +36,7 @@ class RolePermissionController extends Controller
 
         $this->permissionQueries->revokePermissions($validatedData);
 
-        cache()->forget('roles_and_permissions_of_user_' . $request->user()?->id);
+        FlushCaching::dispatch();
 
         return Response::api('Permission revoked successfully.');
     }

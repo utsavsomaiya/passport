@@ -7,6 +7,7 @@ namespace App\Queries;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\LazyCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserQueries extends GlobalQueries
@@ -72,5 +73,21 @@ class UserQueries extends GlobalQueries
     public function findByEmail(string $email): ?User
     {
         return User::query()->firstWhere('email', $email);
+    }
+
+    public function findByIdAndLoadRolesAndPermissions(string $id): ?User
+    {
+        return User::query()
+            ->select('id')
+            ->with(['roles:id,name', 'roles.permissions:id,role_id,title'])
+            ->find($id);
+    }
+
+    public function fetchUsersByLazyCollection(): LazyCollection
+    {
+        return User::query()
+            ->select('id')
+            ->with(['roles:id,name', 'roles.permissions:id,role_id,title'])
+            ->cursor();
     }
 }

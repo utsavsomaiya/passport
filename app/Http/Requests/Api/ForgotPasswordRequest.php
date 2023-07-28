@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace {{ namespace }};
+namespace App\Http\Requests\Api;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class {{ class }} extends FormRequest
+class ForgotPasswordRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,7 +17,8 @@ class {{ class }} extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'email' => ['required', 'email'],
+            'reset_password_page_url' => ['required', 'url'],
         ];
     }
 }

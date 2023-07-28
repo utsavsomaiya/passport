@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Jobs\FlushCaching;
 use App\Models\Role;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
@@ -45,11 +47,15 @@ test('it can create role', function (): void {
 });
 
 test('it can delete the role', function (): void {
+    Queue::fake();
+
     $role = Role::factory()->for($this->company)->named('Access Manager')->create();
 
     $response = $this->withToken($this->token)->deleteJson(route('api.roles.delete', [
         'id' => $role->id,
     ]));
+
+    Queue::assertPushed(FlushCaching::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
@@ -65,11 +71,15 @@ test('it cannot delete the role if it assign to the user', function (): void {
 });
 
 test('it can update the role', function (): void {
+    Queue::fake();
+
     $response = $this->withToken($this->token)->postJson(route('api.roles.update', [
         'id' => Role::min('id'),
     ]), [
         'name' => $name = 'Access Manager',
     ]);
+
+    Queue::assertPushed(FlushCaching::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
