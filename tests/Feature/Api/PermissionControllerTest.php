@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Jobs\FlushCaching;
 use App\Models\Permission;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
@@ -27,6 +29,8 @@ test('it can fetch the static permission list', function (): void {
 });
 
 test('it can give the permissions', function (): void {
+    Queue::fake();
+
     $role = $this->user->roles->first();
 
     Permission::factory()->for($role)->create();
@@ -35,6 +39,8 @@ test('it can give the permissions', function (): void {
         'role' => $role->id,
         'permissions' => ['create-user'],
     ]);
+
+    Queue::assertPushed(FlushCaching::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
@@ -45,6 +51,8 @@ test('it can give the permissions', function (): void {
 });
 
 test('it can revoke the permissions', function (): void {
+    Queue::fake();
+
     $role = $this->user->roles->first();
 
     Permission::factory(3)->for($role)->sequence(
@@ -57,6 +65,8 @@ test('it can revoke the permissions', function (): void {
         'role' => $role->id,
         'permissions' => ['create-user', 'delete-user', 'fetch-users'],
     ]);
+
+    Queue::assertPushed(FlushCaching::class);
 
     $response->assertOk()->assertJsonStructure(['success']);
 
