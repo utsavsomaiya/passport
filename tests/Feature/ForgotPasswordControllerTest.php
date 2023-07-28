@@ -15,7 +15,7 @@ test('it can send an email of the forgot password', function (): void {
 
     $response = $this->postJson(route('api.forgot_password'), [
         'email' => $email,
-        'url' => fake()->url(),
+        'reset_password_page_url' => fake()->url(),
     ]);
 
     Notification::assertSentTo([$user], ResetPassword::class);
