@@ -5,7 +5,9 @@ declare(strict_types=1);
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Spatie\QueryBuilder\Exceptions\InvalidSortQuery;
 
@@ -69,11 +71,15 @@ test('it can create a user', function (): void {
 });
 
 test('it can delete a user', function (): void {
+    Queue::fake();
+
     $user = User::factory()->create();
 
     $response = $this->withToken($this->token)->deleteJson(route('api.users.delete', [
         'id' => $user->id,
     ]));
+
+    expect(Cache::get('roles_and_permissions_of_user_' . $user->id))->toBeNull();
 
     $response->assertOk()->assertJsonStructure(['success']);
 

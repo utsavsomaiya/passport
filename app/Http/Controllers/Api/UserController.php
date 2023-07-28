@@ -12,6 +12,7 @@ use App\Http\Resources\Api\UserResource;
 use App\Queries\UserQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
@@ -40,7 +41,7 @@ class UserController extends Controller
     {
         $this->userQueries->delete($id);
 
-        cache()->forget('roles_and_permissions_of_user_' . $id);
+        Cache::forget('roles_and_permissions_of_user_' . $id);
 
         return Response::api('User deleted successfully.');
     }

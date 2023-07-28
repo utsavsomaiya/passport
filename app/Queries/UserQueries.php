@@ -77,17 +77,11 @@ class UserQueries extends GlobalQueries
 
     public function findByIdAndLoadRolesAndPermissions(string $id): ?User
     {
-        return User::query()
-            ->select('id')
-            ->with(['roles:id,name', 'roles.permissions:id,role_id,title'])
-            ->find($id);
+        return User::query()->select('id')->find($id);
     }
 
     public function fetchUsersByLazyCollection(): LazyCollection
     {
-        return User::query()
-            ->select('id')
-            ->with(['roles:id,name', 'roles.permissions:id,role_id,title'])
-            ->cursor();
+        return User::query()->select('id')->cursor();
     }
 }
