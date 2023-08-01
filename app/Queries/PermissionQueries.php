@@ -39,10 +39,8 @@ class PermissionQueries
             ->delete();
     }
 
-    public function existsByRole(string $roleId): bool
+    public function deleteByRole(string $roleId): void
     {
-        return Permission::query()
-            ->where('role_id', $roleId)
-            ->exists();
+        Permission::query()->where('role_id', $roleId)->delete();
     }
 }

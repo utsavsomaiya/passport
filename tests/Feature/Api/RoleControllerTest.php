@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Jobs\ForgetUsersCacheEntriesJob;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Queue;
@@ -88,4 +89,23 @@ test('it can update the role', function (): void {
     ]);
 });
 
-todo('it cannot delete the role because of there are assigned the permissions.. Can we remove this permissions from database?');
+test('it can also delete the permissions when role is delete', function (): void {
+    Queue::fake();
+
+    $role = Role::factory()
+        ->for($this->company)
+        ->has(Permission::factory())
+        ->named('Access Manager')->create();
+
+    $response = $this->withToken($this->token)->deleteJson(route('api.roles.delete', [
+        'id' => $role->id,
+    ]));
+
+    Queue::assertPushed(ForgetUsersCacheEntriesJob::class);
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertModelMissing($role);
+
+    $this->assertDatabaseCount(Permission::class, 0);
+});

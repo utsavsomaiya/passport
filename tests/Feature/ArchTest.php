@@ -9,6 +9,10 @@ test('laravel model can use only on base model')
     ->expect(Model::class)
     ->toUse(BaseModel::class);
 
+test('it can use strict type on whole applications')
+    ->expect('App')
+    ->toUseStrictTypes();
+
 test('model can extends base model not laravel default model')
     ->expect('App\Models')
     ->not->toUse(BaseModel::class)

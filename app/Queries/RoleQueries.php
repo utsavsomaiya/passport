@@ -37,6 +37,8 @@ class RoleQueries extends GlobalQueries
     {
         abort_if(resolve(RoleUserQueries::class)->exists($id), Response::HTTP_NOT_ACCEPTABLE, 'This role is assigned to one or more users already. Cannot be deleted.');
 
+        resolve(PermissionQueries::class)->deleteByRole($id);
+
         Role::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)

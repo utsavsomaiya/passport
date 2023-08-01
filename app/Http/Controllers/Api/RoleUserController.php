@@ -25,7 +25,7 @@ class RoleUserController extends Controller
 
         $this->roleUserQueries->assignRoles($validatedData);
 
-        ForgetUsersCacheEntriesJob::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch('roles_and_permissions_of_user_');
 
         return Response::api('Roles assigned successfully.');
     }
@@ -36,7 +36,7 @@ class RoleUserController extends Controller
 
         $this->roleUserQueries->removeRoles($validatedData);
 
-        ForgetUsersCacheEntriesJob::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch('roles_and_permissions_of_user_');
 
         return Response::api('Roles removed successfully.');
     }

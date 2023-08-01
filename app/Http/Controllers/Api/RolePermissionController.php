@@ -25,7 +25,7 @@ class RolePermissionController extends Controller
 
         $this->permissionQueries->givePermissions($validatedData);
 
-        ForgetUsersCacheEntriesJob::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch('roles_and_permissions_of_user_');
 
         return Response::api('Permission given successfully.');
     }
@@ -36,7 +36,7 @@ class RolePermissionController extends Controller
 
         $this->permissionQueries->revokePermissions($validatedData);
 
-        ForgetUsersCacheEntriesJob::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch('roles_and_permissions_of_user_');
 
         return Response::api('Permission revoked successfully.');
     }

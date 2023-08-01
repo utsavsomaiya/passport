@@ -75,11 +75,6 @@ class UserQueries extends GlobalQueries
         return User::query()->firstWhere('email', $email);
     }
 
-    public function findByIdAndLoadRolesAndPermissions(string $id): ?User
-    {
-        return User::query()->select('id')->find($id);
-    }
-
     public function fetchUsersByLazyCollection(): LazyCollection
     {
         return User::query()->select('id')->cursor();

@@ -17,7 +17,7 @@
     </a>
 </p>
 
-## Product Xperience Management
+## Product Xperience Manager
 
 ### Requirements
 - PHP 8.2
@@ -86,6 +86,11 @@ If you intend to remove the token while seeding the data, please ensure the foll
 - Methods Using Sanctum Tokens In our application, there are two methods that utilize Sanctum tokens:
 1. [`PersonalAccessToken::findToken()`](./app/Http/Middleware/AddCompanyIdInServiceContainer.php#L24C53-L24C62)
 
+### Caching
+- The cached data is usually stored in a very fast data store such as a redis or etc.
+- We are using the [redis](#redis) cache driver.
+
+
 ### Roles and Permissions Caching
 - We are caching the roles and permissions of all the users for better performance. The caching happens the first time user make any request that required authorization.
 
@@ -98,6 +103,7 @@ If you intend to remove the token while seeding the data, please ensure the foll
 - Horizon Dashboard : `APP_URL/horizon/dashboard`
 - Please note that only the Super Admin role has the necessary privileges to access this dashboard.
 
+### Redis
 - Install [redis](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-22-04) and [phpredis](https://github.com/phpredis/phpredis):
     ```shell
       sudo apt install -y redis-server
