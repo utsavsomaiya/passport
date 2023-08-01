@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PriceBookController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RolePermissionController;
@@ -101,6 +102,13 @@ Route::name('api.')->group(function () {
                 Route::post('create', 'create')->can('create-attribute')->name('create');
                 Route::delete('{id}/delete', 'delete')->can('delete-attribute')->name('delete');
                 Route::post('{id}/update', 'update')->can('update-attribute')->name('update');
+            });
+
+            Route::controller(ProductController::class)->name('products.')->prefix('products')->group(function (): void {
+                Route::get('fetch', 'fetch')->can('fetch-products')->name('fetch');
+                Route::post('create', 'create')->can('create-product')->name('create');
+                Route::delete('{id}/delete', 'delete')->can('delete-product')->name('delete');
+                Route::post('{id}/update', 'update')->can('update-product')->name('update');
             });
         });
     });
