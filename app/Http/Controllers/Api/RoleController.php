@@ -44,7 +44,7 @@ class RoleController extends Controller
     {
         $this->roleQueries->delete($id);
 
-        ForgetUsersCacheEntriesJob::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch('roles_and_permissions_of_user_');
 
         return Response::api('Role deleted successfully');
     }
@@ -55,7 +55,7 @@ class RoleController extends Controller
 
         $this->roleQueries->update($validatedData, $id);
 
-        ForgetUsersCacheEntriesJob::dispatch();
+        ForgetUsersCacheEntriesJob::dispatch('roles_and_permissions_of_user_');
 
         return Response::api('Role updated successfully');
     }

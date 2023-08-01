@@ -20,6 +20,12 @@ class ForgetUsersCacheEntriesJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public function __construct(
+        protected string $key,
+    ) {
+
+    }
+
     /**
      * Execute the job.
      */
@@ -27,7 +33,7 @@ class ForgetUsersCacheEntriesJob implements ShouldQueue
     {
         $users = resolve(UserQueries::class)->fetchUsersByLazyCollection();
         $users->each(function (User $user): void {
-            Cache::forget('roles_and_permissions_of_user_' . $user->id);
+            Cache::forget($this->key . $user->id);
         });
     }
 }
