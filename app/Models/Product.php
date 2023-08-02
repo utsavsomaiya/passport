@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
@@ -49,8 +50,13 @@ class Product extends Model implements HasMedia
     {
         return Attribute::make(
             get: fn (?string $description): ?string => $description ? html_entity_decode($description) : null,
-            set: fn (?string $description): string => htmlentities($description)
+            set: fn (?string $description): ?string => $description ? htmlentities($description) : null
         );
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**

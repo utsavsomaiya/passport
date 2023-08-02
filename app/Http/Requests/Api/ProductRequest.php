@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api;
 
 use App\Models\Product;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rules\Unique;
 
@@ -26,7 +26,7 @@ class ProductRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<int, string | Unique>|string>
+     * @return array<string, array<int, Exists|File|Unique|string|null>>
      */
     public function rules(): array
     {

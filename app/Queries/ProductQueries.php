@@ -61,11 +61,15 @@ class ProductQueries
         $product = Product::find($id);
 
         if ($product) {
-            if ($data['images'] !== []) {
+
+            /** @var array<int, UploadedFile> $productImages */
+            $productImages = $data['images'];
+
+            if ($productImages !== []) {
                 $product->clearMediaCollection('product_images');
 
-                foreach ($data['images'] as $image) {
-                    $product->addMedia($image)->toMediaCollection('product_images');
+                foreach ($productImages as $productImage) {
+                    $product->addMedia($productImage)->toMediaCollection('product_images');
                 }
             }
 
