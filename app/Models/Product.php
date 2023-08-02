@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
@@ -24,6 +24,7 @@ class Product extends Model implements HasMedia
      */
     protected $fillable = [
         'company_id',
+        'parent_product_id',
         'name',
         'description',
         'slug',
@@ -44,9 +45,12 @@ class Product extends Model implements HasMedia
         'is_bundle' => 'boolean',
     ];
 
-    public function bundledProducts(): HasMany
+    public function description(): Attribute
     {
-        return $this->hasMany(self::class, 'parent_product_id')->with('bundledProducts');
+        return Attribute::make(
+            get: fn (?string $description): ?string => $description ? html_entity_decode($description) : null,
+            set: fn (?string $description): string => htmlentities($description)
+        );
     }
 
     /**

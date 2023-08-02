@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Sanctum\Sanctum;
 
@@ -42,6 +43,8 @@ class AppServiceProvider extends ServiceProvider
                 ->symbols() // Required at least one symbol...
                 ->uncompromised() // Must not compromised in data leaks...
         );
+
+        File::defaults(fn (): File => File::image()->types(['jpeg', 'jpg', 'gif', 'png']));
 
         Response::macro('api', fn (string $message, array $extras = []): JsonResponse => Response::json(['success' => __($message), ...$extras]));
 
