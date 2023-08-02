@@ -6,6 +6,7 @@ namespace App\Queries;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -21,7 +22,7 @@ class ProductQueries
             ->allowedFilters(['name', 'sku', 'upc_ean', 'is_bundle'])
             ->where('company_id', app('company_id'))
             ->select($columns)
-            ->when($request->get('parent_product_id'), function ($query) use ($request) {
+            ->when($request->get('parent_product_id'), function ($query) use ($request): void {
                 $query->where('parent_product_id', $request->parent_product_id);
             })
             ->with('media:id,file_name,model_id,model_type,collection_name,disk,created_at')
@@ -29,9 +30,9 @@ class ProductQueries
     }
 
     /**
-     * @param  array<string, string>  $data
+     * @param  array<string, string|array<int, UploadedFile>>  $data
      */
-    public function create(array $data)
+    public function create(array $data): void
     {
         $data['company_id'] ??= app('company_id');
 
@@ -42,7 +43,7 @@ class ProductQueries
         }
     }
 
-    public function delete(string $id)
+    public function delete(string $id): void
     {
         $product = Product::find($id);
 
@@ -52,8 +53,23 @@ class ProductQueries
         }
     }
 
-    public function update(string $id, array $data)
+    /**
+     * @param  array<string, string|array<int, UploadedFile>>  $data
+     */
+    public function update(string $id, array $data): void
     {
+        $product = Product::find($id);
 
+        if ($product) {
+            if ($data['images'] !== []) {
+                $product->clearMediaCollection('product_images');
+
+                foreach ($data['images'] as $image) {
+                    $product->addMedia($image)->toMediaCollection('product_images');
+                }
+            }
+
+            $product->update($data);
+        }
     }
 }

@@ -44,8 +44,12 @@ class ProductController extends Controller
         return Response::api('Product deleted successfully');
     }
 
-    public function update(): void
+    public function update(ProductRequest $request, string $id): JsonResponse
     {
+        $validatedData = $request->validated();
 
+        $this->productQueries->update($id, $validatedData);
+
+        return Response::api('Product updated successfully');
     }
 }
