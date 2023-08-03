@@ -38,8 +38,10 @@ class ProductQueries
 
         $product = Product::create($data);
 
-        foreach ($data['images'] as $image) {
-            $product->addMedia($image)->toMediaCollection('product_images');
+        if (array_key_exists('images', $data)) {
+            foreach ($data['images'] as $image) {
+                $product->addMedia($image)->toMediaCollection('product_images');
+            }
         }
     }
 
@@ -62,14 +64,16 @@ class ProductQueries
 
         if ($product) {
 
-            /** @var array<int, UploadedFile> $productImages */
-            $productImages = $data['images'];
+            if (array_key_exists('images', $data)) {
+                /** @var array<int, UploadedFile> $productImages */
+                $productImages = $data['images'];
 
-            if ($productImages !== []) {
-                $product->clearMediaCollection('product_images');
+                if ($productImages !== []) {
+                    $product->clearMediaCollection('product_images');
 
-                foreach ($productImages as $productImage) {
-                    $product->addMedia($productImage)->toMediaCollection('product_images');
+                    foreach ($productImages as $productImage) {
+                        $product->addMedia($productImage)->toMediaCollection('product_images');
+                    }
                 }
             }
 

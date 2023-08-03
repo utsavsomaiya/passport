@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Models\Product;
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
@@ -44,9 +46,94 @@ test('it can fetch the products', function (): void {
 });
 
 test('if `product_status` is active or true then user needs to upload one image required validation.', function (): void {
+    $response = $this->withToken($this->token)->postJson(route('api.products.create'), [
+        'name' => fake()->name(),
+        'sku' => fake()->uuid(),
+        'upc_ean' => fake()->ean13(),
+        'status' => true,
+        'is_bundle' => false,
+    ]);
 
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['images.0']]);
 });
 
 test('it can create a product', function (): void {
+    $response = $this->withToken($this->token)->postJson(route('api.products.create'), [
+        'name' => $name = fake()->name(),
+        'sku' => $sku = fake()->uuid(),
+        'upc_ean' => fake()->ean13(),
+        'status' => false,
+        'is_bundle' => false,
+        'images' => [UploadedFile::fake()->image($image = 'test.png')],
+    ]);
 
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertDatabaseHas(Product::class, [
+        'name' => $name,
+        'sku' => $sku,
+    ]);
+
+    $this->assertDatabaseHas(Media::class, [
+        'file_name' => $image,
+    ]);
+});
+
+test('it can delete the product with its media', function (): void {
+    $product = Product::factory()->for($this->company)->create();
+
+    $product->addMedia(UploadedFile::fake()->image('test.png'))->toMediaCollection('product_images');
+
+    $media = $product->getFirstMedia('product_images');
+
+    $response = $this->withToken($this->token)->deleteJson(route('api.products.delete', [
+        'id' => $product->id,
+    ]));
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertModelMissing($product);
+    $this->assertModelMissing($media);
+});
+
+test('it can update the product with its media', function (): void {
+    $product = Product::factory()->for($this->company)->create();
+
+    $product->addMedia(UploadedFile::fake()->image('test.png'))->toMediaCollection('product_images');
+
+    $response = $this->withToken($this->token)->postJson(route('api.products.update', [
+        'id' => $product->id,
+    ]), [
+        'name' => $name = fake()->name(),
+        'sku' => fake()->uuid(),
+        'is_bundle' => fake()->boolean(),
+        'status' => fake()->boolean(),
+        'images' => [UploadedFile::fake()->image($image = 'update.png')],
+    ]);
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertDatabaseHas(Product::class, ['name' => $name]);
+
+    $this->assertDatabaseHas(Media::class, ['file_name' => $image]);
+});
+
+test('if the user is unable to provide the media, the media collection will not be cleared when updating the product', function (): void {
+    $product = Product::factory()->for($this->company)->create();
+
+    $product->addMedia(UploadedFile::fake()->image('test.png'))->toMediaCollection('product_images');
+
+    $response = $this->withToken($this->token)->postJson(route('api.products.update', [
+        'id' => $product->id,
+    ]), [
+        'name' => $name = fake()->name(),
+        'sku' => fake()->uuid(),
+        'is_bundle' => fake()->boolean(),
+        'status' => false,
+    ]);
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertDatabaseHas(Product::class, ['name' => $name]);
 });
