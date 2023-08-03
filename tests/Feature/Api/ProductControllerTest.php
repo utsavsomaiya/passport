@@ -137,3 +137,5 @@ test('if the user is unable to provide the media, the media collection will not 
 
     $this->assertDatabaseHas(Product::class, ['name' => $name]);
 });
+
+todo('if we build a new relationship with product we need to abort before delete the product.');
