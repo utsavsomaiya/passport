@@ -30,6 +30,7 @@
 - Generate Key: `php artisan key:generate`
 - DB migrate: `php artisan migrate`
 - Please setup the [scheduler](#scheduled-tasks) (cronjob) on the server.
+- We are using the [redis](#redis) for caching and queued jobs. Please install accordingly.
 - Setup [Horizon](#horizon)
 
 
@@ -72,12 +73,12 @@ fi
 ### Postman
 To generate Postman API Keys, please follow these steps:
 1. Visit the Postman documentation: [Postman API Key Authentication](https://learning.postman.com/docs/developer/postman-api/authentication/).
-2. Follow the instructions provided in the documentation to generate your API keys.
+1. Follow the instructions provided in the documentation to generate your API keys.
 
 ### Important Note for Data Seeding
 If you intend to remove the token while seeding the data, please ensure the following:
 1. Verify that the Postman Environment name is set to: `Local`.
-2. Set the environment variable of Postman accordingly.
+1. Set the environment variable of Postman accordingly.
 - Now, it's time to initiate the data seeding process. Open your terminal and execute the following command: `php artisan db:seed`
 
 ### Upgrade
@@ -86,10 +87,6 @@ If you intend to remove the token while seeding the data, please ensure the foll
 - Methods Using Sanctum Tokens In our application, there are two methods that utilize Sanctum tokens:
 1. [`PersonalAccessToken::findToken()`](./app/Http/Middleware/AddCompanyIdInServiceContainer.php#L24C53-L24C62)
 
-### Caching
-- The cached data is usually stored in a very fast data store such as a redis or etc.
-- We are using the [redis](#redis) cache driver.
-
 
 ### Roles and Permissions Caching
 - We are caching the roles and permissions of all the users for better performance. The caching happens the first time user make any request that required authorization.
@@ -97,11 +94,6 @@ If you intend to remove the token while seeding the data, please ensure the foll
 - Cache key is something like - `roles_and_permissions_of_user_[USER_ID]`
 
 - The cache busting happens when any changes are made to the users, roles, or permissions. If you make any such changes directly (via tinker or DB), please remove the cache entry of the respective user or fire the queued job to remove cache entries for all users.
-
-### [Horizon](https://laravel.com/docs/10.x/horizon)
-- You can access the Horizon dashboard by visiting the following URL:
-- Horizon Dashboard : `APP_URL/horizon/dashboard`
-- Please note that only the Super Admin role has the necessary privileges to access this dashboard.
 
 ### Redis
 - Install [redis](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-22-04) and [phpredis](https://github.com/phpredis/phpredis):
@@ -147,5 +139,10 @@ wget https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar
 sudo php pickle.phar install redis
 ```
 - Setup Horizon, and set .env variables accordingly.
+
+### [Horizon](https://laravel.com/docs/10.x/horizon)
+- You can access the Horizon dashboard by visiting the following URL:
+- Horizon Dashboard : `APP_URL/horizon/dashboard`
+- Please note that only the Super Admin role has the necessary privileges to access this dashboard.
 
 ### [Development Principles](./Principles.md)
