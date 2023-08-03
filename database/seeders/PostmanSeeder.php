@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use function Laravel\Prompts\intro;
 
 class PostmanSeeder extends Seeder
 {
@@ -46,7 +47,7 @@ class PostmanSeeder extends Seeder
                 ]);
 
                 if ($response->ok()) {
-                    $this->command->info('Token removed from the Postman Environment successfully.');
+                    intro('Token removed from the Postman Environment successfully.');
                 }
             }
         }

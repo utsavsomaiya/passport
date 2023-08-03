@@ -7,8 +7,11 @@ namespace Database\Seeders;
 use App\Models\Company;
 use App\Models\User;
 use Database\Factories\CompanyFactory;
-use Illuminate\Console\View\Components\Factory;
 use Illuminate\Console\View\Components\TwoColumnDetail;
+use Illuminate\Support\Facades\Storage;
+use function Laravel\Prompts\alert;
+use function Laravel\Prompts\outro;
+use function Laravel\Prompts\warning;
 
 class DatabaseSeeder extends GenerateCsvDataSeeder
 {
@@ -18,6 +21,12 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
     public function run(): void
     {
         $time = microtime(true);
+
+        warning('Clearing old images...');
+        foreach (Storage::allDirectories('public') as $directory) {
+            Storage::deleteDirectory($directory);
+        }
+        alert('Old images deleted successfully... 🤙');
 
         $this->call(PostmanSeeder::class);
 
@@ -48,8 +57,9 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
 
         $this->call(ProductSeeder::class, parameters: ['companyId' => $companyMinimumId]);
 
-        app()->make(Factory::class, ['output' => $this->command->getOutput()])
-            ->info('All this took ' . number_format((microtime(true) - $time) * 1000, 2) . ' ms');
+        $this->call(BundleItemSeeder::class);
+
+        outro('All this took ' . number_format((microtime(true) - $time) * 1000, 2) . ' ms');
     }
 
     private function fakerCompanySeeding(): void
