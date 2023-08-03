@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->longText('description')->nullable();
             $table->string('slug');
             $table->string('sku')->unique();
-            $table->string('upc_ean')->unique();
+            $table->string('upc_ean')->nullable()->unique();
             $table->string('external_reference')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('is_bundle')->default(false);

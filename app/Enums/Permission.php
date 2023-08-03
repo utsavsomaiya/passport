@@ -26,6 +26,7 @@ final readonly class Permission
             'price-books',
             'templates',
             'attributes',
+            'products',
         ],
 
         /**
