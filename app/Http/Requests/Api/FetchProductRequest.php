@@ -17,7 +17,6 @@ class FetchProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent_product_id' => ['sometimes', 'string', 'uuid'],
             'filter' => ['sometimes', 'array', 'max:4'],
             'filter.name' => ['sometimes', 'string', 'max:255'],
             'filter.sku' => ['sometimes', 'string', 'max:255'],

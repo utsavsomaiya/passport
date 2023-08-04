@@ -26,7 +26,7 @@ class ProductFactory extends Factory
             'company_id' => fn (): Collection|Model => Company::factory()->create(),
             'name' => fake()->name(),
             'description' => fake()->sentence(),
-            'sku' => fake()->uuid(),
+            'sku' => strtoupper(substr(md5(uniqid()), 0, 10)),
             'upc_ean' => fake()->ean13(),
             'external_reference' => fake()->url(),
             'status' => fake()->boolean(),

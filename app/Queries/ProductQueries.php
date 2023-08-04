@@ -14,17 +14,12 @@ class ProductQueries
 {
     public function listQuery(Request $request): LengthAwarePaginator
     {
-        $columns = ['id', 'name', 'description', 'slug', 'sku', 'upc_ean', 'external_reference', 'status', 'is_bundle', 'created_at'];
-
         return QueryBuilder::for(Product::class, $request)
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at', 'sku'])
             ->allowedFilters(['name', 'sku', 'upc_ean', 'is_bundle'])
             ->where('company_id', app('company_id'))
-            ->select($columns)
-            ->when($request->get('parent_product_id'), function ($query) use ($request): void {
-                $query->where('parent_product_id', $request->parent_product_id);
-            })
+            ->select('id', 'name', 'description', 'slug', 'sku', 'upc_ean', 'external_reference', 'status', 'is_bundle', 'created_at')
             ->with('media:id,file_name,model_id,model_type,collection_name,disk,created_at')
             ->jsonPaginate();
     }
