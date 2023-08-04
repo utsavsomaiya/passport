@@ -37,7 +37,6 @@ class ProductRequest extends FormRequest
         }
 
         return [
-            'parent_product_id' => ['sometimes', 'uuid', Rule::exists(Product::class)],
             'name' => ['required', 'string', 'max:255', Rule::unique(Product::class)->ignore($productId)->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
             'slug' => ['sometimes', 'string', 'max:255'],
