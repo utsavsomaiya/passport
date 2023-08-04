@@ -13,12 +13,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('bundle_items', function (Blueprint $table) {
+        Schema::create('product_bundles', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->foreignIdFor(Product::class, 'bundle_product_id')->constrained('products');
+            $table->foreignIdFor(Product::class, 'parent_product_id')->constrained('products');
             $table->foreignIdFor(Product::class, 'child_product_id')->constrained('products');
             $table->integer('quantity');
-            $table->integer('order');
+            $table->integer('sort_order');
             $table->timestamps();
         });
     }
