@@ -20,6 +20,7 @@ class ProductSeeder extends Seeder
             'company_id' => $companyId,
             'name' => 'Men Slim Fit Striped Formal Shirt',
             'sku' => '201501004720',
+            'is_bundle' => false,
         ]);
 
         $product->addMediaFromUrl('https://tinyurl.com/men-striped-formal-shirt')
@@ -66,6 +67,7 @@ class ProductSeeder extends Seeder
             'company_id' => $companyId,
             'name' => 'Men Skinny Fit Stretchable Jeans',
             'sku' => '201501004011',
+            'is_bundle' => false,
         ]);
 
         $product->addMediaFromUrl('https://tinyurl.com/men-skinny-fit-stretchable')
@@ -112,6 +114,7 @@ class ProductSeeder extends Seeder
             'company_id' => $companyId,
             'name' => "Rospick Slip On Men's Sneakers, Walking Shoes for Men",
             'sku' => '201501000970',
+            'is_bundle' => false,
         ]);
 
         $product->addMediaFromUrl('https://m.media-amazon.com/images/I/71PRRNkJs0L._AC_UY575_.jpg')
@@ -158,6 +161,7 @@ class ProductSeeder extends Seeder
             'company_id' => $companyId,
             'name' => 'Unisex Wallets',
             'sku' => '201501002390',
+            'is_bundle' => false,
         ]);
 
         $product->addMediaFromUrl('https://tinyurl.com/unisex-wallets')
