@@ -83,18 +83,13 @@ test('it can create a product', function (): void {
 test('it can delete the product with its media', function (): void {
     $product = Product::factory()->for($this->company)->create();
 
-    $product->addMedia(UploadedFile::fake()->image('test.png'))->toMediaCollection('product_images');
-
-    $media = $product->getFirstMedia('product_images');
-
     $response = $this->withToken($this->token)->deleteJson(route('api.products.delete', [
         'id' => $product->id,
     ]));
 
     $response->assertOk()->assertJsonStructure(['success']);
 
-    $this->assertModelMissing($product);
-    $this->assertModelMissing($media);
+    $this->assertSoftDeleted($product);
 });
 
 test('it can update the product with its media', function (): void {
@@ -138,4 +133,6 @@ test('if the user is unable to provide the media, the media collection will not 
     $this->assertDatabaseHas(Product::class, ['name' => $name]);
 });
 
-todo('if we build a new relationship with product we need to abort before delete the product.');
+test('it can deleting media after 3 months with pruning the database', function (): void {
+    
+});

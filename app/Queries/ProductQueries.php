@@ -10,17 +10,27 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class ProductQueries
+class ProductQueries extends GlobalQueries
 {
     public function listQuery(Request $request): LengthAwarePaginator
     {
         return QueryBuilder::for(Product::class, $request)
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at', 'sku'])
-            ->allowedFilters(['name', 'sku', 'upc_ean', 'is_bundle'])
+            ->allowedFilters([$this->filter('name'), $this->filter('sku'), $this->filter('upc_ean'), 'is_bundle'])
             ->where('company_id', app('company_id'))
             ->select('id', 'name', 'description', 'slug', 'sku', 'upc_ean', 'external_reference', 'status', 'is_bundle', 'created_at')
-            ->with('media:id,file_name,model_id,model_type,collection_name,disk,created_at')
+            ->with([
+                'media:id,file_name,model_id,model_type,collection_name,disk,created_at',
+                'productBundles' => function ($query): void {
+                    $query->with([
+                        'product' => function ($query): void {
+                            $query->with('media:id,file_name,model_id,model_type,collection_name,disk,created_at')
+                                ->select('id', 'name', 'description', 'slug', 'sku', 'upc_ean', 'external_reference', 'status', 'is_bundle', 'created_at');
+                        },
+                    ]);
+                },
+            ])
             ->jsonPaginate();
     }
 
@@ -42,12 +52,7 @@ class ProductQueries
 
     public function delete(string $id): void
     {
-        $product = Product::find($id);
-
-        if ($product) {
-            $product->clearMediaCollection('product_images');
-            $product->delete();
-        }
+        Product::where('id', $id)->delete(); // Soft Delete
     }
 
     /**

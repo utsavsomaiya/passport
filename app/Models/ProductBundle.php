@@ -18,7 +18,8 @@ class ProductBundle extends Model
      */
     protected $fillable = ['parent_product_id', 'child_product_id', 'quantity', 'sort_order'];
 
-    public function childProduct(): BelongsTo
+
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'child_product_id');
     }

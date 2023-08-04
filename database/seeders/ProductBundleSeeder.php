@@ -13,10 +13,11 @@ class ProductBundleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run($companyId): void
     {
         // Bundles - https://www.notion.so/Bundles-a2923eea23954737a59d2f5f1221a5d2?pvs=4
         $bundleProduct = Product::factory()->create([
+            'company_id' => $companyId,
             'name' => 'Nike Weekend Set',
             'sku' => '01-14-00444-0BR04',
             'is_bundle' => true,
@@ -43,6 +44,7 @@ class ProductBundleSeeder extends Seeder
         ProductBundle::factory()->createMany($bundledProducts);
 
         $bundleProduct = Product::factory()->create([
+            'company_id' => $companyId,
             'name' => 'Budget Attire',
             'is_bundle' => true,
             'status' => true,
