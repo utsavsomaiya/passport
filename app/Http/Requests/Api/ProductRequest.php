@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\Rules\RequiredIf;
 use Illuminate\Validation\Rules\Unique;
 
 class ProductRequest extends FormRequest
@@ -20,17 +21,20 @@ class ProductRequest extends FormRequest
     {
         $this->merge([
             'status' => (bool) $this->status,
+            'is_bundle' => (bool) $this->is_bundle,
         ]);
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<int, Exists|File|Unique|string|null>>
+     * @return array<string, array<int, Exists|File|Unique|RequiredIf|string|null>>
      */
     public function rules(): array
     {
         $productId = null;
+
+        $bundleItemRules = [Rule::requiredIf($this->get('is_bundle') === true), 'array'];
 
         if ($this->route()?->getName() === 'api.products.update') {
             $productId = $this->route()->parameter('id');
@@ -48,6 +52,17 @@ class ProductRequest extends FormRequest
             'images' => ['sometimes', 'array'],
             'images.0' => [$this->get('status') === true ? 'required' : 'sometimes', File::defaults()],
             'images.*' => ['sometimes', File::defaults()],
+            'bundle_items' => [...$bundleItemRules, Rule::exists(Product::class, 'id')],
+            'bundle_items.*' => ['required_with:bundle_items', 'string', 'uuid'],
+            'quantities' => $bundleItemRules,
+            'quantities.*' => ['required_with:quantities', 'integer'],
+            'sort_orders' => $bundleItemRules,
+            'sort_orders.*' => ['required_with:sort_orders', 'integer'],
         ];
+    }
+
+    public function after()
+    {
+        
     }
 }

@@ -23,17 +23,19 @@ class ProductResource extends JsonResource
         return [
             ...$this->productData($product),
             $this->mergeWhen($product->is_bundle, [
-                'bundle_items' => $product->productBundles->map(fn (ProductBundle $productBundle): array => [
-                    'product_bundle_id' => $productBundle->id,
-                    ...$this->productData($productBundle->product)
-                ]),
+                'bundle_items' => $product->productBundles->map(function (ProductBundle $productBundle): array {
+                    /** @var Product $product */
+                    $product = $productBundle->product;
+
+                    return $this->productData($product);
+                }),
             ]),
         ];
     }
 
     /**
      * @return array<string, mixed>
-    */
+     */
     private function productData(Product $product): array
     {
         return [
@@ -50,7 +52,7 @@ class ProductResource extends JsonResource
             'media' => $product->getMedia('product_images')->map(fn ($media): array => [
                 'uploaded_at' => $media->created_at?->displayFormat(),
                 'url' => $media->getUrl(),
-            ])
+            ]),
         ];
     }
 }

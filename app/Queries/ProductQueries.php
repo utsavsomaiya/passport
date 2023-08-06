@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Product;
+use App\Models\ProductBundle;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -42,6 +43,11 @@ class ProductQueries extends GlobalQueries
         $data['company_id'] ??= app('company_id');
 
         $product = Product::create($data);
+
+        if ($product->is_bundle) {
+            foreach ($data['bundle_items'] as $key => $value) {
+            }
+        }
 
         if (array_key_exists('images', $data)) {
             foreach ($data['images'] as $image) {

@@ -111,11 +111,6 @@ Route::name('api.')->group(function () {
                 Route::delete('{id}/delete', 'delete')->can('delete-product')->name('delete');
                 Route::post('{id}/update', 'update')->can('update-product')->name('update');
             });
-
-            Route::controller(ProductBundleController::class)->name('product_bundles.')->prefix('product-bundles')->group(function (): void {
-                Route::post('create', 'create')->can('create-product-bundle')->name('create');
-                Route::post('{id}/update', 'update')->can('update-product-bundle')->name('update');
-            });
         });
     });
 });
