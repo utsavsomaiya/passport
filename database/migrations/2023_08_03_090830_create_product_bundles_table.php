@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->foreignIdFor(Product::class, 'parent_product_id')->constrained('products');
             $table->foreignIdFor(Product::class, 'child_product_id')->constrained('products');
             $table->integer('quantity');
-            $table->integer('sort_order');
+            $table->integer('sort_order')->nullable();
             $table->timestamps();
         });
     }

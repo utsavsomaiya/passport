@@ -53,7 +53,7 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
 
         $this->call(ProductSeeder::class, parameters: ['companyId' => $companyMinimumId]);
 
-        $this->call(ProductBundleSeeder::class);
+        $this->call(ProductBundleSeeder::class, parameters: ['companyId' => $companyMinimumId]);
     }
 
     private function fakerCompanySeeding(): void

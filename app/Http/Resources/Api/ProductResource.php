@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Api;
 
+use App\Models\Product;
+use App\Models\ProductBundle;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,12 +14,30 @@ class ProductResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function toArray(Request $request): array
     {
         $product = $this->resource;
 
+        return [
+            ...$this->productData($product),
+            $this->mergeWhen($product->is_bundle, [
+                'bundle_items' => $product->productBundles->map(function (ProductBundle $productBundle): ProductResource {
+                    /** @var Product $product */
+                    $product = $productBundle->product;
+
+                    return new self($product);
+                }),
+            ]),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function productData(Product $product): array
+    {
         return [
             'id' => $product->id,
             'name' => $product->name,

@@ -24,6 +24,7 @@ class User extends Authenticatable implements AuditableInterface
     use SoftDeletes;
     use HasRoles;
     use Auditable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
