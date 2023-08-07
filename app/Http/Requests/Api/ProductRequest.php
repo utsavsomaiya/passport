@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api;
 
 use App\Models\Product;
-use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rules\RequiredIf;
 use Illuminate\Validation\Rules\Unique;
-use Illuminate\Validation\Validator;
 
 class ProductRequest extends FormRequest
 {
@@ -62,61 +60,16 @@ class ProductRequest extends FormRequest
                     ->where('company_id', app('company_id'))
                     ->where('is_bundle', false)
                     ->whereNot('id', $productId ??= ''),
+                array_key_exists('quantities', $this->get('bundle_items', [])) ? 'size:' . count($this->get('bundle_items')['quantities']) : '',
             ],
-            'bundle_items.ids.*' => ['required_with:bundle_items.ids', 'string', 'uuid'],
-            'bundle_items.quantities' => $bundleItemRules,
+            'bundle_items.ids.*' => ['required_with:bundle_items.ids', 'string', 'uuid', 'distinct:strict'],
+            'bundle_items.quantities' => [
+                ...$bundleItemRules,
+                array_key_exists('ids', $this->get('bundle_items', [])) ? 'size:' . count($this->get('bundle_items')['ids']) : '',
+            ],
             'bundle_items.quantities.*' => ['required_with:bundle_items.quantities', 'integer', 'gt:0'],
             'bundle_items.sort_orders' => ['sometimes', 'array'],
             'bundle_items.sort_orders.*' => ['required_with:bundle_items.sort_orders', 'integer'],
-        ];
-    }
-
-    /**
-     * Get the "after" validation callables for the request.
-     *
-     * @return array<int, Closure>
-     */
-    public function after(): array
-    {
-        return [
-            function (Validator $validator): void {
-                if ($this->get('is_bundle') !== true) {
-                    return;
-                }
-
-                $bundleItems = $this->get('bundle_items');
-
-                if (is_array($bundleItems)) {
-                    if (! array_key_exists('ids', $bundleItems)) {
-                        return;
-                    }
-
-                    if (! array_key_exists('quantities', $bundleItems)) {
-                        return;
-                    }
-
-                    $ids = $bundleItems['ids'];
-                    $quantities = $bundleItems['quantities'];
-
-                    if (! is_array($ids)) {
-                        return;
-                    }
-
-                    if (! is_array($quantities)) {
-                        return;
-                    }
-
-                    if (count($ids) !== count(array_unique($ids))) {
-                        $validator->errors()->add('bundle_items.ids', 'The bundle items must be different.');
-                    }
-
-                    if (count($ids) === count($quantities)) {
-                        return;
-                    }
-
-                    $validator->errors()->add('bundle_items', 'Bundle Items and quantity arrays do not match.');
-                }
-            }
         ];
     }
 }

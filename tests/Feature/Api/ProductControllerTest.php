@@ -315,5 +315,5 @@ test('it cannot create the bundle products when the child products are same', fu
     ]);
 
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
+        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids.0', 'bundle_items.ids.1']]);
 });

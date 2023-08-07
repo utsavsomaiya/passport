@@ -17,7 +17,7 @@ class PostmanSeeder extends Seeder
     public function run(): void
     {
         if (! env('POSTMAN_API_KEY')) {
-            $this->command->error('Please set the postman API Key...');
+            $this->command->info('You may set `POSTMAN_API_KEY` to reset token in Postman after running database seeder.');
 
             return;
         }

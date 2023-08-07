@@ -74,12 +74,12 @@ fi
 ### Postman
 To generate Postman API Keys, please follow these steps:
 1. Visit the Postman documentation: [Postman API Key Authentication](https://learning.postman.com/docs/developer/postman-api/authentication/).
-2. Follow the instructions provided in the documentation to generate your API keys.
+1. Follow the instructions provided in the documentation to generate your API keys.
 
 ### Important Note for Data Seeding
 If you intend to remove the token while seeding the data, please ensure the following:
 1. Set the environment variable of [Postman](#postman) accordingly.
-2. Open your terminal and execute the following command: `php artisan db:seed`
+1. Open your terminal and execute the following command: `php artisan db:seed`
 
 ### Upgrade
 - When updating [Laravel Sanctum](https://laravel.com/docs/10.x/sanctum), it is important to consider any changes related to the Sanctum token. If the token implementation or behavior has been modified in the update, corresponding changes should be made in your code.
