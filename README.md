@@ -29,6 +29,7 @@
 - Install the dependencies: `composer install`
 - Generate Key: `php artisan key:generate`
 - DB migrate: `php artisan migrate`
+- `php artisan storage:link`
 - Please setup the [scheduler](#scheduled-tasks) (cronjob) on the server.
 - We are using the [redis](#redis) for caching and queued jobs. Please install accordingly. Media library also uses the redis queue connection.
 - Setup [Horizon](#horizon)
