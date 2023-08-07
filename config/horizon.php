@@ -200,6 +200,7 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
+                'queue' => ['pxm_production'],
                 'maxProcesses' => 10,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
