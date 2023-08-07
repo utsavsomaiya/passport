@@ -137,7 +137,9 @@ test('if the user is unable to provide the media, the media collection will not 
 });
 
 test('it can fetch the products with its bundle.', function (): void {
-    $products = Product::factory(2)->for($this->company)->sequence(['is_bundle' => true], ['is_bundle' => false])->create();
+    $products = Product::factory(2)->for($this->company)
+        ->sequence(['is_bundle' => true], ['is_bundle' => false])
+        ->create();
 
     ProductBundle::factory()->create([
         'parent_product_id' => $products->first()->id,
@@ -184,7 +186,7 @@ test('it can fetch the products with its bundle.', function (): void {
 });
 
 test('it can create a bundle products', function (): void {
-    $product = Product::factory()->for($this->company)->create();
+    $product = Product::factory()->for($this->company)->create(['is_bundle' => false]);
 
     $response = $this->withToken($this->token)->postJson(route('api.products.create'), [
         'name' => $name = fake()->name(),
@@ -212,6 +214,10 @@ test('it can create a bundle products', function (): void {
         'quantity' => $quantity,
         'sort_order' => $sortOrder,
     ]);
+
+    $this->assertDatabaseHas(Media::class, [
+        'file_name' => $image,
+    ]);
 });
 
 test('it cannot create bundle of bundle products', function (): void {
@@ -230,7 +236,8 @@ test('it cannot create bundle of bundle products', function (): void {
         ],
     ]);
 
-    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
 });
 
 test('it can update the bundle product', function (): void {
@@ -269,7 +276,7 @@ test('it can update the bundle product', function (): void {
     ]);
 });
 
-test('it can not add the current product in bundle', function (): void {
+test('it cannot add the current product in bundle', function (): void {
     $product = Product::factory()->for($this->company)->create(['is_bundle' => false]);
 
     $response = $this->withToken($this->token)->postJson(route('api.products.update', [
@@ -287,5 +294,26 @@ test('it can not add the current product in bundle', function (): void {
         ],
     ]);
 
-    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
+});
+
+test('it cannot create the bundle products when the child products are same', function (): void {
+    $product = Product::factory()->for($this->company)->create(['is_bundle' => false]);
+
+    $response = $this->withToken($this->token)->postJson(route('api.products.create'), [
+        'name' => fake()->name(),
+        'sku' => fake()->uuid(),
+        'upc_ean' => fake()->ean13(),
+        'status' => false,
+        'is_bundle' => true,
+        'images' => [UploadedFile::fake()->image('test.png')],
+        'bundle_items' => [
+            'ids' => [$product->id, $product->id],
+            'quantities' => [fake()->numberBetween(1, 10), fake()->numberBetween(1, 10)],
+        ],
+    ]);
+
+    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
 });

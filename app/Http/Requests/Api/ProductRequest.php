@@ -65,7 +65,7 @@ class ProductRequest extends FormRequest
             ],
             'bundle_items.ids.*' => ['required_with:bundle_items.ids', 'string', 'uuid'],
             'bundle_items.quantities' => $bundleItemRules,
-            'bundle_items.quantities.*' => ['required_with:bundle_items', 'integer', 'gt:0'],
+            'bundle_items.quantities.*' => ['required_with:bundle_items.quantities', 'integer', 'gt:0'],
             'bundle_items.sort_orders' => ['sometimes', 'array'],
             'bundle_items.sort_orders.*' => ['required_with:bundle_items.sort_orders', 'integer'],
         ];
@@ -106,13 +106,17 @@ class ProductRequest extends FormRequest
                         return;
                     }
 
+                    if (count($ids) !== count(array_unique($ids))) {
+                        $validator->errors()->add('bundle_items.ids', 'The bundle items must be different.');
+                    }
+
                     if (count($ids) === count($quantities)) {
                         return;
                     }
 
                     $validator->errors()->add('bundle_items', 'Bundle Items and quantity arrays do not match.');
                 }
-            },
+            }
         ];
     }
 }
