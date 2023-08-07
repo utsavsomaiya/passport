@@ -134,5 +134,5 @@ test('if the user is unable to provide the media, the media collection will not 
 });
 
 test('it can deleting media after 3 months with pruning the database', function (): void {
-    
+
 });

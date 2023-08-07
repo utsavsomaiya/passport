@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Product;
-use App\Models\ProductBundle;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductQueries extends GlobalQueries
@@ -36,7 +36,7 @@ class ProductQueries extends GlobalQueries
     }
 
     /**
-     * @param  array<string, string|array<int, UploadedFile>>  $data
+     * @param  array<string, string|array<int, UploadedFile|array<int, array<int, string>>>>  $data
      */
     public function create(array $data): void
     {
@@ -44,10 +44,7 @@ class ProductQueries extends GlobalQueries
 
         $product = Product::create($data);
 
-        if ($product->is_bundle) {
-            foreach ($data['bundle_items'] as $key => $value) {
-            }
-        }
+        $this->storeBundleProducts($product, $data);
 
         if (array_key_exists('images', $data)) {
             foreach ($data['images'] as $image) {
@@ -62,14 +59,13 @@ class ProductQueries extends GlobalQueries
     }
 
     /**
-     * @param  array<string, string|array<int, UploadedFile>>  $data
+     * @param  array<string, mixed>  $data
      */
     public function update(string $id, array $data): void
     {
         $product = Product::find($id);
 
         if ($product) {
-
             if (array_key_exists('images', $data)) {
                 /** @var array<int, UploadedFile> $productImages */
                 $productImages = $data['images'];
@@ -83,7 +79,77 @@ class ProductQueries extends GlobalQueries
                 }
             }
 
+            $isProductBundle = $product->status;
+
             $product->update($data);
+
+            if ($product->refresh()->is_bundle !== $isProductBundle) {
+
+                /** @var array<int, mixed> $bundledProducts */
+                $bundledProducts = [];
+
+                if ($data['is_bundle']) {
+                    /** @var array<string, mixed> $bundleItems */
+                    $bundleItems = $data['bundle_items'];
+
+                    foreach ($bundleItems['ids'] as $key => $bundleItemId) {
+                        $bundledProducts[] = [
+                            'parent_product_id' => $product->id,
+                            'child_product_id' => $bundleItemId,
+                            'quantity' => $bundleItems['quantities'][$key],
+                            'sort_order' => $this->sortOrders($bundleItems, $key),
+                        ];
+                    }
+
+                    resolve(ProductBundleQueries::class)->upsert($bundledProducts);
+
+                    return;
+                }
+
+                resolve(ProductBundleQueries::class)->deleteByParentId($product->id);
+            }
         }
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function storeBundleProducts(Product $product, array $data): void
+    {
+        if ($product->is_bundle) {
+            /** @var array<int, mixed> $bundledProducts */
+            $bundledProducts = [];
+
+            /** @var array<string, mixed> $bundleItems */
+            $bundleItems = $data['bundle_items'];
+
+            foreach ($bundleItems['ids'] as $key => $bundleItemId) {
+                $bundledProducts[] = [
+                    'id' => Str::orderedUuid(),
+                    'parent_product_id' => $product->id,
+                    'child_product_id' => $bundleItemId,
+                    'quantity' => $bundleItems['quantities'][$key],
+                    'sort_orders' => $this->sortOrders($bundleItems, $key),
+                ];
+            }
+
+            resolve(ProductBundleQueries::class)->createMany($bundledProducts);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $bundleItems
+     */
+    private function sortOrders(array $bundleItems, int $key): ?int
+    {
+        if (! array_key_exists('sort_orders', $bundleItems)) {
+            return null;
+        }
+
+        if (array_key_exists($key, $bundleItems['sort_orders'])) {
+            return (int) $bundleItems['sort_orders'][$key];
+        }
+
+        return null;
     }
 }

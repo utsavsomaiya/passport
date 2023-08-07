@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PriceBookController;
-use App\Http\Controllers\Api\ProductBundleController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\RoleController;
