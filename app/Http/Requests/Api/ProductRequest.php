@@ -39,6 +39,7 @@ class ProductRequest extends FormRequest
         $bundleItemRules = [Rule::requiredIf($this->get('is_bundle') === true), 'array'];
 
         if ($this->route()?->getName() === 'api.products.update') {
+            /** @var string $productId */
             $productId = $this->route()->parameter('id');
         }
 
@@ -55,7 +56,13 @@ class ProductRequest extends FormRequest
             'images.0' => [$this->get('status') === true ? 'required' : 'sometimes', File::defaults()],
             'images.*' => ['sometimes', File::defaults()],
             'bundle_items' => [...$bundleItemRules, 'max:3'],
-            'bundle_items.ids' => [...$bundleItemRules, Rule::exists(Product::class, 'id')->where('is_bundle', false)],
+            'bundle_items.ids' => [
+                ...$bundleItemRules,
+                Rule::exists(Product::class, 'id')
+                    ->where('company_id', app('company_id'))
+                    ->where('is_bundle', false)
+                    ->whereNot('id', $productId ??= ''),
+            ],
             'bundle_items.ids.*' => ['required_with:bundle_items.ids', 'string', 'uuid'],
             'bundle_items.quantities' => $bundleItemRules,
             'bundle_items.quantities.*' => ['required_with:bundle_items', 'integer', 'gt:0'],
@@ -77,19 +84,34 @@ class ProductRequest extends FormRequest
                     return;
                 }
 
-                if (! is_countable($this->get('bundle_items')['ids'])) {
-                    return;
-                }
+                $bundleItems = $this->get('bundle_items');
 
-                if (! is_countable($this->get('bundle_items')['quantities'])) {
-                    return;
-                }
+                if (is_array($bundleItems)) {
+                    if (! array_key_exists('ids', $bundleItems)) {
+                        return;
+                    }
 
-                if (count($this->get('bundle_items')['ids']) === count($this->get('bundle_items')['quantities'])) {
-                    return;
-                }
+                    if (! array_key_exists('quantities', $bundleItems)) {
+                        return;
+                    }
 
-                $validator->errors()->add('bundle_items', 'Bundle Items and quantity arrays are not match.');
+                    $ids = $bundleItems['ids'];
+                    $quantities = $bundleItems['quantities'];
+
+                    if (! is_array($ids)) {
+                        return;
+                    }
+
+                    if (! is_array($quantities)) {
+                        return;
+                    }
+
+                    if (count($ids) === count($quantities)) {
+                        return;
+                    }
+
+                    $validator->errors()->add('bundle_items', 'Bundle Items and quantity arrays do not match.');
+                }
             },
         ];
     }

@@ -79,7 +79,7 @@ class ProductQueries extends GlobalQueries
                 }
             }
 
-            $isProductBundle = $product->status;
+            $isProductBundle = $product->is_bundle;
 
             $product->update($data);
 
@@ -129,7 +129,7 @@ class ProductQueries extends GlobalQueries
                     'parent_product_id' => $product->id,
                     'child_product_id' => $bundleItemId,
                     'quantity' => $bundleItems['quantities'][$key],
-                    'sort_orders' => $this->sortOrders($bundleItems, $key),
+                    'sort_order' => $this->sortOrders($bundleItems, $key),
                 ];
             }
 
