@@ -141,6 +141,7 @@ sudo php pickle.phar install redis
 - Setup Horizon, and set .env variables accordingly.
 
 ### [Horizon](https://laravel.com/docs/10.x/horizon)
+- If multiple sites are using Horizon on the same server, prefixes need to be added.
 - You can access the Horizon dashboard by visiting the following URL:
 - Horizon Dashboard : `APP_URL/horizon/dashboard`
 - Please note that only the Super Admin role has the necessary privileges to access this dashboard.
