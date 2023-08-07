@@ -41,6 +41,8 @@ class ProductRequest extends FormRequest
             $productId = $this->route()->parameter('id');
         }
 
+        $bundleItems = $this->get('bundle_items', []);
+
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique(Product::class)->ignore($productId)->where('company_id', app('company_id'))],
             'description' => ['nullable', 'string'],
@@ -60,12 +62,12 @@ class ProductRequest extends FormRequest
                     ->where('company_id', app('company_id'))
                     ->where('is_bundle', false)
                     ->whereNot('id', $productId ??= ''),
-                array_key_exists('quantities', $this->get('bundle_items', [])) ? 'size:' . count($this->get('bundle_items')['quantities']) : '',
+                array_key_exists('quantities', $bundleItems) && is_array($bundleItems['quantities']) ? 'size:' . count($bundleItems['quantities']) : '',
             ],
             'bundle_items.ids.*' => ['required_with:bundle_items.ids', 'string', 'uuid', 'distinct:strict'],
             'bundle_items.quantities' => [
                 ...$bundleItemRules,
-                array_key_exists('ids', $this->get('bundle_items', [])) ? 'size:' . count($this->get('bundle_items')['ids']) : '',
+                array_key_exists('ids', $bundleItems) && is_array($bundleItems['ids']) ? 'size:' . count($bundleItems['ids']) : '',
             ],
             'bundle_items.quantities.*' => ['required_with:bundle_items.quantities', 'integer', 'gt:0'],
             'bundle_items.sort_orders' => ['sometimes', 'array'],
