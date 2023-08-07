@@ -28,7 +28,7 @@ class PostmanSeeder extends Seeder
 
         if ($response->ok()) {
             $environmentId = $response->collect('environments')
-                ->filter(fn ($environment): bool => $environment['name'] === 'Local')
+                ->filter(fn ($environment): bool => $environment['name'] === env('POSTMAN_ENVIRONMENT_NAME', 'Local'))
                 ->first()['id'];
         }
 
