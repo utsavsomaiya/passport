@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\GenerateTokenController;
 use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
+use App\Http\Controllers\Api\LocaleProductController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Controllers\Api\ProductController;
@@ -18,11 +19,11 @@ use App\Http\Controllers\Api\RolePermissionController;
 use App\Http\Controllers\Api\RoleUserController;
 use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Routing\Middleware\ThrottleRequestsWithRedis;
 use Illuminate\Support\Facades\Route;
 
 Route::name('api.')->group(function () {
-    Route::middleware(ThrottleRequests::with(5, 1))->group(function (): void {
+    Route::middleware(ThrottleRequestsWithRedis::using('auth'))->group(function (): void {
         Route::post('generate-token', [GenerateTokenController::class, 'generateToken'])->name('generate_token');
         Route::post('forgot-password', ForgotPasswordController::class)->name('forgot_password');
         Route::post('reset-password', ResetPasswordController::class)->name('reset_password');
@@ -109,6 +110,10 @@ Route::name('api.')->group(function () {
                 Route::post('create', 'create')->can('create-product')->name('create');
                 Route::delete('{id}/delete', 'delete')->can('delete-product')->name('delete');
                 Route::post('{id}/update', 'update')->can('update-product')->name('update');
+            });
+
+            Route::controller(LocaleProductController::class)->name('locale_product.')->prefix('locale-product')->group(function () {
+
             });
         });
     });

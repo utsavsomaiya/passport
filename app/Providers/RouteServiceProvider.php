@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +31,13 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for(
             'api',
             fn (Request $request): Limit => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip())
+        );
+
+        RateLimiter::for('auth', fn (Request $request): Limit => Limit::perMinute(5)
+            ->by($request->user()?->id ?: $request->ip())
+            ->response(fn (Request $request, array $headers): ResponseFactory|Response => response(__('Too many attempts. Please try again in :seconds seconds', [
+                'seconds' => $headers['Retry-After'],
+            ]), Response::HTTP_TOO_MANY_REQUESTS))
         );
 
         $this->routes(function (): void {

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Company;
 use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -13,7 +12,6 @@ test('it can generate the user token', function (): void {
         'email' => $user->email,
         'password' => 'password',
         'device_name' => 'test',
-        'company_id' => Company::factory()->create()->id,
     ]);
 
     $response->assertOk()

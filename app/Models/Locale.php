@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Locale extends Model
 {
@@ -30,5 +31,10 @@ class Locale extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function localeProducts(): HasMany
+    {
+        return $this->hasMany(LocaleProduct::class);
     }
 }

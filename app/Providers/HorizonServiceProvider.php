@@ -18,7 +18,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         parent::boot();
 
-        Horizon::auth(fn ($request) => $request->query('unlock') === 'only-gaurav-and-utsav-can-view-this' || app()->environment('local'));
+        Horizon::auth(fn ($request): bool => $request->query('unlock') === 'only-gaurav-and-utsav-can-view-this' || app()->environment('local'));
 
         // Horizon::routeSmsNotificationsTo('15556667777');
         // Horizon::routeMailNotificationsTo('example@example.com');
