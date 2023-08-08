@@ -66,6 +66,11 @@ class Product extends Model implements HasMedia
         return $this->hasMany(ProductBundle::class, 'parent_product_id')->with('product');
     }
 
+    public function localeProducts(): HasMany
+    {
+        return $this->hasMany(LocaleProduct::class);
+    }
+
     /**
      * Get the options for generating the slug.
      */

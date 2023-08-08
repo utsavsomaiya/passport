@@ -26,6 +26,7 @@ class CheckCredentialsRequest extends FormRequest
         return [
             'email' => ['required', 'email'],
             'password' => ['required'],
+            'device_name' => ['sometimes', 'string', 'max:255']
         ];
     }
 
@@ -41,7 +42,7 @@ class CheckCredentialsRequest extends FormRequest
         return [
             function (Validator $validator): void {
                 if (! $this->user || ! Hash::check($this->password, $this->user->password)) {
-                    $validator->errors()->add('email', 'The provided credentials are incorrect');
+                    $validator->errors()->add('email', __('auth.failed'));
                 }
             },
         ];
