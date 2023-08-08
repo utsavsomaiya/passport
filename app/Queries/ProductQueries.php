@@ -25,7 +25,7 @@ class ProductQueries extends GlobalQueries
                 'media:id,file_name,model_id,model_type,collection_name,disk,created_at',
                 'productBundles' => function ($query): void {
                     $query->with([
-                        'product' => function ($query): void {
+                        'childProduct' => function ($query): void {
                             $query->with('media:id,file_name,model_id,model_type,collection_name,disk,created_at')
                                 ->select('id', 'name', 'description', 'slug', 'sku', 'upc_ean', 'external_reference', 'status', 'is_bundle', 'created_at');
                         },
@@ -63,51 +63,49 @@ class ProductQueries extends GlobalQueries
      */
     public function update(string $id, array $data): void
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
-        if ($product) {
-            if (array_key_exists('images', $data)) {
-                /** @var array<int, UploadedFile> $productImages */
-                $productImages = $data['images'];
+        if (array_key_exists('images', $data)) {
+            /** @var array<int, UploadedFile> $productImages */
+            $productImages = $data['images'];
 
-                if ($productImages !== []) {
-                    $product->clearMediaCollection('product_images');
+            if ($productImages !== []) {
+                $product->clearMediaCollection('product_images');
 
-                    foreach ($productImages as $productImage) {
-                        $product->addMedia($productImage)->toMediaCollection('product_images');
-                    }
+                foreach ($productImages as $productImage) {
+                    $product->addMedia($productImage)->toMediaCollection('product_images');
                 }
             }
+        }
 
-            $isProductBundle = $product->is_bundle;
+        $isProductBundle = $product->is_bundle;
 
-            $product->update($data);
+        $product->update($data);
 
-            if ($product->refresh()->is_bundle !== $isProductBundle) {
+        if ($product->refresh()->is_bundle !== $isProductBundle) {
 
-                /** @var array<int, mixed> $bundledProducts */
-                $bundledProducts = [];
+            /** @var array<int, mixed> $bundledProducts */
+            $bundledProducts = [];
 
-                if ($data['is_bundle']) {
-                    /** @var array<string, mixed> $bundleItems */
-                    $bundleItems = $data['bundle_items'];
+            if ($data['is_bundle']) {
+                /** @var array<string, mixed> $bundleItems */
+                $bundleItems = $data['bundle_items'];
 
-                    foreach ($bundleItems['ids'] as $key => $bundleItemId) {
-                        $bundledProducts[] = [
-                            'parent_product_id' => $product->id,
-                            'child_product_id' => $bundleItemId,
-                            'quantity' => $bundleItems['quantities'][$key],
-                            'sort_order' => $this->sortOrders($bundleItems, $key),
-                        ];
-                    }
-
-                    resolve(ProductBundleQueries::class)->upsert($bundledProducts);
-
-                    return;
+                foreach ($bundleItems['ids'] as $key => $bundleItemId) {
+                    $bundledProducts[] = [
+                        'parent_product_id' => $product->id,
+                        'child_product_id' => $bundleItemId,
+                        'quantity' => $bundleItems['quantities'][$key],
+                        'sort_order' => $this->sortOrders($bundleItems, $key),
+                    ];
                 }
 
-                resolve(ProductBundleQueries::class)->deleteByParentId($product->id);
+                resolve(ProductBundleQueries::class)->upsert($bundledProducts);
+
+                return;
             }
+
+            resolve(ProductBundleQueries::class)->deleteByParentId($product->id);
         }
     }
 

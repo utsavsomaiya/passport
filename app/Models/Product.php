@@ -63,7 +63,7 @@ class Product extends Model implements HasMedia
 
     public function productBundles(): HasMany
     {
-        return $this->hasMany(ProductBundle::class, 'parent_product_id')->with('product');
+        return $this->hasMany(ProductBundle::class, 'parent_product_id');
     }
 
     public function localeProducts(): HasMany

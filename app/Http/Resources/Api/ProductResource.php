@@ -23,11 +23,11 @@ class ProductResource extends JsonResource
         return [
             ...$this->productData($product),
             $this->mergeWhen($product->is_bundle, [
-                'bundle_items' => $product->productBundles->map(function (ProductBundle $productBundle): ProductResource {
-                    /** @var Product $product */
-                    $product = $productBundle->product;
+                'bundle_items' => $product->productBundles->map(function (ProductBundle $productBundle): array {
+                    /** @var Product $childProduct */
+                    $childProduct = $productBundle->childProduct;
 
-                    return new self($product);
+                    return $this->productData($childProduct);
                 }),
             ]),
         ];
