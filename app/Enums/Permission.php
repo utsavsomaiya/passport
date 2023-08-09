@@ -35,6 +35,7 @@ final readonly class Permission
         protected array $permissions = [
             'manage-user-roles',
             'manage-role-permissions',
+            'manage-product-images',
         ]
     ) {
 

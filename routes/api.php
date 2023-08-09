@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\LocaleProductController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductMediaController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RolePermissionController;
@@ -112,7 +113,13 @@ Route::name('api.')->group(function () {
                 Route::post('{id}/update', 'update')->can('update-product')->name('update');
             });
 
-            Route::controller(LocaleProductController::class)->name('locale_product.')->prefix('locale-product')->group(function () {
+            Route::controller(ProductMediaController::class)->name('product_media.')->prefix('product-media')->group(function (): void {
+                Route::get('{productId}/fetch', 'fetch')->can('manage-product-images')->name('fetch');
+                Route::post('{productId}/create', 'create')->can('manage-product-images')->name('create');
+                Route::delete('{productId}/{id}/delete', 'delete')->can('manage-product-images')->name('delete');
+            });
+
+            Route::controller(LocaleProductController::class)->name('locale_product.')->prefix('locale-product')->group(function (): void {
 
             });
         });

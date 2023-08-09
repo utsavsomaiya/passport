@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised() // Must not compromised in data leaks...
         );
 
-        File::defaults(fn (): File => File::image()->types(['jpeg', 'jpg', 'gif', 'png']));
+        File::defaults(fn (): File => File::image()->types(['jpeg', 'jpg', 'gif', 'png', 'webp']));
 
         Response::macro('api', fn (string $message, array $extras = []): JsonResponse => Response::json(['success' => __($message), ...$extras]));
 
