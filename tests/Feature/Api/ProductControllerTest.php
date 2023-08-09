@@ -54,11 +54,10 @@ test('if `product_status` is active or true then user needs to upload one image 
         'sku' => fake()->uuid(),
         'upc_ean' => fake()->ean13(),
         'status' => true,
-        'is_bundle' => false,
     ]);
 
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ->assertJsonStructure(['message', 'errors' => ['images.0']]);
+        ->assertJsonStructure(['message', 'errors' => ['image']]);
 });
 
 test('it can create a product', function (): void {
@@ -67,8 +66,7 @@ test('it can create a product', function (): void {
         'sku' => $sku = fake()->uuid(),
         'upc_ean' => fake()->ean13(),
         'status' => false,
-        'is_bundle' => false,
-        'images' => [UploadedFile::fake()->image($image = 'test.png')],
+        'image' => UploadedFile::fake()->image($image = 'test.png'),
     ]);
 
     $response->assertOk()->assertJsonStructure(['success']);
@@ -76,6 +74,7 @@ test('it can create a product', function (): void {
     $this->assertDatabaseHas(Product::class, [
         'name' => $name,
         'sku' => $sku,
+        'status' => false,
     ]);
 
     $this->assertDatabaseHas(Media::class, [
@@ -83,7 +82,7 @@ test('it can create a product', function (): void {
     ]);
 });
 
-test('it can delete the product with its media', function (): void {
+test('it can archive(`soft delete`) the product', function (): void {
     $product = Product::factory()->for($this->company)->create();
 
     $response = $this->withToken($this->token)->deleteJson(route('api.products.delete', [
@@ -105,9 +104,8 @@ test('it can update the product with its media', function (): void {
     ]), [
         'name' => $name = fake()->name(),
         'sku' => fake()->uuid(),
-        'is_bundle' => false,
         'status' => fake()->boolean(),
-        'images' => [UploadedFile::fake()->image($image = 'update.png')],
+        'image' => UploadedFile::fake()->image($image = 'update.png'),
     ]);
 
     $response->assertOk()->assertJsonStructure(['success']);
@@ -115,25 +113,6 @@ test('it can update the product with its media', function (): void {
     $this->assertDatabaseHas(Product::class, ['name' => $name]);
 
     $this->assertDatabaseHas(Media::class, ['file_name' => $image]);
-});
-
-test('if the user is unable to provide the media, the media collection will not be cleared when updating the product', function (): void {
-    $product = Product::factory()->for($this->company)->create();
-
-    $product->addMedia(UploadedFile::fake()->image('test.png'))->toMediaCollection('product_images');
-
-    $response = $this->withToken($this->token)->postJson(route('api.products.update', [
-        'id' => $product->id,
-    ]), [
-        'name' => $name = fake()->name(),
-        'sku' => fake()->uuid(),
-        'is_bundle' => false,
-        'status' => false,
-    ]);
-
-    $response->assertOk()->assertJsonStructure(['success']);
-
-    $this->assertDatabaseHas(Product::class, ['name' => $name]);
 });
 
 test('it can fetch the products with its bundle.', function (): void {
@@ -183,137 +162,4 @@ test('it can fetch the products with its bundle.', function (): void {
                 ->etc()
         );
 
-});
-
-test('it can create a bundle products', function (): void {
-    $product = Product::factory()->for($this->company)->create(['is_bundle' => false]);
-
-    $response = $this->withToken($this->token)->postJson(route('api.products.create'), [
-        'name' => $name = fake()->name(),
-        'sku' => $sku = fake()->uuid(),
-        'upc_ean' => fake()->ean13(),
-        'status' => false,
-        'is_bundle' => true,
-        'images' => [UploadedFile::fake()->image($image = 'test.png')],
-        'bundle_items' => [
-            'ids' => [$product->id],
-            'quantities' => [$quantity = fake()->numberBetween(1, 10)],
-            'sort_orders' => [$sortOrder = fake()->numberBetween(1, 10)],
-        ],
-    ]);
-
-    $response->assertOk()->assertJsonStructure(['success']);
-
-    $this->assertDatabaseHas(Product::class, [
-        'name' => $name,
-        'sku' => $sku,
-    ]);
-
-    $this->assertDatabaseHas(ProductBundle::class, [
-        'child_product_id' => $product->id,
-        'quantity' => $quantity,
-        'sort_order' => $sortOrder,
-    ]);
-
-    $this->assertDatabaseHas(Media::class, [
-        'file_name' => $image,
-    ]);
-});
-
-test('it cannot create bundle of bundle products', function (): void {
-    $product = Product::factory()->for($this->company)->create(['is_bundle' => true]);
-
-    $response = $this->withToken($this->token)->postJson(route('api.products.create'), [
-        'name' => fake()->name(),
-        'sku' => fake()->uuid(),
-        'upc_ean' => fake()->ean13(),
-        'status' => false,
-        'is_bundle' => true,
-        'images' => [UploadedFile::fake()->image('test.png')],
-        'bundle_items' => [
-            'ids' => [$product->id],
-            'quantities' => [fake()->numberBetween(1, 10)],
-        ],
-    ]);
-
-    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
-});
-
-test('it can update the bundle product', function (): void {
-    $childProduct = Product::factory()->for($this->company)->create(['is_bundle' => false]);
-
-    $product = Product::factory()->for($this->company)->create(['is_bundle' => false]);
-
-    $response = $this->withToken($this->token)->postJson(route('api.products.update', [
-        'id' => $product->id,
-    ]), [
-        'name' => $name = fake()->name(),
-        'sku' => fake()->uuid(),
-        'upc_ean' => fake()->ean13(),
-        'status' => false,
-        'is_bundle' => true,
-        'images' => [UploadedFile::fake()->image('test.png')],
-        'bundle_items' => [
-            'ids' => [$childProduct->id],
-            'quantities' => [$quantity = fake()->numberBetween(1, 10)],
-        ],
-    ]);
-
-    $response->assertOk()->assertJsonStructure(['success']);
-
-    $this->assertDatabaseHas(Product::class, [
-        'id' => $product->id,
-        'name' => $name,
-        'is_bundle' => true,
-    ]);
-
-    $this->assertDatabaseHas(ProductBundle::class, [
-        'parent_product_id' => $product->id,
-        'child_product_id' => $childProduct->id,
-        'quantity' => $quantity,
-        'sort_order' => null,
-    ]);
-});
-
-test('it cannot add the current product in bundle', function (): void {
-    $product = Product::factory()->for($this->company)->create(['is_bundle' => false]);
-
-    $response = $this->withToken($this->token)->postJson(route('api.products.update', [
-        'id' => $product->id,
-    ]), [
-        'name' => fake()->name(),
-        'sku' => fake()->uuid(),
-        'upc_ean' => fake()->ean13(),
-        'status' => false,
-        'is_bundle' => true,
-        'images' => [UploadedFile::fake()->image('test.png')],
-        'bundle_items' => [
-            'ids' => [$product->id],
-            'quantities' => [fake()->numberBetween(1, 10)],
-        ],
-    ]);
-
-    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids']]);
-});
-
-test('it cannot create the bundle products when the child products are same', function (): void {
-    $product = Product::factory()->for($this->company)->create(['is_bundle' => false]);
-
-    $response = $this->withToken($this->token)->postJson(route('api.products.create'), [
-        'name' => fake()->name(),
-        'sku' => fake()->uuid(),
-        'upc_ean' => fake()->ean13(),
-        'status' => false,
-        'is_bundle' => true,
-        'images' => [UploadedFile::fake()->image('test.png')],
-        'bundle_items' => [
-            'ids' => [$product->id, $product->id],
-            'quantities' => [fake()->numberBetween(1, 10), fake()->numberBetween(1, 10)],
-        ],
-    ]);
-
-    $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ->assertJsonStructure(['message', 'errors' => ['bundle_items.ids.0', 'bundle_items.ids.1']]);
 });
