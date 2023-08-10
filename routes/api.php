@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\AttributeController;
+use App\Http\Controllers\Api\BundleProductController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\ForgotPasswordController;
@@ -116,6 +117,11 @@ Route::name('api.')->group(function () {
                 Route::get('{productId}/fetch', 'fetch')->can('manage-product-images')->name('fetch');
                 Route::post('{productId}/create', 'create')->can('manage-product-images')->name('create');
                 Route::delete('{productId}/{id}/delete', 'delete')->can('manage-product-images')->name('delete');
+            });
+
+            Route::controller(BundleProductController::class)->name('bundle_product')->prefix('bundle-product')->group(function (): void {
+                Route::post('{productId}/create', 'create')->can('manage-bundle-product')->name('create');
+                Route::post('{productId}/delete', 'delete')->can('manage-bundle-product')->name('delete');
             });
         });
     });
