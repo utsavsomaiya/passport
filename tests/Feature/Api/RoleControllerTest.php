@@ -109,3 +109,13 @@ test('it can also delete the permissions when role is delete', function (): void
 
     $this->assertDatabaseCount(Permission::class, 0);
 });
+
+test('it can not delete the role named `Super Admin`', function (): void {
+    $role = Role::factory()->for($this->company)->named('Super Admin')->create();
+
+    $response = $this->withToken($this->token)->deleteJson(route('api.roles.delete', [
+        'id' => $role->id,
+    ]));
+
+    $response->assertStatus(Response::HTTP_BAD_REQUEST);
+});

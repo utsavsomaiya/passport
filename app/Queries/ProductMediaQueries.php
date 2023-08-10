@@ -7,6 +7,7 @@ namespace App\Queries;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
 
 class ProductMediaQueries
@@ -17,6 +18,7 @@ class ProductMediaQueries
     public function listQuery(string $productId): MediaCollection
     {
         $product = Product::query()
+            ->select('id')
             ->where('company_id', app('company_id'))
             ->findOrFail($productId);
 
@@ -34,7 +36,9 @@ class ProductMediaQueries
         }
 
         if ($request->hasFile('images')) {
-            $product->addMediaFromRequest('images')->toMediaCollection('product_images');
+            DB::transaction(function () use ($product): void {
+                $product->addMediaFromRequest('images')->toMediaCollection('product_images');
+            });
         }
     }
 

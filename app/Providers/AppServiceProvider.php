@@ -31,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (! app()->runningInConsole() && ! request()->expectsJson()) {
+            abort(404, 'This application does not support this type');
+        }
+
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         Model::preventLazyLoading(! $this->app->isProduction());
 
@@ -44,7 +48,11 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised() // Must not compromised in data leaks...
         );
 
-        File::defaults(fn (): File => File::image()->types(['jpeg', 'jpg', 'gif', 'png', 'webp']));
+        File::defaults(
+            fn (): File => File::image()
+                ->types(['jpeg', 'jpg', 'gif', 'png', 'webp'])
+                ->max('8mb')
+        );
 
         Response::macro('api', fn (string $message, array $extras = []): JsonResponse => Response::json(['success' => __($message), ...$extras]));
 

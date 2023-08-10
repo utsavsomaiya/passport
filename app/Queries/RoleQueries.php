@@ -39,10 +39,11 @@ class RoleQueries extends GlobalQueries
 
         resolve(PermissionQueries::class)->deleteByRole($id);
 
-        Role::query()
-            ->where('company_id', app('company_id'))
-            ->where('id', $id)
-            ->delete();
+        $role = Role::where('company_id', app('company_id'))->findOrFail($id);
+
+        abort_if($role->name === 'Super Admin', Response::HTTP_BAD_REQUEST, 'This role can not be deleted');
+
+        $role->delete();
     }
 
     /**
