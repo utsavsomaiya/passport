@@ -87,7 +87,7 @@ If you intend to remove the token while seeding the data, please ensure the foll
 ### Upgrade
 - When updating [Laravel Sanctum](https://laravel.com/docs/10.x/sanctum), it is important to consider any changes related to the Sanctum token. If the token implementation or behavior has been modified in the update, corresponding changes should be made in your code.
 
-- Methods Using Sanctum Tokens In our application, there are two methods that utilize Sanctum tokens:
+- Methods Using Sanctum Tokens In our application, there is a method that utilize Sanctum tokens:
 1. [`PersonalAccessToken::findToken()`](./app/Http/Middleware/AddCompanyIdInServiceContainer.php#L24C53-L24C62)
 
 
