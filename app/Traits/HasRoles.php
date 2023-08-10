@@ -85,9 +85,7 @@ trait HasRoles
             throw new InvalidArgumentException(sprintf('There is no role with id `%s`.', $role));
         }
 
-        $roleModel = Role::query()
-            ->where('name', $role)
-            ->first();
+        $roleModel = Role::firstWhere('name', $role);
 
         if ($roleModel?->exists) {
             return $roleModel->getKey();

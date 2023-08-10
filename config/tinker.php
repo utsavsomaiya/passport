@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Console\Migrations\FreshCommand;
+use Illuminate\Database\Console\Seeds\SeedCommand;
+use Illuminate\Database\Console\WipeCommand;
+use Illuminate\Support\Benchmark;
+
 return [
 
     /*
@@ -16,7 +21,9 @@ return [
     */
 
     'commands' => [
-        // App\Console\Commands\ExampleCommand::class,
+        WipeCommand::class,
+        FreshCommand::class,
+        SeedCommand::class,
     ],
 
     /*
@@ -31,7 +38,7 @@ return [
     */
 
     'alias' => [
-        //
+        'Benchmark' => Benchmark::class,
     ],
 
     /*
