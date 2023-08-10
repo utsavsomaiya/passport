@@ -10,9 +10,7 @@ beforeEach(function (): void {
 });
 
 test('it can fetch the currencies', function (): void {
-    $currencies = Currency::factory(2)->create([
-        'company_id' => $this->company->id,
-    ]);
+    $currencies = Currency::factory(2)->for($this->company)->create();
 
     $response = $this->withToken($this->token)->getJson(route('api.currencies.fetch'));
 

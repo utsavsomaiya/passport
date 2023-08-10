@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\GenerateTokenController;
 use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
-use App\Http\Controllers\Api\LocaleProductController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PriceBookController;
 use App\Http\Controllers\Api\ProductController;
@@ -117,10 +116,6 @@ Route::name('api.')->group(function () {
                 Route::get('{productId}/fetch', 'fetch')->can('manage-product-images')->name('fetch');
                 Route::post('{productId}/create', 'create')->can('manage-product-images')->name('create');
                 Route::delete('{productId}/{id}/delete', 'delete')->can('manage-product-images')->name('delete');
-            });
-
-            Route::controller(LocaleProductController::class)->name('locale_product.')->prefix('locale-product')->group(function (): void {
-
             });
         });
     });

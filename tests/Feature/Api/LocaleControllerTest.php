@@ -16,9 +16,7 @@ beforeEach(function (): void {
 });
 
 test('it can fetch locales', function (): void {
-    $locales = Locale::factory(3)->create([
-        'company_id' => $this->company->id,
-    ]);
+    $locales = Locale::factory(3)->for($this->company)->create();
 
     $response = $this->withToken($this->token)->getJson(route('api.locales.fetch'));
 
@@ -43,9 +41,7 @@ test('it can fetch locales', function (): void {
 });
 
 test('it can create locale', function (): void {
-    $locale = Locale::factory()->make([
-        'company_id' => $this->company->id,
-    ]);
+    $locale = Locale::factory()->for($this->company)->make();
 
     $response = $this->withToken($this->token)->postJson(route('api.locales.create'), [
         'name' => $locale->name,
@@ -63,9 +59,7 @@ test('it can create locale', function (): void {
 });
 
 test('it can delete locale', function (): void {
-    $locale = Locale::factory()->create([
-        'company_id' => $this->company->id,
-    ]);
+    $locale = Locale::factory()->for($this->company)->create();
 
     $response = $this->withToken($this->token)->deleteJson(route('api.locales.delete', [
         'id' => $locale->id,
@@ -81,9 +75,7 @@ test('it can delete locale', function (): void {
 });
 
 test('it can update locale', function (): void {
-    $locale = Locale::factory()->create([
-        'company_id' => $this->company->id,
-    ]);
+    $locale = Locale::factory()->for($this->company)->create();
 
     $response = $this->withToken($this->token)->postJson(route('api.locales.update', [
         'id' => $locale->id,
