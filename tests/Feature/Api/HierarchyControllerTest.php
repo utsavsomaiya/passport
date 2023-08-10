@@ -12,9 +12,9 @@ beforeEach(function (): void {
 
 test('it can fetch hierarchies', function (): void {
     $hierarchy = Hierarchy::factory()
-        ->company($this->company->id)
+        ->for($this->company)
         ->has(
-            Hierarchy::factory()->company($this->company->id)->state(fn (): array => ['name' => 'B2B']),
+            Hierarchy::factory()->for($this->company)->state(fn (): array => ['name' => 'B2B']),
             'children'
         )
         ->create(['name' => 'B2B']);
@@ -148,7 +148,7 @@ test('it can update a hierarchy', function (): void {
 test('it can not update the name because of there is a children available for the same name', function (): void {
     $hierarchy = Hierarchy::factory()
         ->has(
-            Hierarchy::factory(2)->company($this->company->id)->sequence(
+            Hierarchy::factory(2)->for($this->company)->sequence(
                 ['name' => 'B2B'],
                 ['name' => 'C2C']
             ),
@@ -171,7 +171,7 @@ test('it can not update the name because of there is a children available for th
 test('it cannot create a hierarchy because of there is a children available for the same name', function (): void {
     $hierarchy = Hierarchy::factory()
         ->has(
-            Hierarchy::factory(2)->company($this->company->id)->sequence(
+            Hierarchy::factory(2)->for($this->company)->sequence(
                 ['name' => 'B2B'],
                 ['name' => 'C2C']
             ),
