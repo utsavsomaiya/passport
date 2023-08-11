@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\LocaleController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PriceBookController;
+use App\Http\Controllers\Api\ProductBundleController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductMediaController;
 use App\Http\Controllers\Api\ResetPasswordController;
@@ -119,9 +120,10 @@ Route::name('api.')->group(function () {
                 Route::delete('{productId}/{id}/delete', 'delete')->can('manage-product-images')->name('delete');
             });
 
-            Route::controller(BundleProductController::class)->name('bundle_product')->prefix('bundle-product')->group(function (): void {
+            Route::controller(ProductBundleController::class)->name('product_bundle.')->prefix('product-bundle')->group(function (): void {
+                Route::get('{productId}/fetch-items', 'fetchItems')->can('manage-bundle-product')->name('fetch_items');
                 Route::post('{productId}/create', 'create')->can('manage-bundle-product')->name('create');
-                Route::post('{productId}/delete', 'delete')->can('manage-bundle-product')->name('delete');
+                Route::post('{parentProductId}/{childProductId?}/delete', 'delete')->can('manage-bundle-product')->name('delete');
             });
         });
     });

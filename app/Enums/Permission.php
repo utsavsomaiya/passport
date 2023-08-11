@@ -36,6 +36,7 @@ final readonly class Permission
             'manage-user-roles',
             'manage-role-permissions',
             'manage-product-images',
+            'manage-bundle-product',
         ]
     ) {
 
