@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
@@ -32,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (! app()->runningInConsole() && ! request()->expectsJson()) {
-            abort(404, 'This application does not support this type');
+            abort(HttpResponse::HTTP_FORBIDDEN, 'Accept JSON header is missing in the request.');
         }
 
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);

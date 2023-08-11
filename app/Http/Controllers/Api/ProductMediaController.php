@@ -31,13 +31,13 @@ class ProductMediaController extends Controller
     {
         $this->productMediaQueries->create($request, $productId);
 
-        return Response::api('Product images have been generated successfully.');
+        return Response::api('Product image(s) have been uploaded successfully.');
     }
 
     public function delete(string $productId, string $id): JsonResponse
     {
         $this->productMediaQueries->delete($productId, $id);
 
-        return Response::api('The product image has been successfully deleted.');
+        return Response::api('The product image has been deleted successfully.');
     }
 }

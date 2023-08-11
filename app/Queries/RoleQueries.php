@@ -41,7 +41,7 @@ class RoleQueries extends GlobalQueries
 
         $role = Role::where('company_id', app('company_id'))->findOrFail($id);
 
-        abort_if($role->name === 'Super Admin', Response::HTTP_BAD_REQUEST, 'This role can not be deleted');
+        abort_if($role->name === 'Super Admin', Response::HTTP_BAD_REQUEST, 'This role cannot be deleted');
 
         $role->delete();
     }
