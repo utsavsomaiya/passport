@@ -24,7 +24,7 @@ class ProductWithBundleResource extends JsonResource
         return [
             ...(new ProductResource($product))->toArray($request),
             $this->mergeWhen($product->is_bundle, [
-                'bundle_items' => $product->productBundles->map(function (ProductBundle $productBundle) use($request): array {
+                'bundle_items' => $product->productBundles->map(function (ProductBundle $productBundle) use ($request): array {
                     /** @var Product $childProduct */
                     $childProduct = $productBundle->childProduct;
 

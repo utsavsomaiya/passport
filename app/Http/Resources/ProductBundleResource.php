@@ -20,7 +20,8 @@ class ProductBundleResource extends JsonResource
         $productBundle = $this->resource;
 
         return [
-            ...((new ProductResource($productBundle->childProduct))->toArray($request)),
+            'bundle_id' => $productBundle->id,
+            ...((new ProductResource($productBundle->childProduct))->toArray($request)), // May be in future we will wrap into product.
             'quantity' => $productBundle->quantity,
             'sort_order' => $productBundle->sort_order,
         ];

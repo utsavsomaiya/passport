@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\FetchProductRequest;
 use App\Http\Requests\Api\ProductBundleRequest;
-use App\Http\Resources\Api\ProductResource;
 use App\Http\Resources\ProductBundleResource;
 use App\Queries\ProductBundleQueries;
 use Illuminate\Http\JsonResponse;

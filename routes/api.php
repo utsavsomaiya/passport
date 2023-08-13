@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\AttributeController;
-use App\Http\Controllers\Api\BundleProductController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\ForgotPasswordController;

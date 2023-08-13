@@ -4,27 +4,31 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use App\Models\Product;
 use App\Models\ProductBundle;
-use App\Queries\Spatie\ChildProductSort;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class ProductBundleQueries
+class ProductBundleQueries extends GlobalQueries
 {
-    public function listQuery(Request $request, string $parentProductId)
+    public function listQuery(Request $request, string $parentProductId): LengthAwarePaginator
     {
         return QueryBuilder::for(ProductBundle::class, $request)
             ->defaultSort('-sort_order')
             ->allowedSorts([
                 'quantity',
                 'sort_order',
-                AllowedSort::custom('name', new ChildProductSort),
+                AllowedSort::callback('name', $this->sortingWithRelationShips('childProduct')),
+            ])
+            ->allowedFilters([
+                $this->filterWithRelationship('name', 'childProduct'),
+                $this->filterWithRelationship('sku', 'childProduct'),
+                'quantity',
+                'sort_order',
             ])
             ->where('parent_product_id', $parentProductId)
             ->select('id', 'parent_product_id', 'child_product_id', 'sort_order', 'quantity')

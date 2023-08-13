@@ -26,7 +26,7 @@ test('it can fetch bundle product items', function (): void {
         'sort_order' => 1,
     ]);
 
-    ProductBundle::factory()->create([
+    $productBundle = ProductBundle::factory()->create([
         'parent_product_id' => $bundleProduct->id,
         'child_product_id' => $nonBundleProducts[1]->id,
         'sort_order' => 2,
@@ -37,9 +37,10 @@ test('it can fetch bundle product items', function (): void {
     ]));
 
     $response->assertOk()
-        ->assertJson(fn (AssertableJson $json): AssertableJson => dd($json)
+        ->assertJson(fn (AssertableJson $json): AssertableJson => $json
             ->has('data', fn (AssertableJson $json): AssertableJson => $json
                 ->has('0', fn (AssertableJson $json): AssertableJson => $json
+                    ->where('bundle_id', $productBundle->id)
                     ->where('id', $nonBundleProducts[1]->id)
                     ->etc()
                 )
@@ -47,4 +48,4 @@ test('it can fetch bundle product items', function (): void {
             )
             ->etc()
         );
-})->only();
+});
