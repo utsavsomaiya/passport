@@ -33,6 +33,7 @@
 - Please setup the [scheduler](#scheduled-tasks) (cronjob) on the server.
 - We are using the [redis](#redis) for caching and queued jobs. Please install accordingly. Media library also uses the redis queue connection.
 - Setup [Horizon](#horizon)
+- [Seed data]('#data-seeding') as per your environment
 
 
 ### Make commands
@@ -76,13 +77,18 @@ To generate Postman API Keys, please follow these steps:
 1. Visit the Postman documentation: [Postman API Key Authentication](https://learning.postman.com/docs/developer/postman-api/authentication/).
 1. Follow the instructions provided in the documentation to generate your API keys.
 
-### Important Note for Data Seeding
-If your application environment is **production**:
-1. You need to create one Super Admin. Don't worry just fire one command: `php artisan db:seed --class=StaticSeeder`.
+### Data Seeding
 
-If you intend to remove the token while seeding the data, please ensure the following:
-1. Set the environment variable of [Postman](#postman) accordingly.
-1. Open your terminal and execute the following command: `php artisan db:seed`.
+If you are deploying to a production website, please run `php artisan db:seed --class=StaticSeeder`
+It will create:
+    - A super admin account
+
+If you are setting up this project locally, please run `php artisan db:seed`
+
+#### Note about Postman
+This project offers an extra convenience to developers with Postman.
+As per our documentation in Postman, setting the {{token}} variable 'undefined' runs the pre-request script.
+Running the seeder when the `POSTMAN_API_KEY` .env variable is set resets the token by making an API call.
 
 ### Upgrade
 - When updating [Laravel Sanctum](https://laravel.com/docs/10.x/sanctum), it is important to consider any changes related to the Sanctum token. If the token implementation or behavior has been modified in the update, corresponding changes should be made in your code.
