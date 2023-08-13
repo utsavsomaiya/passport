@@ -1,0 +1,33 @@
+name: Pint and Rector Automation
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"  # Run every Sunday at midnight (UTC)
+
+jobs:
+  pint_rector:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Install Composer Dependencies
+        run: composer install
+
+      - name: Run Pint
+        run: ./vendor/bin/pint
+        continue-on-error: true
+
+      - name: Run Rector Process
+        run: |
+          ./vendor/bin/rector process --clear-cache
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Automated Rector process" || true
+          git push origin main

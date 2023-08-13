@@ -1,0 +1,34 @@
+name: Pest and Larastan Automation
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"  # Run every Sunday at midnight (UTC)
+
+jobs:
+  pest_larastan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Install Composer Dependencies
+        run: composer install
+
+      - name: Run Pest Tests
+        run: ./vendor/bin/pest || echo "Pest tests failed" >> test_failure.log
+
+      - name: Run Larastan
+        run: ./vendor/bin/phpstan analyse --no-progress || echo "Larastan analysis failed" >> test_failure.log
+
+      - name: Upload Test Failure Log
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test_failure_log
+          path: test_failure.log
