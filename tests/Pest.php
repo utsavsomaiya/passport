@@ -102,19 +102,25 @@ function getRoutes(array $routes)
 {
     $actions = [];
 
-    foreach ($routes as $route) {
+    foreach ($routes as $key => $route) {
+        if (is_array($route)) {
+            $actions[] = getRoutesAndMethod($key, $route);
+
+            continue;
+        }
+
         $actions[] = getRoutesAndMethod($route);
     }
 
     return collect($actions)->flatten()->toArray();
 }
 
-function getRoutesAndMethod(string $requestFor): array
+function getRoutesAndMethod(string $requestFor, array $parameters = []): array
 {
     return [
-        fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.create', $requestFor))],
+        fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.create', $requestFor), $parameters)],
         fn (): array => ['method' => 'delete', 'route' => route(sprintf('api.%s.delete', $requestFor), ['id' => fake()->uuid()])],
-        fn (): array => ['method' => 'get', 'route' => route(sprintf('api.%s.fetch', $requestFor))],
+        fn (): array => ['method' => 'get', 'route' => route(sprintf('api.%s.fetch', $requestFor), $parameters)],
         fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.update', $requestFor), ['id' => fake()->uuid()])],
     ];
 }

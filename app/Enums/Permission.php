@@ -27,6 +27,7 @@ final readonly class Permission
             'templates',
             'attributes',
             'products',
+            'product-bundles',
         ],
 
         /**

@@ -112,7 +112,7 @@ class ProductSeeder extends Seeder
         // Sneakers
         $product = Product::factory()->create([
             'company_id' => $companyId,
-            'name' => "Rospick Slip On Men's Sneakers, Walking Shoes for Men",
+            'name' => "Rospick Slip On Men's Sneakers Walking Shoes for Men",
             'sku' => '201501000970',
             'is_bundle' => false,
         ]);
