@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -84,30 +83,25 @@ class ProductQueries extends GlobalQueries
     /**
      * @throws ModelNotFoundException<Product>
      */
-    public function getProductIdByBundle(string $parentProductId, bool $isBundle): Product
+    public function getProductIdByBundle(string $parentProductId): Product
     {
-        return $this->getProductIdBuilderByBundle($parentProductId, $isBundle)->findOrFail($parentProductId);
+        return Product::query()
+            ->select('id')
+            ->where('company_id', app('company_id'))
+            ->findOrFail($parentProductId);
     }
 
     /**
      * @throws ModelNotFoundException<Product>
      */
-    public function getProductIdByBundleWithCount(string $parentProductId, bool $isBundle): Product
-    {
-        return $this->getProductIdBuilderByBundle($parentProductId, $isBundle)
-            ->withCount('productBundles')
-            ->findOrFail($parentProductId);
-    }
-
-    /**
-     * @return Builder<Product>
-     */
-    private function getProductIdBuilderByBundle(string $parentProductId, bool $isBundle): Builder
+    public function getProductIdByBundleWithCount(string $parentProductId): Product
     {
         return Product::query()
             ->select('id')
-            ->where('is_bundle', $isBundle)
-            ->where('company_id', app('company_id'));
+            ->where('is_bundle', true)
+            ->where('company_id', app('company_id'))
+            ->withCount('productBundles')
+            ->findOrFail($parentProductId);
     }
 
     /**
@@ -118,9 +112,9 @@ class ProductQueries extends GlobalQueries
         return Product::query()
             ->select('id')
             ->with([
-                'productBundles' => function ($query) {
+                'productBundles' => function ($query): void {
                     $query->select('id', 'parent_product_id', 'child_product_id', 'sort_order', 'quantity')
-                        ->with('childProduct', function ($query) {
+                        ->with('childProduct', function ($query): void {
                             $query->select($this->selectedColumns());
                         })
                         ->orderByDesc('sort_order');

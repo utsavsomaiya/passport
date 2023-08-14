@@ -21,6 +21,8 @@ test('it cannot perform any action without any proper permission', function ($da
     'price_books',
     'templates',
     'attributes',
+    'products',
+    'product_bundles' => ['productId' => fake()->uuid()],
 ]));
 
 test('it can check the request has put the roles and permissions into the cache', function (): void {

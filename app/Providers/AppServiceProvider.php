@@ -16,6 +16,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Sanctum\Sanctum;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
         if (! app()->runningInConsole() && ! request()->expectsJson()) {
             abort(HttpResponse::HTTP_FORBIDDEN, 'Accept JSON header is missing in the request.');
         }
+
+        // If you are set this delimiter, you need to update the documentations.
+        QueryBuilderRequest::setArrayValueDelimiter('|'); // By default value is `,`
 
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         Model::preventLazyLoading(! $this->app->isProduction());

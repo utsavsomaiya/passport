@@ -119,10 +119,11 @@ Route::name('api.')->group(function () {
                 Route::delete('{productId}/{id}/delete', 'delete')->can('manage-product-images')->name('delete');
             });
 
-            Route::controller(ProductBundleController::class)->name('product_bundle.')->prefix('product-bundle')->group(function (): void {
-                Route::get('{productId}/fetch-items', 'fetchItems')->can('manage-bundle-product')->name('fetch_items');
-                Route::post('{productId}/create', 'create')->can('manage-bundle-product')->name('create');
-                Route::post('{parentProductId}/{childProductId?}/delete', 'delete')->can('manage-bundle-product')->name('delete');
+            Route::controller(ProductBundleController::class)->name('product_bundles.')->prefix('product-bundle')->group(function (): void {
+                Route::get('{productId}/fetch', 'fetch')->can('fetch-product-bundles')->name('fetch');
+                Route::post('{productId}/create', 'create')->can('create-product-bundle')->name('create');
+                Route::delete('{id}/delete', 'delete')->can('delete-product-bundle')->name('delete');
+                Route::post('{id}/update', 'update')->can('update-product-bundle')->name('update');
             });
         });
     });

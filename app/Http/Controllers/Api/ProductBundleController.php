@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\FetchProductRequest;
 use App\Http\Requests\Api\ProductBundleRequest;
+use App\Http\Requests\Api\UpdateProductBundleRequest;
 use App\Http\Resources\ProductBundleResource;
 use App\Queries\ProductBundleQueries;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +22,7 @@ class ProductBundleController extends Controller
 
     }
 
-    public function fetchItems(FetchProductRequest $request, string $productId): AnonymousResourceCollection
+    public function fetch(FetchProductRequest $request, string $productId): AnonymousResourceCollection
     {
         $bundleProducts = $this->productBundleQueries->listQuery($request, $productId);
 
@@ -35,10 +36,19 @@ class ProductBundleController extends Controller
         return Response::api('Product bundle created successfully.');
     }
 
-    public function delete(string $parentProductId, string $childProductId = null): JsonResponse
+    public function delete(string $id): JsonResponse
     {
-        $this->productBundleQueries->delete($parentProductId, $childProductId);
+        $this->productBundleQueries->delete($id);
 
         return Response::api('Product bundle deleted successfully.');
+    }
+
+    public function update(UpdateProductBundleRequest $request, string $id): JsonResponse
+    {
+        $validatedData = $request->validated();
+
+        $this->productBundleQueries->update($validatedData, $id);
+
+        return Response::api('Product bundle updated successfully.');
     }
 }

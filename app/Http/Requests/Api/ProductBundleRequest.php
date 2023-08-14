@@ -40,4 +40,14 @@ class ProductBundleRequest extends FormRequest
             'bundle_products.*.sort_order' => ['sometimes', 'integer'],
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'bundle_products.*' => 'bundle_products #:position',
+        ];
+    }
 }

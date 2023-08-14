@@ -27,6 +27,7 @@ final readonly class Permission
             'templates',
             'attributes',
             'products',
+            'product-bundles',
         ],
 
         /**
@@ -36,7 +37,6 @@ final readonly class Permission
             'manage-user-roles',
             'manage-role-permissions',
             'manage-product-images',
-            'manage-bundle-product',
         ]
     ) {
 

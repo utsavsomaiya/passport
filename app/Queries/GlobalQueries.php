@@ -28,11 +28,11 @@ class GlobalQueries
                     $wrappedProperty = $query->getQuery()->getGrammar()->wrap($query->qualifyColumn($property));
 
                     if (is_array($value)) {
-                        if (count(array_filter($value, 'strlen')) === 0) {
+                        if (array_filter($value, 'strlen') === []) {
                             return $query;
                         }
 
-                        $query->where(function ($query) use ($value, $wrappedProperty) {
+                        $query->where(function ($query) use ($value, $wrappedProperty): void {
                             foreach (array_filter($value, 'strlen') as $partialValue) {
                                 [$sql, $bindings] = $this->getWhereRawParameters($partialValue, $wrappedProperty);
                                 $query->orWhereRaw($sql, $bindings);
@@ -59,32 +59,32 @@ class GlobalQueries
     {
         return AllowedFilter::callback($columnName, function (Builder $query, $value, $property) use ($relationship): void {
             if (is_array($value)) {
-                $value = implode(',', $value); // Relationship can not support multiple value for now...
+                $value = $value[0]; // Relationship can not support multiple value for now...
             }
 
             $filterMethod = request()->get('filter_method', []);
 
             if (array_key_exists($property, $filterMethod)) {
                 if ($filterMethod[$property] === 'equals') {
-                    $query->whereHas($relationship, function ($query) use ($property, $value) {
+                    $query->whereHas($relationship, function ($query) use ($property, $value): void {
                         $query->where($property, '=', $value);
                     });
                 }
 
                 if ($filterMethod[$property] === 'starts_with') {
-                    $query->whereHas($relationship, function ($query) use ($property, $value) {
+                    $query->whereHas($relationship, function ($query) use ($property, $value): void {
                         $query->where($property, 'LIKE', $value . '%');
                     });
                 }
 
                 if ($filterMethod[$property] === 'ends_with') {
-                    $query->whereHas($relationship, function ($query) use ($property, $value) {
+                    $query->whereHas($relationship, function ($query) use ($property, $value): void {
                         $query->where($property, 'LIKE', '%' . $value);
                     });
                 }
 
                 if ($filterMethod[$property] === 'is_like') {
-                    $query->whereHas($relationship, function ($query) use ($property, $value) {
+                    $query->whereHas($relationship, function ($query) use ($property, $value): void {
                         $query->where($property, 'LIKE', '%' . $value . '%');
                     });
                 }
@@ -92,7 +92,7 @@ class GlobalQueries
                 return;
             }
 
-            $query->whereHas($relationship, function ($query) use ($property, $value) {
+            $query->whereHas($relationship, function ($query) use ($property, $value): void {
                 $query->where($property, '=', $value);
             });
         });
@@ -100,8 +100,8 @@ class GlobalQueries
 
     public function sortingWithRelationShips(string $relationship): Closure
     {
-        return function (Builder $query, bool $descending, string $property) use ($relationship) {
-            $query->whereHas($relationship, function ($query) use ($descending, $property) {
+        return function (Builder $query, bool $descending, string $property) use ($relationship): void {
+            $query->whereHas($relationship, function ($query) use ($descending, $property): void {
                 $direction = $descending ? 'DESC' : 'ASC';
                 $query->orderBy($property, $direction);
             });
@@ -114,8 +114,8 @@ class GlobalQueries
     protected function getWhereRawParameters(string $value, string $property): array
     {
         return [
-            "{$property} LIKE ?",
-            ["%{$value}"],
+            sprintf('%s LIKE ?', $property),
+            [sprintf('%%%s', $value)],
         ];
     }
 }
