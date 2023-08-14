@@ -48,6 +48,9 @@ class ProductBundleRequest extends FormRequest
     {
         return [
             'bundle_products.*' => 'bundle_products #:position',
+            'bundle_products.*.id' => 'bundle_products #:position has id',
+            'bundle_products.*.quantity' => 'bundle_products #:position has quantity',
+            'bundle_products.*.sort_order' => 'bundle_products #:position has sort_order',
         ];
     }
 }
