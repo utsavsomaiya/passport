@@ -64,16 +64,16 @@ class HierarchySeeder extends Seeder
 
         // Price Range
         $priceRangeHierarchy = Hierarchy::factory()
-                ->company($companyId)
-                ->has(
-                    Hierarchy::factory(3)->company($companyId)->sequence(
-                        ['name' => 'Budget'],
-                        ['name' => 'Mid-Range'],
-                        ['name' => 'High-End'],
-                    ),
-                    'children'
-                )
-                ->create(['name' => 'Price Range']);
+            ->company($companyId)
+            ->has(
+                Hierarchy::factory(3)->company($companyId)->sequence(
+                    ['name' => 'Budget'],
+                    ['name' => 'Mid-Range'],
+                    ['name' => 'High-End'],
+                ),
+                'children'
+            )
+            ->create(['name' => 'Price Range']);
 
         Cache::put('Budget', $priceRangeHierarchy->children->firstWhere('name', 'Budget'));
         Cache::put('Mid-Range', $priceRangeHierarchy->children->firstWhere('name', 'Mid-Range'));

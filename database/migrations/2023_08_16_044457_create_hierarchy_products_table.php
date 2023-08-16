@@ -14,7 +14,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('hierarchy_product', function (Blueprint $table) {
+        Schema::create('hierarchy_product', function (Blueprint $table): void {
             $table->primary(['hierarchy_id', 'product_id']);
             $table->foreignIdFor(Hierarchy::class, 'hierarchy_id')->constrained();
             $table->foreignIdFor(Product::class, 'product_id')->constrained();
