@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use Closure;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:query')]
@@ -77,7 +80,7 @@ class QueryMakeCommand extends GeneratorCommand
 
         if (
             ! class_exists($modelClass) &&
-            $this->components->confirm(sprintf('A %s model does not exist. Do you want to generate it?', $modelClass), true)
+            confirm(sprintf('A %s model does not exist. Do you want to generate it?', $modelClass), true)
         ) {
             $this->call('make:model', ['name' => $modelClass]);
         }
@@ -110,5 +113,28 @@ class QueryMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '\Queries';
+    }
+
+    /**
+     * Prompt for missing input arguments using the returned questions.
+     *
+     * @return array<string, Closure>
+     */
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'name' => fn (): string => text(
+                label: 'What should the ' . strtolower($this->type) . ' be named?',
+                placeholder: 'E.g. UserQueries',
+                required: 'The name is required.',
+                validate: function (string $value): ?string {
+                    if (! Str::endsWith($value, 'Queries')) {
+                        return 'The name must have suffix "Queries".';
+                    }
+
+                    return null;
+                }
+            ),
+        ];
     }
 }

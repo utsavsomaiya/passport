@@ -115,7 +115,7 @@ class GlobalQueries
     {
         return [
             sprintf('%s LIKE ?', $property),
-            [sprintf('%%%s', $value)],
+            [sprintf('%%%s', $value)], // if $value is 'pxm', it will return '%pxm'
         ];
     }
 }
