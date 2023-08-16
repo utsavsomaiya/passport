@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 class ProductSeeder extends Seeder
 {
@@ -17,14 +18,14 @@ class ProductSeeder extends Seeder
         // Shirts - https://www.notion.so/Products-2765737e7e9b4246a5541a2091eaa299?pvs=4#2e2955f4c4a74bc495d3a430c8a08dd3
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Shirts'),
-                cache('Men'),
-                cache('Winter'),
-                cache('Formal'),
-                cache('Formal-Slim-Fit'),
-                cache('Striped'),
-                cache('Budget'),
-                cache('B2B'),
+                Cache::pull('Shirts'),
+                Cache::pull('Men'),
+                Cache::pull('Winter'),
+                Cache::pull('Formal'),
+                Cache::pull('Formal-Slim-Fit'),
+                Cache::pull('Striped'),
+                Cache::pull('Budget'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -38,13 +39,13 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Shirts'),
-                cache('Men'),
-                cache('Summer'),
-                cache('Casual'),
-                cache('Casual-Slim-Fit'),
-                cache('Printed'),
-                cache('Mid-Range'),
+                Cache::pull('Shirts'),
+                Cache::pull('Men'),
+                Cache::pull('Summer'),
+                Cache::pull('Casual'),
+                Cache::pull('Casual-Slim-Fit'),
+                Cache::pull('Printed'),
+                Cache::pull('Mid-Range'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -57,12 +58,12 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Shirts'),
-                cache('Women'),
-                cache('Winter'),
-                cache('Casual'),
-                cache('High-end'),
-                cache('B2B'),
+                Cache::pull('Shirts'),
+                Cache::pull('Women'),
+                Cache::pull('Winter'),
+                Cache::pull('Casual'),
+                Cache::pull('High-end'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -75,11 +76,11 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Shirts'),
-                cache('Women'),
-                cache('Winter'),
-                cache('Retro'),
-                cache('Mid-Range'),
+                Cache::pull('Shirts'),
+                Cache::pull('Women'),
+                Cache::pull('Winter'),
+                Cache::pull('Retro'),
+                Cache::pull('Mid-Range'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -92,12 +93,12 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Shirts'),
-                cache('Women'),
-                cache('Summer'),
-                cache('Casual'),
-                cache('Solid'),
-                cache('High-end'),
+                Cache::pull('Shirts'),
+                Cache::pull('Women'),
+                Cache::pull('Summer'),
+                Cache::pull('Casual'),
+                Cache::pull('Solid'),
+                Cache::pull('High-end'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -111,15 +112,15 @@ class ProductSeeder extends Seeder
         // Jeans
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Jeans'),
-                cache('Men'),
-                cache('Spring'),
-                cache('Formal'),
-                cache('Skinny Fit'),
-                cache('Cotton'),
-                cache('Machine-wash'),
-                cache('Budget'),
-                cache('B2B'),
+                Cache::pull('Jeans'),
+                Cache::pull('Men'),
+                Cache::pull('Spring'),
+                Cache::pull('Formal'),
+                Cache::pull('Skinny Fit'),
+                Cache::pull('Cotton'),
+                Cache::pull('Machine-wash'),
+                Cache::pull('Budget'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -133,11 +134,11 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Jeans'),
-                cache('Women'),
-                cache('Winter'),
-                cache('Formal'),
-                cache('Skinny Fit'),
+                Cache::pull('Jeans'),
+                Cache::pull('Women'),
+                Cache::pull('Winter'),
+                Cache::pull('Formal'),
+                Cache::pull('Skinny Fit'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -150,13 +151,13 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Jeans'),
-                cache('Women'),
-                cache('Winter'),
-                cache('Summer'),
-                cache('Formal'),
-                cache('Skinny Fit'),
-                cache('B2B'),
+                Cache::pull('Jeans'),
+                Cache::pull('Women'),
+                Cache::pull('Winter'),
+                Cache::pull('Summer'),
+                Cache::pull('Formal'),
+                Cache::pull('Skinny Fit'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -169,11 +170,11 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Jeans'),
-                cache('Women'),
-                cache('Winter'),
-                cache('Formal'),
-                cache('Skinny Fit'),
+                Cache::pull('Jeans'),
+                Cache::pull('Women'),
+                Cache::pull('Winter'),
+                Cache::pull('Formal'),
+                Cache::pull('Skinny Fit'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -186,14 +187,14 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Jeans'),
-                cache('Women'),
-                cache('Winter'),
-                cache('Summer'),
-                cache('Spring'),
-                cache('Fall'),
-                cache('Formal'),
-                cache('Skinny Fit'),
+                Cache::pull('Jeans'),
+                Cache::pull('Women'),
+                Cache::pull('Winter'),
+                Cache::pull('Summer'),
+                Cache::pull('Spring'),
+                Cache::pull('Fall'),
+                Cache::pull('Formal'),
+                Cache::pull('Skinny Fit'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -207,12 +208,12 @@ class ProductSeeder extends Seeder
         // Sneakers
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Sneakers'),
-                cache('Men'),
-                cache('Winter'),
-                cache('Summer'),
-                cache('Sports'),
-                cache('B2B'),
+                Cache::pull('Sneakers'),
+                Cache::pull('Men'),
+                Cache::pull('Winter'),
+                Cache::pull('Summer'),
+                Cache::pull('Sports'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -226,12 +227,12 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Sneakers'),
-                cache('Men'),
-                cache('Winter'),
-                cache('Summer'),
-                cache('Sports'),
-                cache('High-end'),
+                Cache::pull('Sneakers'),
+                Cache::pull('Men'),
+                Cache::pull('Winter'),
+                Cache::pull('Summer'),
+                Cache::pull('Sports'),
+                Cache::pull('High-end'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -244,12 +245,12 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Sneakers'),
-                cache('Women'),
-                cache('Summer'),
-                cache('Sports'),
-                cache('Mid-end'),
-                cache('B2B'),
+                Cache::pull('Sneakers'),
+                Cache::pull('Women'),
+                Cache::pull('Summer'),
+                Cache::pull('Sports'),
+                Cache::pull('Mid-end'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -262,11 +263,11 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Sneakers'),
-                cache('Men'),
-                cache('Summer'),
-                cache('Casual'),
-                cache('Budget'),
+                Cache::pull('Sneakers'),
+                Cache::pull('Men'),
+                Cache::pull('Summer'),
+                Cache::pull('Casual'),
+                Cache::pull('Budget'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -279,10 +280,10 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Sneakers'),
-                cache('Men'),
-                cache('Summer'),
-                cache('Casual'),
+                Cache::pull('Sneakers'),
+                Cache::pull('Men'),
+                Cache::pull('Summer'),
+                Cache::pull('Casual'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -296,9 +297,9 @@ class ProductSeeder extends Seeder
         // Wallets
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Wallets'),
-                cache('Unisex'),
-                cache('B2B'),
+                Cache::pull('Wallets'),
+                Cache::pull('Unisex'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -312,8 +313,8 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Wallets'),
-                cache('Men'),
+                Cache::pull('Wallets'),
+                Cache::pull('Men'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -326,10 +327,10 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Wallets'),
-                cache('Unisex'),
-                cache('High-end'),
-                cache('B2B'),
+                Cache::pull('Wallets'),
+                Cache::pull('Unisex'),
+                Cache::pull('High-end'),
+                Cache::pull('B2B'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -342,8 +343,8 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Wallets'),
-                cache('Women'),
+                Cache::pull('Wallets'),
+                Cache::pull('Women'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -356,8 +357,8 @@ class ProductSeeder extends Seeder
 
         $product = Product::factory()
             ->hasAttached(collect([
-                cache('Wallets'),
-                cache('Women'),
+                Cache::pull('Wallets'),
+                Cache::pull('Women'),
             ]), ['created_at' => now(), 'updated_at' => now()])
             ->create([
                 'company_id' => $companyId,
@@ -367,7 +368,5 @@ class ProductSeeder extends Seeder
 
         $product->addMediaFromUrl('https://tinyurl.com/women-zip-around-wallets')
             ->toMediaCollection('product_images');
-
-        cache()->flush();
     }
 }
