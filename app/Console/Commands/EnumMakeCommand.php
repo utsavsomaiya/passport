@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use Closure;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use function Laravel\Prompts\text;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:enum')]
@@ -68,5 +70,28 @@ class EnumMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '\Enums';
+    }
+
+    /**
+     * Prompt for missing input arguments using the returned questions.
+     *
+     * @return array<string, Closure>
+     */
+    protected function promptForMissingArgumentsUsing()
+    {
+        return [
+            'name' => fn (): string => text(
+                label: 'What should the ' . strtolower($this->type) . ' be named?',
+                placeholder: 'E.g. StatusEnum',
+                required: 'The name is required.',
+                validate: function (string $value): ?string {
+                    if (! Str::endsWith($value, 'Enum')) {
+                        return 'The name must have suffix "Enum".';
+                    }
+
+                    return null;
+                }
+            ),
+        ];
     }
 }

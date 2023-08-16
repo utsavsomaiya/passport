@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Laravel\Prompts\Prompt;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Artisan;
 | simple approach to interacting with each command's IO methods.
 |
 */
+
+Prompt::fallbackWhen(shell_exec('tput lines') < 8);
 
 Artisan::command('dd {code*}', function () {
     $isAllowedToRun = function () {
