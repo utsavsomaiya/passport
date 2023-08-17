@@ -13,7 +13,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('bundle_product_components', function (Blueprint $table) {
+        Schema::create('bundle_product_components', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignIdFor(Product::class, 'parent_product_id')->constrained('products');
             $table->foreignIdFor(Product::class, 'child_product_id')->constrained('products');

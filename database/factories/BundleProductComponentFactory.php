@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\BundleProductComponent;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,8 +23,8 @@ class BundleProductComponentFactory extends Factory
     public function definition(): array
     {
         return [
-            'parent_product_id' => fn () => Product::factory()->create(['is_bundle' => true]),
-            'child_product_id' => fn () => Product::factory()->create(['is_bundle' => false]),
+            'parent_product_id' => fn (): Collection|Model => Product::factory()->create(['is_bundle' => true]),
+            'child_product_id' => fn (): Collection|Model => Product::factory()->create(['is_bundle' => false]),
             'quantity' => fake()->numberBetween(1, 100),
             'sort_order' => fake()->numberBetween(1, 100),
         ];

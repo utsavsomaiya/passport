@@ -32,7 +32,7 @@ class BundleProductComponentSeeder extends Seeder
         $productIds = Product::whereIn('sku', ['201501004720', '201501004011', '201501000970', '201501002390'])
             ->where('is_bundle', false)
             ->pluck('id')
-            ->each(function ($childProductId) use (&$bundledProductComponents, $parentProduct) {
+            ->each(function ($childProductId) use (&$bundledProductComponents, $parentProduct): void {
                 $bundledProductComponents[] = [
                     'parent_product_id' => $parentProduct->id,
                     'child_product_id' => $childProductId,
