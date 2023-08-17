@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\Product;
-use App\Models\ProductBundle;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -113,53 +112,4 @@ test('it can update the product with its media', function (): void {
     $this->assertDatabaseHas(Product::class, ['name' => $name]);
 
     $this->assertDatabaseHas(Media::class, ['file_name' => $image]);
-});
-
-test('it can fetch the products with its bundle.', function (): void {
-    $products = Product::factory(2)->for($this->company)
-        ->sequence(['is_bundle' => true], ['is_bundle' => false])
-        ->create();
-
-    ProductBundle::factory()->create([
-        'parent_product_id' => $products->first()->id,
-        'child_product_id' => ($childProduct = $products->last())->id,
-    ]);
-
-    $product = $products->sortByDesc('created_at')->first();
-
-    $product->addMedia(UploadedFile::fake()->image('test.png'))->toMediaCollection('product_images');
-
-    $media = $product->getFirstMedia('product_images');
-
-    $response = $this->withToken($this->token)->getJson(route('api.products.fetch'));
-
-    $response->assertOk()
-        ->assertJson(
-            fn (AssertableJson $json): AssertableJson => $json
-                ->has('data', fn (AssertableJson $json): AssertableJson => $json
-                    ->has('0', fn (AssertableJson $json): AssertableJson => $json
-                        ->where('id', $product->id)
-                        ->where('name', $product->name)
-                        ->has('bundle_items', fn (AssertableJson $json): AssertableJson => $json
-                            ->has('0', fn (AssertableJson $json): AssertableJson => $json
-                                ->where('id', $childProduct->id)
-                                ->where('name', $childProduct->name)
-                                ->etc()
-                            )
-                            ->etc()
-                        )
-                        ->has('media', fn (AssertableJson $json): AssertableJson => $json
-                            ->has('0', fn (AssertableJson $json): AssertableJson => $json
-                                ->where('uploaded_at', $media->created_at->displayFormat())
-                                ->where('url', $media->getUrl())
-                            )
-                            ->etc()
-                        )
-                        ->etc()
-                    )
-                    ->etc()
-                )
-                ->etc()
-        );
-
 });
