@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -28,7 +31,15 @@ class ProductQueries extends GlobalQueries
             ->allowedFilters([$this->filter('name'), $this->filter('sku'), $this->filter('upc_ean'), 'is_bundle', 'status'])
             ->where('company_id', app('company_id'))
             ->select($this->selectedColumns())
-            ->with(['media:id,file_name,model_id,model_type,collection_name,disk,created_at'])
+            ->with([
+                'media:id,file_name,model_id,model_type,collection_name,disk,created_at',
+                'bundleComponents' => function (HasMany $relation): void {
+                    $relation->with('childProduct', function (BelongsTo $relation): void {
+                        $relation->with('media:id,file_name,model_id,model_type,collection_name,disk,created_at')
+                            ->select($this->selectedColumns());
+                    });
+                },
+            ])
             ->jsonPaginate();
     }
 

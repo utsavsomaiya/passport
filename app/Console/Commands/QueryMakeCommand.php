@@ -79,7 +79,7 @@ class QueryMakeCommand extends GeneratorCommand
         $modelClass = $this->parseModel(Str::before($name, 'Queries'));
 
         if (
-            ! class_exists($modelClass) &&
+            ! file_exists(app_path('Models/' . Str::of($modelClass)->classBasename() . '.php')) &&
             confirm(sprintf('A %s model does not exist. Do you want to generate it?', $modelClass), true)
         ) {
             $this->call('make:model', ['name' => $modelClass]);

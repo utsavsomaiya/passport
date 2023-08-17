@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\FetchProductRequest;
 use App\Http\Requests\Api\ProductRequest;
-use App\Http\Resources\Api\ProductWithBundleResource;
+use App\Http\Resources\Api\ProductWithBundleComponentsResource;
 use App\Queries\ProductQueries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -25,7 +25,7 @@ class ProductController extends Controller
     {
         $products = $this->productQueries->listQuery($request);
 
-        return ProductWithBundleResource::collection($products);
+        return ProductWithBundleComponentsResource::collection($products);
     }
 
     public function create(ProductRequest $request): JsonResponse

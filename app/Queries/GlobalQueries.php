@@ -47,7 +47,7 @@ class GlobalQueries
                 });
             }
 
-            if ($filterMethod[$columnName] === 'like') {
+            if ($filterMethod[$columnName] === 'is_like') {
                 return AllowedFilter::partial($columnName);
             }
         }
@@ -96,16 +96,6 @@ class GlobalQueries
                 $query->where($property, '=', $value);
             });
         });
-    }
-
-    public function sortingWithRelationShips(string $relationship): Closure
-    {
-        return function (Builder $query, bool $descending, string $property) use ($relationship): void {
-            $query->whereHas($relationship, function ($query) use ($descending, $property): void {
-                $direction = $descending ? 'DESC' : 'ASC';
-                $query->orderBy($property, $direction);
-            });
-        };
     }
 
     /**

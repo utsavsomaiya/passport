@@ -20,6 +20,7 @@
         "spatie/laravel-sluggable": "^3.5"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.13",
         "driftingly/rector-laravel": "^0.17.0",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
@@ -67,7 +68,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "barryvdh/laravel-ide-helper"
+            ]
         }
     },
     "config": {
