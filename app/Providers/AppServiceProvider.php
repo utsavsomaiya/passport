@@ -37,7 +37,6 @@ class AppServiceProvider extends ServiceProvider
             abort(HttpResponse::HTTP_FORBIDDEN, 'Accept JSON header is missing in the request.');
         }
 
-        // If you are set this delimiter, you need to update the documentations.
         QueryBuilderRequest::setArrayValueDelimiter('|'); // By default value is `,`
 
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);

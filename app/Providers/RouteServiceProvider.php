@@ -30,10 +30,12 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for(
             'api',
-            fn (Request $request): Limit => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip())
+            fn (Request $request): Limit => Limit::perMinute(env('LIMIT_REQUEST_PER_MINUTE', 60))->by($request->user()?->id ?: $request->ip())
         );
 
-        RateLimiter::for('auth', fn (Request $request): Limit => Limit::perMinute(app()->runningInConsole() ? 60 : env('LIMIT_REQUEST_PER_MINUTE', 5))
+        RateLimiter::for('auth', fn (Request $request): Limit => Limit::perMinute(
+            app()->runningInConsole() ? env('LIMIT_REQUEST_PER_MINUTE', 60) : env('LIMIT_REQUEST_PER_MINUTE_FOR_AUTHENTICATION', 5)
+        )
             ->by($request->user()?->id ?: $request->ip())
             ->response(fn (Request $request, array $headers): ResponseFactory|Response => response(__('Too many attempts. Please try again in :seconds seconds', [
                 'seconds' => $headers['Retry-After'],
