@@ -6,17 +6,7 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Prompts\Prompt;
 
-/*
-|--------------------------------------------------------------------------
-| Console Routes
-|--------------------------------------------------------------------------
-|
-| This file is where you may define all of your Closure based console
-| commands. Each Closure is bound to a command instance allowing a
-| simple approach to interacting with each command's IO methods.
-|
-*/
-
+// When terminal height is less than 8. It will display old prompt.
 Prompt::fallbackWhen(shell_exec('tput lines') < 8);
 
 Artisan::command('dd {code*}', function () {
