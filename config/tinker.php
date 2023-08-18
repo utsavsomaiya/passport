@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Illuminate\Database\Console\Migrations\FreshCommand;
 use Illuminate\Database\Console\Seeds\SeedCommand;
 use Illuminate\Database\Console\WipeCommand;
+use Illuminate\Foundation\Console\ConfigCacheCommand;
+use Illuminate\Foundation\Console\ConfigClearCommand;
 use Illuminate\Support\Benchmark;
 
 return [
@@ -24,6 +26,8 @@ return [
         WipeCommand::class,
         FreshCommand::class,
         SeedCommand::class,
+        ConfigCacheCommand::class,
+        ConfigClearCommand::class,
     ],
 
     /*

@@ -10,90 +10,77 @@ beforeEach(function (): void {
     [$this->user, $this->company, $this->token] = frontendApiLoginWithUser('Super Admin');
 });
 
-test('it can fetch bundle product components', function (): void {
-    [$parentProduct, $firstChildProduct, $secondChildProduct] = Product::factory(3)
-        ->for($this->company)
-        ->sequence(['is_bundle' => true], ['is_bundle' => false], ['is_bundle' => false])
-        ->create();
+describe('fetch bundle product components', function (): void {
+    beforeEach(function (): void {
+        [$this->parentProduct, $this->firstChildProduct, $this->secondChildProduct] = Product::factory(3)
+            ->for($this->company)
+            ->sequence(
+                ['name' => 'Jeans', 'is_bundle' => true],
+                ['name' => 'Sneaker', 'is_bundle' => false],
+                ['name' => 'Wallet', 'is_bundle' => false]
+            )
+            ->create();
 
-    BundleProductComponent::factory()->create([
-        'parent_product_id' => $parentProduct->id,
-        'child_product_id' => $firstChildProduct->id,
-        'sort_order' => 1,
-    ]);
+        BundleProductComponent::factory()->create([
+            'parent_product_id' => $this->parentProduct->id,
+            'child_product_id' => $this->firstChildProduct->id,
+            'sort_order' => 1,
+        ]);
 
-    $component = BundleProductComponent::factory()->create([
-        'parent_product_id' => $parentProduct->id,
-        'child_product_id' => $secondChildProduct->id,
-        'sort_order' => 2,
-    ]);
+        $this->component = BundleProductComponent::factory()->create([
+            'parent_product_id' => $this->parentProduct->id,
+            'child_product_id' => $this->secondChildProduct->id,
+            'sort_order' => 2,
+        ]);
+    });
 
-    $response = $this->withToken($this->token)->getJson(route('api.bundle_product_components.fetch', [
-        'parentProductId' => $parentProduct->id,
-    ]));
+    test('it can fetch bundle product components with default sorting', function (): void {
+        $response = $this->withToken($this->token)->getJson(route('api.bundle_product_components.fetch', [
+            'parentProductId' => $this->parentProduct->id,
+        ]));
 
-    $response->assertOk()
-        ->assertJson(fn (AssertableJson $json): AssertableJson => $json
-            ->has('data', fn (AssertableJson $json): AssertableJson => $json
-                ->has('0', fn (AssertableJson $json): AssertableJson => $json
-                    ->where('component_id', $component->id)
-                    ->has('component', fn (AssertableJson $json): AssertableJson => $json
-                        ->where('id', $secondChildProduct->id)
+        $response->assertOk()
+            ->assertJson(fn (AssertableJson $json): AssertableJson => $json
+                ->has('data', fn (AssertableJson $json): AssertableJson => $json
+                    ->has('0', fn (AssertableJson $json): AssertableJson => $json
+                        ->where('component_id', $this->component->id)
+                        ->has('component', fn (AssertableJson $json): AssertableJson => $json
+                            ->where('id', $this->secondChildProduct->id)
+                            ->etc()
+                        )
+                        ->where('sort_order', 2)
                         ->etc()
                     )
-                    ->where('sort_order', 2)
                     ->etc()
                 )
                 ->etc()
-            )
-            ->etc()
-        );
-});
+            );
+    });
 
-test('it can display the record order by descending of component product name', function (): void {
-    [$parentProduct, $firstChildProduct, $secondChildProduct] = Product::factory(3)
-        ->for($this->company)
-        ->sequence(
-            ['name' => 'Jeans', 'is_bundle' => true],
-            ['name' => 'Sneaker', 'is_bundle' => false],
-            ['name' => 'Wallet', 'is_bundle' => false]
-        )
-        ->create();
+    test('it can display the record order by descending of component product name', function (): void {
+        $response = $this->withToken($this->token)->getJson(route('api.bundle_product_components.fetch', [
+            'parentProductId' => $this->parentProduct->id,
+            'sort' => '-name',
+        ]));
 
-    BundleProductComponent::factory()->create([
-        'parent_product_id' => $parentProduct->id,
-        'child_product_id' => $firstChildProduct->id,
-        'sort_order' => 1,
-    ]);
-
-    $component = BundleProductComponent::factory()->create([
-        'parent_product_id' => $parentProduct->id,
-        'child_product_id' => $secondChildProduct->id,
-        'sort_order' => 2,
-    ]);
-
-    $response = $this->withToken($this->token)->getJson(route('api.bundle_product_components.fetch', [
-        'parentProductId' => $parentProduct->id,
-        'sort' => '-name',
-    ]));
-
-    $response->assertOk()
-        ->assertJson(fn (AssertableJson $json): AssertableJson => $json
-            ->has('data', fn (AssertableJson $json): AssertableJson => $json
-                ->has('0', fn (AssertableJson $json): AssertableJson => $json
-                    ->where('component_id', $component->id)
-                    ->has('component', fn (AssertableJson $json): AssertableJson => $json
-                        ->where('name', 'Wallet')
-                        ->etc()
+        $response->assertOk()
+            ->assertJson(fn (AssertableJson $json): AssertableJson => $json
+                ->has('data', fn (AssertableJson $json): AssertableJson => $json
+                    ->has('0', fn (AssertableJson $json): AssertableJson => $json
+                        ->where('component_id', $this->component->id)
+                        ->has('component', fn (AssertableJson $json): AssertableJson => $json
+                            ->where('name', 'Wallet')
+                            ->etc()
+                        )
+                        ->where('quantity', $this->component->quantity)
+                        ->where('sort_order', $this->component->sort_order)
+                        ->where('component_id', $this->component->id)
                     )
-                    ->where('quantity', $component->quantity)
-                    ->where('sort_order', $component->sort_order)
-                    ->where('component_id', $component->id)
+                    ->etc()
                 )
                 ->etc()
-            )
-            ->etc()
-        );
+            );
+    });
 });
 
 test('it can create a bundle product with update parent product `is_bundle` column', function (): void {
