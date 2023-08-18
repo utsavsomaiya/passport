@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
@@ -78,5 +78,23 @@ class ProductQueries extends GlobalQueries
         }
 
         $product->update($data);
+    }
+
+    /**
+     * @throws ModelNotFoundException<Product>
+     */
+    public function fetchProduct(string $parentProductId): Product
+    {
+        return Product::query()
+            ->select('id')
+            ->where('company_id', app('company_id'))
+            ->findOrFail($parentProductId);
+    }
+
+    public function unbundleProduct(string $productId): void
+    {
+        Product::query()
+            ->where('id', $productId)
+            ->update(['is_bundle' => false]);
     }
 }

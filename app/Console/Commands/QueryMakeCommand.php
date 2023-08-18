@@ -8,9 +8,10 @@ use Closure;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Symfony\Component\Console\Attribute\AsCommand;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:query')]
 class QueryMakeCommand extends GeneratorCommand

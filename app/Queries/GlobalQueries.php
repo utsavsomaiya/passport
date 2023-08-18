@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -104,8 +103,8 @@ class GlobalQueries
     protected function getWhereRawParameters(string $value, string $property): array
     {
         return [
-            sprintf('%s LIKE ?', $property),
-            [sprintf('%%%s', $value)], // if $value is 'pxm', it will return '%pxm'
+            __(':property LIKE ?', ['property' => $property]),
+            [__('%:value', ['value' => $value])],
         ];
     }
 }

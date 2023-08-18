@@ -120,9 +120,12 @@ Route::name('api.')->group(function () {
             });
 
             Route::controller(BundleProductComponentController::class)
-                ->name('bundle_product_component.')
-                ->prefix('bundle-product-component')->group(function (): void {
+                ->name('bundle_product_components.')
+                ->prefix('bundle-product-components')->group(function (): void {
                     Route::get('{parentProductId}/fetch', 'fetch')->can('fetch-bundle-product-components')->name('fetch');
+                    Route::post('{parentProductId}/create', 'create')->can('create-bundle-product-component')->name('create');
+                    Route::delete('{id}/delete', 'delete')->can('delete-bundle-product-component')->name('delete');
+                    Route::post('{id}/update', 'update')->can('update-bundle-product-component')->name('update');
                 });
         });
     });

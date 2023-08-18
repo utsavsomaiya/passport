@@ -21,7 +21,7 @@ class FetchBundleProductComponentRequest extends FormRequest
             'filter.sku' => ['sometimes', 'string', 'max:255'],
             'filter.quantity' => ['sometimes', 'integer'],
             'filter.sort_order' => ['sometimes', 'integer'],
-            'sort' => ['sometimes', 'string']
+            'sort' => ['sometimes', 'string'],
         ];
     }
 }
