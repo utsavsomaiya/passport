@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\PersonalAccessToken;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\PendingRequest;
@@ -25,7 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if ($this->app->isLocal()) {
+            $this->app->register(IdeHelperServiceProvider::class);
+        }
     }
 
     /**

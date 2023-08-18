@@ -28,6 +28,7 @@ final readonly class Permission
             'attributes',
             'products',
             'product-bundles',
+            'bundle-product-components',
         ],
 
         /**

@@ -7,8 +7,9 @@ namespace App\Console\Commands;
 use Closure;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
-use function Laravel\Prompts\text;
 use Symfony\Component\Console\Attribute\AsCommand;
+
+use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:enum')]
 class EnumMakeCommand extends GeneratorCommand

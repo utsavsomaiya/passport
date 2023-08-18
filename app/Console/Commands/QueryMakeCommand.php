@@ -8,9 +8,10 @@ use Closure;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Symfony\Component\Console\Attribute\AsCommand;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:query')]
 class QueryMakeCommand extends GeneratorCommand
@@ -79,7 +80,7 @@ class QueryMakeCommand extends GeneratorCommand
         $modelClass = $this->parseModel(Str::before($name, 'Queries'));
 
         if (
-            ! class_exists($modelClass) &&
+            ! file_exists(app_path('Models/' . Str::of($modelClass)->classBasename() . '.php')) &&
             confirm(sprintf('A %s model does not exist. Do you want to generate it?', $modelClass), true)
         ) {
             $this->call('make:model', ['name' => $modelClass]);

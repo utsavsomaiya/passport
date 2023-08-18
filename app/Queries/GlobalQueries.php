@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -47,7 +46,7 @@ class GlobalQueries
                 });
             }
 
-            if ($filterMethod[$columnName] === 'like') {
+            if ($filterMethod[$columnName] === 'is_like') {
                 return AllowedFilter::partial($columnName);
             }
         }
@@ -98,24 +97,14 @@ class GlobalQueries
         });
     }
 
-    public function sortingWithRelationShips(string $relationship): Closure
-    {
-        return function (Builder $query, bool $descending, string $property) use ($relationship): void {
-            $query->whereHas($relationship, function ($query) use ($descending, $property): void {
-                $direction = $descending ? 'DESC' : 'ASC';
-                $query->orderBy($property, $direction);
-            });
-        };
-    }
-
     /**
      * @return array<int, mixed>
      */
     protected function getWhereRawParameters(string $value, string $property): array
     {
         return [
-            sprintf('%s LIKE ?', $property),
-            [sprintf('%%%s', $value)], // if $value is 'pxm', it will return '%pxm'
+            __(':property LIKE ?', ['property' => $property]),
+            [__('%:value', ['value' => $value])],
         ];
     }
 }

@@ -7,7 +7,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductWithBundleResource extends JsonResource
+class ProductWithBundleComponentsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,10 @@ class ProductWithBundleResource extends JsonResource
         $product = $this->resource;
 
         return [
-            ...(new ProductResource($product))->toArray($request),
+            ...resolve(ProductResource::class, ['resource' => $product])->toArray($request),
+            $this->mergeWhen($product->is_bundle, [
+                'bundle_components' => BundleProductComponentResource::collection($product->bundleComponents),
+            ]),
         ];
     }
 }
