@@ -29,18 +29,18 @@ class BundleProductComponentController extends Controller
         return BundleProductComponentResource::collection($bundleProductComponents);
     }
 
-    public function create(BundleProductComponentRequest $request, string $parentProductId): JsonResponse
+    public function add(BundleProductComponentRequest $request, string $parentProductId): JsonResponse
     {
         $this->bundleProductComponentQueries->create($request, $parentProductId);
 
-        return Response::api('Bundle of product components created successfully.');
+        return Response::api('Component(s) have been added to the specified bundle product successfully.');
     }
 
     public function delete(string $id): JsonResponse
     {
         $this->bundleProductComponentQueries->delete($id);
 
-        return Response::api('Bundle of product component successfully deleted. If the last product was part of the bundle, it has been automatically unbundled.');
+        return Response::api('The component of the specified bundle product was deleted successfully.');
     }
 
     public function update(UpdateBundleProductComponentRequest $request, string $id): JsonResponse
@@ -49,6 +49,6 @@ class BundleProductComponentController extends Controller
 
         $this->bundleProductComponentQueries->update($validatedData, $id);
 
-        return Response::api('Bundle of product component updated successfully.');
+        return Response::api('The component of the bundle product has been updated successfully.');
     }
 }

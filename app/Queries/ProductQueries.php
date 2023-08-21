@@ -83,12 +83,12 @@ class ProductQueries extends GlobalQueries
     /**
      * @throws ModelNotFoundException<Product>
      */
-    public function fetchProduct(string $parentProductId): Product
+    public function fetchProduct(string $id): Product
     {
         return Product::query()
             ->select('id')
             ->where('company_id', app('company_id'))
-            ->findOrFail($parentProductId);
+            ->findOrFail($id);
     }
 
     public function unbundleProduct(string $productId): void

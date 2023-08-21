@@ -78,11 +78,11 @@ class BundleProductComponentQueries extends GlobalQueries
     /**
      * @param  array<string, string>  $validatedData
      */
-    public function update(array $validatedData, string $bundleId): void
+    public function update(array $validatedData, string $componentId): void
     {
-        $productBundle = BundleProductComponent::query()->findOrFail($bundleId);
+        $bundleProductComponent = BundleProductComponent::query()->findOrFail($componentId);
 
-        $productBundle->update($validatedData);
+        $bundleProductComponent->update($validatedData);
     }
 
     private function sortingWithRelationShips(): Closure
