@@ -105,7 +105,7 @@ test('it can delete a hierarchy', function (): void {
     $response->assertOk()
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json
-                ->where('success', __('Hierarchy deleted successfully.'))
+                ->where('success', __('Hierarchy has been successfully deleted. If it was assigned to the product, it has been automatically removed.'))
         );
 
     $this->assertModelMissing($hierarchy);
