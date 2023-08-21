@@ -41,7 +41,7 @@ class HierarchyController extends Controller
     {
         $this->hierarchyQueries->delete($id);
 
-        return Response::api('Hierarchy deleted successfully.');
+        return Response::api('Hierarchy has been successfully deleted. If it was assigned to the product, it has been automatically removed.');
     }
 
     public function update(HierarchyRequest $request, string $id): JsonResponse

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Models\Hierarchy;
+use App\Models\HierarchyProduct;
+use App\Models\Product;
 use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -231,4 +233,18 @@ test('it can create a same name hierarchy in different parents', function (): vo
         'name' => 'Kia seltos',
         'parent_hierarchy_id' => $suvCars->id,
     ]);
+});
+
+test('it can detach hierarchy from the product at deletion', function (): void {
+    $hierarchy = Hierarchy::factory()->for($this->company)->hasAttached(Product::factory()->for($this->company))->create();
+
+    $response = $this->withToken($this->token)->deleteJson(route('api.hierarchies.delete', [
+        'id' => $hierarchy->id,
+    ]));
+
+    $response->assertOk()->assertJsonStructure(['success']);
+
+    $this->assertModelMissing($hierarchy);
+
+    $this->assertDatabaseCount(HierarchyProduct::class, 0);
 });
