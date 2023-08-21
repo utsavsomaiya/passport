@@ -46,32 +46,6 @@ We have created some ‘make’ commands. Feel free to use these commands:
 - [Horizon SnapShot](https://laravel.com/docs/10.x/horizon#metrics)
 - Remove auditable entries after 180 days by default. This can be changed by setting the `DELETE_AUDITABLE_RECORDS_OLDER_THAN_DAYS` .env variable.
 
-
-### [Prevent main branch direct pushes](https://hiltonmeyer.com/articles/protect-git-branch-and-prevent-master-push.html)
-- Open terminal (not inside VS Code) and cd into the project directory
-
-- touch .git/hooks/pre-push (to create the hook file)
-
-- nano .git/hooks/pre-push (to edit the hook file)
-
-- Paste the following content in it and save:
-
-```shell
-#!/bin/bash
-
-protected_branch='main'
-current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-
-if [ $protected_branch = $current_branch ]
-then
-    echo "${protected_branch} is a protected branch, create PR to merge"
-    exit 1 # push will not execute
-else
-    exit 0 # push will execute
-fi
-```
-- `chmod +x .git/hooks/pre-push` (to make the hook file executable)
-
 ### Postman
 To generate Postman API Keys, please follow these steps:
 1. Visit the Postman documentation: [Postman API Key Authentication](https://learning.postman.com/docs/developer/postman-api/authentication/).
