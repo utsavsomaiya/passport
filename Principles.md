@@ -223,6 +223,15 @@ if ($invoice->isOverdue()) {
 
 + $foo = $foo ?? 'bar';
 + $foo ??= 'bar';
+
+
+- if (in_array($bar, array_keys($foo))) {
+-      $foo[$bar]
+- }
+
++ if (array_key_exists($bar, $foo)) {
++      $foo[$bar]
++ }
 ```
 
 ### [Prevent main branch direct pushes](https://hiltonmeyer.com/articles/protect-git-branch-and-prevent-master-push.html)

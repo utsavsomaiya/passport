@@ -53,25 +53,26 @@ class BundleProductComponentQueries extends GlobalQueries
             BundleProductComponent::query()->upsert($bundleProductComponents, ['parent_product_id', 'child_product_id']);
 
             if (! $product->is_bundle) {
-                $product->is_bundle = true;
-                $product->save();
+                resolve(ProductQueries::class)->convertToBundle($product->id);
             }
         });
     }
 
-    public function delete(string $id): void
+    public function delete(string $id): bool
     {
         $bundleProductComponent = BundleProductComponent::findOrFail($id);
         $bundleProductComponentParentProductId = $bundleProductComponent->parent_product_id;
 
-        DB::transaction(function () use ($bundleProductComponent, $bundleProductComponentParentProductId): void {
+        return DB::transaction(function () use ($bundleProductComponent, $bundleProductComponentParentProductId): bool {
             $bundleProductComponent->delete();
 
             $remainingBundleCount = BundleProductComponent::where('parent_product_id', $bundleProductComponentParentProductId)->count();
 
             if ($remainingBundleCount === 0) {
-                resolve(ProductQueries::class)->unbundleProduct($bundleProductComponentParentProductId);
+                resolve(ProductQueries::class)->convertToRegular($bundleProductComponentParentProductId);
             }
+
+            return $remainingBundleCount === 0;
         });
     }
 

@@ -39,9 +39,19 @@ class HierarchyController extends Controller
 
     public function delete(string $id): JsonResponse
     {
-        $this->hierarchyQueries->delete($id);
+        $hierarchyProductsCount = $this->hierarchyQueries->delete($id);
 
-        return Response::api('Hierarchy has been successfully deleted. If it was assigned to the product, it has been automatically removed.');
+        $message = 'Hierarchy has been deleted successfully.';
+
+        if ($hierarchyProductsCount > 0) {
+            $message .= trans_choice(
+                key: 'The product assigned to the hierarchy has been detached now.|The products assigned (:productCount) to the hierarchy have been detached now.',
+                number: $hierarchyProductsCount,
+                replace: ['productCount' => $hierarchyProductsCount]
+            );
+        }
+
+        return Response::api($message);
     }
 
     public function update(HierarchyRequest $request, string $id): JsonResponse

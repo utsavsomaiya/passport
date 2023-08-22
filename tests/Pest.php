@@ -104,7 +104,7 @@ function getRoutes(array $routes)
 
     foreach ($routes as $key => $route) {
         if (is_array($route)) {
-            $actions[] = getRoutesAndMethod($key, $route);
+            $actions[] = getRoutesAndMethod($key, $route['parameters'], $route['rename']); // Code refactor about the parameters is remaining...
 
             continue;
         }
@@ -115,12 +115,15 @@ function getRoutes(array $routes)
     return collect($actions)->flatten()->toArray();
 }
 
-function getRoutesAndMethod(string $requestFor, array $parameters = []): array
+function getRoutesAndMethod(string $requestFor, array $parameters = [], array $rename = []): array
 {
-    return [
-        fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.create', $requestFor), $parameters)],
-        fn (): array => ['method' => 'delete', 'route' => route(sprintf('api.%s.delete', $requestFor), ['id' => fake()->uuid()])],
-        fn (): array => ['method' => 'get', 'route' => route(sprintf('api.%s.fetch', $requestFor), $parameters)],
-        fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.update', $requestFor), ['id' => fake()->uuid()])],
-    ];
+    return collect(['fetch', 'create', 'update', 'delete'])
+        ->map(fn (string $action) => $rename !== [] && array_key_exists($action, $rename) ? $rename[$action] : $action)
+        ->map(fn ($action) => match ($action) {
+            $rename['fetch'] ?? 'fetch' => fn (): array => ['method' => 'get', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), $parameters)],
+            $rename['create'] ?? 'create' => fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), $parameters)],
+            $rename['update'] ?? 'update' => fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), ['id' => fake()->uuid()])],
+            $rename['delete'] ?? 'delete' => fn (): array => ['method' => 'delete', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), ['id' => fake()->uuid()])],
+        })
+        ->toArray();
 }

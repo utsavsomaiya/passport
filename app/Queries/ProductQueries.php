@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductQueries extends GlobalQueries
@@ -28,7 +30,25 @@ class ProductQueries extends GlobalQueries
         return QueryBuilder::for(Product::class, $request)
             ->defaultSort('-created_at')
             ->allowedSorts(['name', 'created_at', 'sku'])
-            ->allowedFilters([$this->filter('name'), $this->filter('sku'), $this->filter('upc_ean'), 'is_bundle', 'status'])
+            ->allowedFilters([
+                $this->filter('name'),
+                $this->filter('sku'),
+                $this->filter('upc_ean'),
+                'is_bundle',
+                'status',
+                AllowedFilter::callback('has_hierarchies', function (Builder $query, $value): void {
+                    $value = match ($value) {
+                        '1', 'true', true => true,
+                        default => false,
+                    };
+
+                    if ($value) {
+                        $query->has('hierarchies');
+                    } else {
+                        $query->has('hierarchies', '=', 0);
+                    }
+                }),
+            ])
             ->where('company_id', app('company_id'))
             ->select($this->selectedColumns())
             ->with([
@@ -91,10 +111,19 @@ class ProductQueries extends GlobalQueries
             ->findOrFail($id);
     }
 
-    public function unbundleProduct(string $productId): void
+    public function convertToRegular(string $id): void
     {
         Product::query()
-            ->where('id', $productId)
+            ->where('id', $id)
+            ->where('company_id', app('company_id'))
             ->update(['is_bundle' => false]);
+    }
+
+    public function convertToBundle(string $product): void
+    {
+        Product::query()
+            ->where('id', $product)
+            ->where('company_id', app('company_id'))
+            ->update(['is_bundle' => true]);
     }
 }

@@ -17,12 +17,13 @@ class FetchProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'filter' => ['sometimes', 'array', 'max:5'],
+            'filter' => ['sometimes', 'array', 'max:6'],
             'filter.name' => ['sometimes', 'string', 'max:255'],
             'filter.sku' => ['sometimes', 'string', 'max:255'],
             'filter.upc_ean' => ['sometimes', 'string', 'max:255'],
             'filter.is_bundle' => ['sometimes', 'boolean'],
             'filter.status' => ['sometimes', 'boolean'],
+            'filter.has_hierarchies' => ['sometimes', 'boolean'],
             'sort' => ['sometimes', 'string'],
         ];
     }
