@@ -22,7 +22,12 @@ test('it cannot perform any action without any proper permission', function ($da
     'templates',
     'attributes',
     'products',
-    'bundle_product_components' => ['parentProductId' => fake()->uuid()],
+    'bundle_product_components' => [
+        'parameters' => ['parentProductId' => fake()->uuid()],
+        'rename' => [
+            'create' => 'add',
+        ],
+    ],
 ]));
 
 test('it can check the request has put the roles and permissions into the cache', function (): void {

@@ -86,7 +86,7 @@ describe('fetch bundle product components', function (): void {
 test('it can create a bundle product with update parent product `is_bundle` column', function (): void {
     [$parentProduct, $firstChildProduct, $secondChildProduct] = Product::factory(3)->for($this->company)->create(['is_bundle' => false]);
 
-    $response = $this->withToken($this->token)->postJson(route('api.bundle_product_components.create', [
+    $response = $this->withToken($this->token)->postJson(route('api.bundle_product_components.add', [
         'parentProductId' => $parentProduct->id,
     ]), [
         'bundle_product_components' => [
@@ -133,7 +133,10 @@ test('it can delete the product bundle', function (): void {
         'id' => $component->id,
     ]));
 
-    $response->assertOk()->assertJsonStructure(['success']);
+    $response->assertOk()
+        ->assertJson([
+            'success' => 'The component of the specified bundle product was deleted successfully.The parent product has been converted to a regular product now as there are no product components left.',
+        ]);
 
     $this->assertModelMissing($component);
 
@@ -159,7 +162,7 @@ test('it cannot modify the `is_bundle` column if there is already a product with
         'id' => $firstBundleProductComponent->id,
     ]));
 
-    $response->assertOk()->assertJsonStructure(['success']);
+    $response->assertOk()->assertJson(['success' => 'The component of the specified bundle product was deleted successfully.']);
 
     $this->assertModelMissing($firstBundleProductComponent);
 

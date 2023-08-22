@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\Hierarchy;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -41,20 +42,24 @@ class HierarchyQueries extends GlobalQueries
     /**
      * @throws HttpException
      */
-    public function delete(string $id): void
+    public function delete(string $id): int
     {
         $hierarchy = Hierarchy::query()
             ->where('company_id', app('company_id'))
             ->where('id', $id)
+            ->withCount('products')
             ->withExists('children')
             ->firstOrFail();
 
         // @phpstan-ignore-next-line
         abort_if($hierarchy->children_exists, Response::HTTP_NOT_ACCEPTABLE, sprintf('This hierarchy has children. Cannot be deleted - %s.', $hierarchy->name));
 
-        resolve(HierarchyProductQueries::class)->deleteByHierarchyId($hierarchy->id);
+        DB::transaction(function () use ($hierarchy): void {
+            resolve(HierarchyProductQueries::class)->deleteByHierarchyId($hierarchy->id);
+            $hierarchy->delete();
+        });
 
-        $hierarchy->delete();
+        return $hierarchy->products_count;
     }
 
     /**

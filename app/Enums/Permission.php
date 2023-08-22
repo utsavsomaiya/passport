@@ -14,7 +14,10 @@ final readonly class Permission
 
     public function __construct(
         /**
-         * @var array<int, string>
+         * For altering an array of actions, supply the array alongside an array of key-value pairs.
+         * If a null value is passed, the corresponding action will be removed from the array.
+         *
+         * @var array<int|string, array<string, string>|string>
          */
         protected array $modules = [
             'users',
@@ -28,7 +31,9 @@ final readonly class Permission
             'attributes',
             'products',
             'product-bundles',
-            'bundle-product-components',
+            'bundle-product-components' => [
+                'create' => 'add',
+            ],
         ],
 
         /**
@@ -63,17 +68,20 @@ final readonly class Permission
         $self = app(self::class);
 
         return collect($self->modules)
-            ->map(fn (string $name): array => self::generateCrud(Str::singular($name)))
+            ->map(fn (string|array $name, string|int $key): array => is_array($name) ? self::generateCrud(Str::singular((string) $key), $name) : self::generateCrud(Str::singular($name)))
             ->push($self->permissions)
             ->flatten();
     }
 
     /**
+     * @param  array<string, string>  $renameActions
      * @return array<int, string>
      */
-    private static function generateCrud(string $for): array
+    private static function generateCrud(string $for, array $renameActions = []): array
     {
         return collect(['fetch', 'create', 'update', 'delete'])
+            ->map(fn (string $action): string => $renameActions !== [] && array_key_exists($action, $renameActions) ? $renameActions[$action] : $action)
+            ->filter(fn (?string $action): bool => ! is_null($action))
             ->map(fn (string $action): string => self::generateAction($action, $for))
             ->toArray();
     }

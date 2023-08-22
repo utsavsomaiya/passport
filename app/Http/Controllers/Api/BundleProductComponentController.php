@@ -38,9 +38,15 @@ class BundleProductComponentController extends Controller
 
     public function delete(string $id): JsonResponse
     {
-        $this->bundleProductComponentQueries->delete($id);
+        $isConvertedToRegularProduct = $this->bundleProductComponentQueries->delete($id);
 
-        return Response::api('The component of the specified bundle product was deleted successfully.');
+        $message = 'The component of the specified bundle product was deleted successfully.';
+
+        if ($isConvertedToRegularProduct) {
+            $message .= 'The parent product has been converted to a regular product now as there are no product components left.';
+        }
+
+        return Response::api($message);
     }
 
     public function update(UpdateBundleProductComponentRequest $request, string $id): JsonResponse

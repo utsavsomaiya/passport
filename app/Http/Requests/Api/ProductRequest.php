@@ -14,16 +14,6 @@ use Illuminate\Validation\Rules\Unique;
 class ProductRequest extends FormRequest
 {
     /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'status' => (bool) $this->status,
-        ]);
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, array<int, File|Unique|RequiredIf|string|null>>

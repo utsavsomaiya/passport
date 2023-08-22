@@ -48,7 +48,7 @@ class BundleProductComponentRequest extends FormRequest
     {
         return [
             'bundle_product_components.*' => 'bundle_product_components #:position',
-            'bundle_product_components.*.id' => 'bundle_product_components #:position id',
+            'bundle_product_components.*.id' => 'bundle_product_components #:position id', // The selected bundle_product_components #1 id is invalid.
             'bundle_product_components.*.quantity' => 'bundle_product_components #:position quantity',
             'bundle_product_components.*.sort_order' => 'bundle_product_components #:position sort_order',
         ];
