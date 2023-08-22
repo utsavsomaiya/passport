@@ -48,9 +48,9 @@ class BundleProductComponentRequest extends FormRequest
     {
         return [
             'bundle_product_components.*' => 'bundle_product_components #:position',
-            'bundle_product_components.*.id' => 'bundle_product_components #:position has id',
-            'bundle_product_components.*.quantity' => 'bundle_product_components #:position has quantity',
-            'bundle_product_components.*.sort_order' => 'bundle_product_components #:position has sort_order',
+            'bundle_product_components.*.id' => 'bundle_product_components #:position id',
+            'bundle_product_components.*.quantity' => 'bundle_product_components #:position quantity',
+            'bundle_product_components.*.sort_order' => 'bundle_product_components #:position sort_order',
         ];
     }
 }
