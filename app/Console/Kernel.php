@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('sanctum:prune-expired --hours=24')->daily();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
-        $schedule->command('postman-collection-backup')->twiceMonthly();
+        $schedule->command('postman-backup')->twiceMonthly();
 
         $schedule->command('audit:clean')->daily();
     }

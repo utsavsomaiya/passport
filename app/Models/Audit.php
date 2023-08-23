@@ -18,6 +18,6 @@ class Audit extends BaseAudit
      */
     public function user()
     {
-        return $this->morphTo()->withTrashed(); // @phpstan-ignore-line
+        return $this->morphTo()->withTrashed();
     }
 }

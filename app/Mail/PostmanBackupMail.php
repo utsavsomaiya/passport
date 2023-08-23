@@ -16,11 +16,9 @@ class PostmanBackupMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
+    // @phpstan-ignore-next-line
     public function __construct(
-        protected string $filename,
+        protected array $fileNames,
     ) {
     }
 
@@ -47,9 +45,13 @@ class PostmanBackupMail extends Mailable
      */
     public function attachments(): array
     {
-        return [
-            Attachment::fromStorage($this->filename)
-                ->withMime('application/json'),
-        ];
+        $attachments = [];
+
+        foreach ($this->fileNames as $fileName) {
+            $attachments[] = Attachment::fromStorage($fileName)
+                ->withMime('application/json');
+        }
+
+        return $attachments;
     }
 }
