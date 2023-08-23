@@ -32,7 +32,7 @@ class PostmanBackup extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         if (! env('POSTMAN_API_KEY') || ! env('POSTMAN_URL')) {
             Log::error('You may set postman environment variable for latest updates of the postman.');
@@ -61,7 +61,7 @@ class PostmanBackup extends Command
             Mail::to(env('DEVELOPER_EMAIL'))->send(new PostmanBackupMail($files));
             Storage::delete($files);
 
-            exit(0);
+            return static::SUCCESS;
         }
 
         Log::error('Postman collections Response', [
@@ -74,7 +74,7 @@ class PostmanBackup extends Command
             'body' => $environmentsResponse->body(),
         ]);
 
-        exit(1);
+        return static::FAILURE;
     }
 
     private function generateCollection(string $collectionFileName): Response
