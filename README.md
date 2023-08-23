@@ -1,6 +1,6 @@
 <p align="center">
     <a
-        href="https://artisanssoultions.com"
+        href="https://artisanscloud.com"
         target="_blank"
     >
         <picture>
@@ -45,6 +45,11 @@ We have created some ‘make’ commands. Feel free to use these commands:
 - Remove expired Sanctum tokens after 24 hours.
 - [Horizon SnapShot](https://laravel.com/docs/10.x/horizon#metrics)
 - Remove auditable entries after 180 days by default. This can be changed by setting the `DELETE_AUDITABLE_RECORDS_OLDER_THAN_DAYS` .env variable.
+- Send an email with a backup of the Postman environments and collection to the developer every Monday and Thursday at 10:00 AM Asia/Kolkata (+05:30) time.
+    - To Scheduled this task, you need to configure the list of .env variables as mentioned below:
+        - `DEVELOPER_EMAIL`
+        - `POSTMAN_URL`
+        - `POSTMAN_API_KEY`
 
 ### Postman
 To generate Postman API Keys, please follow these steps:

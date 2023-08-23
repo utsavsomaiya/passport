@@ -10,8 +10,8 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Benchmark;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Mail;
 
 class PostmanBackup extends Command
 {
@@ -34,6 +34,11 @@ class PostmanBackup extends Command
      */
     public function handle(): void
     {
+        if (! env('POSTMAN_API_KEY') || ! env('POSTMAN_URL')) {
+            Log::error('You may set postman environment variable for latest updates of the postman.');
+            exit(1);
+        }
+
         $collectionFileName = 'public/pxm-collection.json';
         $localEnvironmentFileName = 'public/pxm-local-environment.json';
         $productionEnvironmentFileName = 'public/pxm-production-environment.json';
@@ -42,6 +47,7 @@ class PostmanBackup extends Command
 
         $collectionsResponse = $this->generateCollection($collectionFileName);
         $environmentsResponse = $this->fetchEnvironments();
+
         if ($environmentsResponse->ok()) {
             [$localId, $productionId] = $environmentsResponse->collect('environments')
                 ->filter(fn ($environment): bool => isset($environment['name']) && in_array($environment['name'], ['Local', 'Production']))
@@ -52,7 +58,7 @@ class PostmanBackup extends Command
         }
 
         if ($collectionsResponse->ok() && $environmentsResponse->ok()) {
-            Mail::to(env('DEVELOPER_EMAIL', 'utsav@freshbits.in'))->send(new PostmanBackupMail($files));
+            Mail::to(env('DEVELOPER_EMAIL'))->send(new PostmanBackupMail($files));
             Storage::delete($files);
 
             exit(0);
