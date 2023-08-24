@@ -36,7 +36,7 @@ class PostmanBackup extends Command
     {
         if (! env('POSTMAN_API_KEY') || ! env('POSTMAN_URL')) {
             Log::error('You may set postman environment variable for latest updates of the postman.');
-            exit(1);
+            return static::FAILURE;
         }
 
         $collectionFileName = 'public/pxm-collection.json';
@@ -82,7 +82,7 @@ class PostmanBackup extends Command
         [$response, $duration] = Benchmark::value(fn () => Http::postman()->get('/collections'));
 
         if ($duration > 1500) {
-            Log::warning('The Postman API is running slowly when attempting to fetch all collections.');
+            Log::warning(__('The Postman API is running slowly, taking several :duration, when attempting to fetch all collections.', ['duration' => $duration]));
         }
 
         if ($response->ok()) {
@@ -94,7 +94,7 @@ class PostmanBackup extends Command
             [$collectionResponse, $fetchCollectionDuration] = Benchmark::value(fn () => Http::postman()->get('/collections/' . $collectionId));
 
             if ($fetchCollectionDuration > 4000) {
-                Log::warning('The Postman API is running slowly when attempting to fetch pxm collection.');
+                Log::warning(__('The Postman API is running slowly, taking several :duration, when attempting to fetch pxm collection.', ['duration' => $fetchCollectionDuration]));
             }
 
             if ($collectionResponse->ok()) {
@@ -123,7 +123,7 @@ class PostmanBackup extends Command
         [$response, $duration] = Benchmark::value(fn () => Http::postman()->get('/environments'));
 
         if ($duration > 1500) {
-            Log::warning('The Postman API is running slowly when attempting to fetch all environments.');
+            Log::warning(__('The Postman API is running slowly, taking several :duration, when attempting to fetch all environments.', ['duration' => $duration]));
         }
 
         if ($response->failed()) {
@@ -138,7 +138,7 @@ class PostmanBackup extends Command
         [$response, $duration] = Benchmark::value(fn () => Http::postman()->get('/environments/' . $localId));
 
         if ($duration > 2500) {
-            Log::warning('The Postman API is running slowly when attempting to fetch local environment.');
+            Log::warning(__('The Postman API is running slowly, taking several :duration, when attempting to fetch local environment.', ['seconds' => $duration]));
         }
 
         if ($response->ok()) {
@@ -165,7 +165,7 @@ class PostmanBackup extends Command
         [$response, $duration] = Benchmark::value(fn () => Http::postman()->get('/environments/' . $productionId));
 
         if ($duration > 2500) {
-            Log::warning('The Postman API is running slowly when attempting to fetch production environment.');
+            Log::warning(__('The Postman API is running slowly, taking several :duration, when attempting to fetch production environment.', ['duration' => $duration]));
         }
 
         if ($response->ok()) {

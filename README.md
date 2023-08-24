@@ -46,6 +46,7 @@ We have created some ‘make’ commands. Feel free to use these commands:
 - [Horizon SnapShot](https://laravel.com/docs/10.x/horizon#metrics)
 - Remove auditable entries after 180 days by default. This can be changed by setting the `DELETE_AUDITABLE_RECORDS_OLDER_THAN_DAYS` .env variable.
 - Send an email with a backup of the Postman environments and collection to the developer every Monday and Thursday at 10:00 AM Asia/Kolkata (+05:30) time.
+    - **Please ensure that the Postman collection name matches the app name before scheduling it**.
     - To Scheduled this task, you need to configure the list of .env variables as mentioned below:
         - `DEVELOPER_EMAIL`
         - `POSTMAN_URL`
