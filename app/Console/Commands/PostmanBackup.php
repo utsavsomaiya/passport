@@ -49,9 +49,9 @@ class PostmanBackup extends Command
         $environmentsResponse = $this->fetchEnvironments();
 
         if ($environmentsResponse->ok()) {
-            [$localId, $productionId] = $environmentsResponse->collect('environments')
+            ['Local' => $localId, 'Production' => $productionId] = $environmentsResponse->collect('environments')
                 ->filter(fn ($environment): bool => isset($environment['name']) && in_array($environment['name'], ['Local', 'Production']))
-                ->pluck('id');
+                ->pluck('id', 'name');
 
             $this->generateLocalEnvironment($localId, $localEnvironmentFileName);
             $this->generateProductionEnvironment($productionId, $productionEnvironmentFileName);
