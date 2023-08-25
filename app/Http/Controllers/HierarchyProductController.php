@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Api\CreateOrUpdateHierarchyProductRequest;
 use App\Http\Requests\Api\FetchHierarchyProductRequest;
 use App\Http\Requests\Api\HierarchyProductRequest;
 use App\Http\Resources\Api\HierarchyProductResource;
