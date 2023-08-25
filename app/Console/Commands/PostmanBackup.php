@@ -36,6 +36,7 @@ class PostmanBackup extends Command
     {
         if (! env('POSTMAN_API_KEY') || ! env('POSTMAN_URL')) {
             Log::error('You may set postman environment variable for latest updates of the postman.');
+
             return static::FAILURE;
         }
 

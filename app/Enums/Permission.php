@@ -15,9 +15,9 @@ final readonly class Permission
     public function __construct(
         /**
          * For altering an array of actions, supply the array alongside an array of key-value pairs.
-         * If a null value is passed, the corresponding action will be removed from the array.
+         * If a '' value is passed, the corresponding action will be removed from the array.
          *
-         * @var array<int|string, array<string, string>|string>
+         * @var array<string|int, mixed>
          */
         protected array $modules = [
             'users',
@@ -33,6 +33,10 @@ final readonly class Permission
             'product-bundles',
             'bundle-product-components' => [
                 'create' => 'add',
+            ],
+            'hierarchy-products' => [
+                'create' => 'create-or-update',
+                'update' => null,
             ],
         ],
 
@@ -51,25 +55,23 @@ final readonly class Permission
     /**
      * @return array<string, string>
      */
-    public static function listOfPermissions(): array
+    public function listOfPermissions(): array
     {
-        return self::getFeatureGates()->mapWithKeys(fn (string $name): array => [
+        return $this->getFeatureGates()->mapWithKeys(fn (string $name): array => [
             $name => Str::of($name)->replaceFirst('-', ' ')->title()->value(),
         ])->toArray();
     }
 
-    public static function ability(string $action, string $for): string
+    public function ability(string $action, string $for): string
     {
-        return self::generateAction($action, Str::singular($for));
+        return $this->generateAction($action, Str::singular($for));
     }
 
-    public static function getFeatureGates(): Collection
+    public function getFeatureGates(): Collection
     {
-        $self = app(self::class);
-
-        return collect($self->modules)
-            ->map(fn (string|array $name, string|int $key): array => is_array($name) ? self::generateCrud(Str::singular((string) $key), $name) : self::generateCrud(Str::singular($name)))
-            ->push($self->permissions)
+        return collect($this->modules)
+            ->map(fn (string|array $name, string|int $key): array => is_array($name) ? $this->generateCrud(Str::singular((string) $key), $name) : $this->generateCrud(Str::singular($name)))
+            ->push($this->permissions)
             ->flatten();
     }
 
@@ -77,16 +79,16 @@ final readonly class Permission
      * @param  array<string, string>  $renameActions
      * @return array<int, string>
      */
-    private static function generateCrud(string $for, array $renameActions = []): array
+    private function generateCrud(string $for, array $renameActions = []): array
     {
         return collect(['fetch', 'create', 'update', 'delete'])
-            ->map(fn (string $action): string => $renameActions !== [] && array_key_exists($action, $renameActions) ? $renameActions[$action] : $action)
-            ->filter(fn (?string $action): bool => ! is_null($action))
-            ->map(fn (string $action): string => self::generateAction($action, $for))
+            ->map(fn (string $action): mixed => $renameActions !== [] && array_key_exists($action, $renameActions) ? $renameActions[$action] : $action)
+            ->filter(fn (?string $action): bool => ! blank($action))
+            ->map(fn (string $action): string => $this->generateAction($action, $for))
             ->toArray();
     }
 
-    private static function generateAction(string $action, string $for): string
+    private function generateAction(string $action, string $for): string
     {
         if ($action === 'fetch') {
             return Str::of($action)

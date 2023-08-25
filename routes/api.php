@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\RolePermissionController;
 use App\Http\Controllers\Api\RoleUserController;
 use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\HierarchyProductController;
 use Illuminate\Routing\Middleware\ThrottleRequestsWithRedis;
 use Illuminate\Support\Facades\Route;
 
@@ -127,6 +128,12 @@ Route::name('api.')->group(function () {
                     Route::delete('{id}/delete', 'delete')->can('delete-bundle-product-component')->name('delete');
                     Route::post('{id}/update', 'update')->can('update-bundle-product-component')->name('update');
                 });
+
+            Route::controller(HierarchyProductController::class)->name('hierarchy_product.')->prefix('hierarchy-product')->group(function (): void {
+                Route::get('{hierarchyId}/fetch', 'fetch')->can('fetch-hierarchy-products')->name('fetch');
+                Route::post('create-or-update', 'createOrUpdate')->can('create-or-update-hierarchy-product')->name('create_or_update');
+                Route::delete('{hierarchyId}/{productId}/delete', 'delete')->can('delete-hierarchy-product')->name('delete');
+            });
         });
     });
 });
