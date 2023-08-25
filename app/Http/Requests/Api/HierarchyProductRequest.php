@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Validator;
 
-class CreateOrUpdateHierarchyProductRequest extends FormRequest
+class HierarchyProductRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

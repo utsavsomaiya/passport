@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Api\CreateOrUpdateHierarchyProductRequest;
 use App\Http\Requests\Api\FetchHierarchyProductRequest;
+use App\Http\Requests\Api\HierarchyProductRequest;
 use App\Http\Resources\Api\HierarchyProductResource;
 use App\Queries\HierarchyProductQueries;
 use Illuminate\Http\JsonResponse;
@@ -26,7 +27,7 @@ class HierarchyProductController extends Controller
         return new HierarchyProductResource($hierarchyWithProduct);
     }
 
-    public function createOrUpdate(CreateOrUpdateHierarchyProductRequest $request): JsonResponse
+    public function createOrUpdate(HierarchyProductRequest $request): JsonResponse
     {
         $this->hierarchyProductQueries->createOrUpdate($request);
 
