@@ -16,10 +16,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('sanctum:prune-expired --hours=24')->daily();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
-        $schedule->command('postman-backup')
-            ->days([Schedule::MONDAY, Schedule::THURSDAY])
-            ->timezone('Asia/Kolkata')
-            ->at('10:00');
+        $schedule->command('postman-backup')->timezone('Asia/Kolkata')->at('01:00');
 
         $schedule->command('audit:clean')->daily();
     }

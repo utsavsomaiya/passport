@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Mail\PostmanBackupMail;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 test('it will get the postman backup.', function (): void {
     Http::fake([
