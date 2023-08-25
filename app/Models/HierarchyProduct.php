@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class HierarchyProduct extends Pivot
@@ -23,4 +24,9 @@ class HierarchyProduct extends Pivot
     protected $casts = [
         'is_curated_product' => 'boolean',
     ];
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

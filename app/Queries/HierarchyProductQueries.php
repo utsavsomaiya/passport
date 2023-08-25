@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Models\HierarchyProduct;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -31,5 +32,18 @@ class HierarchyProductQueries
             ->where('product_id', $productId)
             ->where('hierarchy_id', $hierarchyId)
             ->delete();
+    }
+
+    public function isGreaterThanTwentyProductsAreCurated(string $hierarchyId): bool
+    {
+        $curatedProductCount = HierarchyProduct::query()
+            ->where('hierarchy_id', $hierarchyId)
+            ->where('is_curated_product', true)
+            ->whereHas('product', function (Builder $query): void {
+                $query->where('company_id', app('company_id'));
+            })
+            ->count();
+
+        return $curatedProductCount >= 20;
     }
 }
