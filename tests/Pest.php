@@ -119,11 +119,12 @@ function getRoutesAndMethod(string $requestFor, array $parameters = [], array $r
 {
     return collect(['fetch', 'create', 'update', 'delete'])
         ->map(fn (string $action) => $rename !== [] && array_key_exists($action, $rename) ? $rename[$action] : $action)
-        ->map(fn ($action) => match ($action) {
+        ->filter(fn (?string $action): bool => ! blank($action))
+        ->map(fn (string $action) => match ($action) {
             $rename['fetch'] ?? 'fetch' => fn (): array => ['method' => 'get', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), $parameters)],
             $rename['create'] ?? 'create' => fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), $parameters)],
             $rename['update'] ?? 'update' => fn (): array => ['method' => 'post', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), ['id' => fake()->uuid()])],
-            $rename['delete'] ?? 'delete' => fn (): array => ['method' => 'delete', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), ['id' => fake()->uuid()])],
+            $rename['delete'] ?? 'delete' => fn (): array => ['method' => 'delete', 'route' => route(sprintf('api.%s.%s', $requestFor, $action), blank($parameters) ? ['id' => fake()->uuid()] : $parameters)],
         })
         ->toArray();
 }

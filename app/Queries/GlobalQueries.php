@@ -23,27 +23,7 @@ class GlobalQueries
             }
 
             if ($filterMethod[$columnName] === 'ends_with') {
-                return AllowedFilter::callback($columnName, function (Builder $query, $value, $property) {
-                    $wrappedProperty = $query->getQuery()->getGrammar()->wrap($query->qualifyColumn($property));
-
-                    if (is_array($value)) {
-                        if (array_filter($value, 'strlen') === []) {
-                            return $query;
-                        }
-
-                        $query->where(function ($query) use ($value, $wrappedProperty): void {
-                            foreach (array_filter($value, 'strlen') as $partialValue) {
-                                [$sql, $bindings] = $this->getWhereRawParameters($partialValue, $wrappedProperty);
-                                $query->orWhereRaw($sql, $bindings);
-                            }
-                        });
-
-                        return;
-                    }
-
-                    [$sql, $bindings] = $this->getWhereRawParameters($value, $wrappedProperty);
-                    $query->whereRaw($sql, $bindings);
-                });
+                return AllowedFilter::endsWithStrict($columnName);
             }
 
             if ($filterMethod[$columnName] === 'is_like') {
@@ -95,16 +75,5 @@ class GlobalQueries
                 $query->where($property, '=', $value);
             });
         });
-    }
-
-    /**
-     * @return array<int, mixed>
-     */
-    protected function getWhereRawParameters(string $value, string $property): array
-    {
-        return [
-            __(':property LIKE ?', ['property' => $property]),
-            [__('%:value', ['value' => $value])],
-        ];
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Permission as EnumsPermission;
+use Facades\App\Enums\Permission as EnumsPermission;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
@@ -23,9 +23,16 @@ test('it cannot perform any action without any proper permission', function ($da
     'attributes',
     'products',
     'bundle_product_components' => [
-        'parameters' => ['parentProductId' => fake()->uuid()],
+        'parameters' => ['parentProductId' => fake()->uuid(), 'id' => fake()->uuid()],
         'rename' => [
             'create' => 'add',
+        ],
+    ],
+    'hierarchy_product' => [
+        'parameters' => ['hierarchyId' => fake()->uuid(), 'productId' => fake()->uuid()],
+        'rename' => [
+            'create' => 'create_or_update',
+            'update' => null,
         ],
     ],
 ]));

@@ -46,6 +46,6 @@ class Hierarchy extends Model
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->using(HierarchyProduct::class);
+        return $this->belongsToMany(Product::class)->using(HierarchyProduct::class)->withPivot(['is_curated_product']);
     }
 }

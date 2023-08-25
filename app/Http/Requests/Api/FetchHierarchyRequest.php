@@ -17,9 +17,10 @@ class FetchHierarchyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'filter' => ['sometimes', 'array', 'max:2'],
+            'filter' => ['sometimes', 'array', 'max:3'],
             'filter.name' => ['sometimes', 'string', 'max:255'],
             'filter.id' => ['sometimes', 'string', 'uuid'],
+            'filter.product_id' => ['sometimes', 'string', 'uuid'],
             'sort' => ['sometimes', 'string'],
         ];
     }

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Enums\Permission;
 use App\Models\Locale;
+use Facades\App\Enums\Permission;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {

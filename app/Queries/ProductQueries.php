@@ -48,6 +48,11 @@ class ProductQueries extends GlobalQueries
                         $query->has('hierarchies', '=', 0);
                     }
                 }),
+                AllowedFilter::callback('hierarchy_id', function (Builder $query, $value): void {
+                    $query->whereHas('hierarchies', function (Builder $query) use ($value): void {
+                        $query->where('id', $value);
+                    });
+                }),
             ])
             ->where('company_id', app('company_id'))
             ->select($this->selectedColumns())
