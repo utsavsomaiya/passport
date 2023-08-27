@@ -23,7 +23,6 @@ final readonly class Permission
             'users',
             'roles',
             'permissions',
-            'locales',
             'currencies',
             'hierarchies',
             'price-books',
@@ -44,6 +43,7 @@ final readonly class Permission
          * @var array<int, string>
          */
         protected array $permissions = [
+            'fetch-locales',
             'manage-user-roles',
             'manage-role-permissions',
             'manage-product-images',
