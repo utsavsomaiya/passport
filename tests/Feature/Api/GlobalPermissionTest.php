@@ -15,7 +15,6 @@ test('it cannot perform any action without any proper permission', function ($da
 })->with(getRoutes([
     'users',
     'roles',
-    'locales',
     'currencies',
     'hierarchies',
     'price_books',

@@ -4,24 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Locale;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\FetchLocaleRequest;
-use App\Http\Resources\Api\LocaleResource;
-use App\Queries\LocaleQueries;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 
 class LocaleController extends Controller
 {
-    public function __construct(
-        protected LocaleQueries $localeQueries
-    ) {
-
-    }
-
-    public function fetch(FetchLocaleRequest $request): AnonymousResourceCollection
+    public function fetch(): JsonResponse
     {
-        $locales = $this->localeQueries->listQuery($request);
+        $locales = Locale::listOfLocales();
 
-        return LocaleResource::collection($locales);
+        return Response::json(['locales' => $locales]);
     }
 }

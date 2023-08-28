@@ -7,4 +7,4 @@ dataset('string field validation check', [
     fake()->sentence(256),
 ]);
 
-dataset('modules', ['users', 'roles', 'locales', 'currencies', 'hierarchies', 'price_books', 'templates', 'attributes']);
+dataset('modules', ['users', 'roles', 'currencies', 'hierarchies', 'price_books', 'templates', 'attributes']);

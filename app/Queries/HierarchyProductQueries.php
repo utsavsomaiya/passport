@@ -34,7 +34,7 @@ class HierarchyProductQueries
             ->delete();
     }
 
-    public function isGreaterThanTwentyProductsAreCurated(string $hierarchyId): bool
+    public function areTwentyProductsCuratedAlready(string $hierarchyId): bool
     {
         $curatedProductCount = HierarchyProduct::query()
             ->where('hierarchy_id', $hierarchyId)
