@@ -65,12 +65,7 @@ Route::name('api.')->group(function () {
                 Route::post('revoke-permissions', [RolePermissionController::class, 'revokePermissions'])->can('manage-role-permissions')->name('revoke');
             });
 
-            Route::controller(LocaleController::class)->name('locales.')->prefix('locales')->group(function (): void {
-                Route::get('fetch', 'fetch')->can('fetch-locales')->name('fetch');
-                Route::post('create', 'create')->can('create-locale')->name('create');
-                Route::delete('{id}/delete', 'delete')->can('delete-locale')->name('delete');
-                Route::post('{id}/update', 'update')->can('update-locale')->name('update');
-            });
+            Route::get('locales\fetch', [LocaleController::class, 'fetch'])->can('locales.fetch-locales')->name('fetch');
 
             Route::controller(CurrencyController::class)->name('currencies.')->prefix('currencies')->group(function (): void {
                 Route::get('fetch', 'fetch')->can('fetch-currencies')->name('fetch');

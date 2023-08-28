@@ -39,8 +39,6 @@ class DatabaseSeeder extends GenerateCsvDataSeeder
             $user->companies()->attach(Company::min('id'), ['created_at' => now(), 'updated_at' => now()]);
         });
 
-        $this->seedDataFromCsvFile(database_path('/seeders/csv/locales.csv'), companyId: $companyMinimumId);
-
         $this->seedDataFromCsvFile(database_path('/seeders/csv/currencies.csv'), companyId: $companyMinimumId);
 
         $this->seedDataFromCsvFile(database_path('/seeders/csv/price_books.csv'), companyId: $companyMinimumId);
