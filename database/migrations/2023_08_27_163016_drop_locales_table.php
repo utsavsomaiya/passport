@@ -15,6 +15,7 @@ return new class extends Migration {
     {
         Schema::table('locale_products', function (Blueprint $table): void {
             $table->dropForeignIdFor(Locale::class, 'locale_id');
+            $table->dropColumn('locale_id');
         });
 
         Schema::dropIfExists('locales');
