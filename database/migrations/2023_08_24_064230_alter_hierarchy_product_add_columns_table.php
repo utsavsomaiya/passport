@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('hierarchy_product', function (Blueprint $table): void {
-            $table->boolean('is_curated_product')->default(false)->after('product_id');
+            $table->boolean('is_curated')->default(false)->after('product_id');
         });
     }
 };
