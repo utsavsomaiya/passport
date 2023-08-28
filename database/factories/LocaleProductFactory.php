@@ -24,7 +24,6 @@ class LocaleProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'locale_id' => fn (): Collection|Model => Locale::factory()->create(),
             'product_id' => fn (): Collection|Model => Product::factory()->create(),
             'name' => fake()->name(),
             'description' => fake()->sentence(),
