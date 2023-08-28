@@ -35,7 +35,7 @@ test('it will fetch curated products of hierarchy', function (): void {
         'is_curated' => false,
     ]);
 
-    $response = $this->withToken($this->token)->getJson(route('api.hierarchy_product.fetch', [
+    $response = $this->withToken($this->token)->getJson(route('api.hierarchy_products.fetch', [
         'hierarchyId' => $hierarchy->id,
     ]));
 
@@ -60,7 +60,7 @@ test('it can create or update hierarchy product', function (): void {
 
     $hierarchy = Hierarchy::factory()->for($this->company)->create();
 
-    $response = $this->withToken($this->token)->postJson(route('api.hierarchy_product.create_or_update'), [
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchy_products.create_or_update'), [
         'hierarchy_id' => $hierarchy->id,
         'product_id' => $menJeans->id,
         'is_curated' => false,
@@ -93,7 +93,7 @@ describe('create or update hierarchy product', function (): void {
     });
 
     test('it cannot create or update hierarchy product when the curated product count is greater than 20', function (): void {
-        $response = $this->withToken($this->token)->postJson(route('api.hierarchy_product.create_or_update'), [
+        $response = $this->withToken($this->token)->postJson(route('api.hierarchy_products.create_or_update'), [
             'hierarchy_id' => $this->hierarchy->id,
             'product_id' => $this->menJeans->id,
             'is_curated' => true,
@@ -103,7 +103,7 @@ describe('create or update hierarchy product', function (): void {
     });
 
     test('it can create or update hierarchy product when the curated product count is greater than 20', function (): void {
-        $response = $this->withToken($this->token)->postJson(route('api.hierarchy_product.create_or_update'), [
+        $response = $this->withToken($this->token)->postJson(route('api.hierarchy_products.create_or_update'), [
             'hierarchy_id' => $this->hierarchy->id,
             'product_id' => $this->menJeans->id,
             'is_curated' => false,
@@ -128,7 +128,7 @@ test('it can create or update hierarchy product when the curated product count i
         ]);
     });
 
-    $response = $this->withToken($this->token)->postJson(route('api.hierarchy_product.create_or_update'), [
+    $response = $this->withToken($this->token)->postJson(route('api.hierarchy_products.create_or_update'), [
         'hierarchy_id' => $hierarchy->id,
         'product_id' => $menJeans->id,
         'is_curated' => true,
@@ -148,7 +148,7 @@ test('it can delete hierarchy product', function (): void {
         'is_curated' => true,
     ]);
 
-    $response = $this->withToken($this->token)->deleteJson(route('api.hierarchy_product.delete', [
+    $response = $this->withToken($this->token)->deleteJson(route('api.hierarchy_products.delete', [
         'hierarchyId' => $hierarchy->id,
         'productId' => $menJeans->id,
     ]));

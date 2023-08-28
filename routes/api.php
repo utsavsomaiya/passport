@@ -65,7 +65,7 @@ Route::name('api.')->group(function () {
                 Route::post('revoke-permissions', [RolePermissionController::class, 'revokePermissions'])->can('manage-role-permissions')->name('revoke');
             });
 
-            Route::get('locales\fetch', [LocaleController::class, 'fetch'])->can('locales.fetch-locales')->name('fetch');
+            Route::get('locales/fetch', [LocaleController::class, 'fetch'])->can('fetch-locales')->name('locales.fetch');
 
             Route::controller(CurrencyController::class)->name('currencies.')->prefix('currencies')->group(function (): void {
                 Route::get('fetch', 'fetch')->can('fetch-currencies')->name('fetch');
@@ -124,7 +124,7 @@ Route::name('api.')->group(function () {
                     Route::post('{id}/update', 'update')->can('update-bundle-product-component')->name('update');
                 });
 
-            Route::controller(HierarchyProductController::class)->name('hierarchy_product.')->prefix('hierarchy-product')->group(function (): void {
+            Route::controller(HierarchyProductController::class)->name('hierarchy_products.')->prefix('hierarchy-products')->group(function (): void {
                 Route::get('{hierarchyId}/fetch', 'fetch')->can('fetch-hierarchy-products')->name('fetch');
                 Route::post('create-or-update', 'createOrUpdate')->can('create-or-update-hierarchy-product')->name('create_or_update');
                 Route::delete('{hierarchyId}/{productId}/delete', 'delete')->can('delete-hierarchy-product')->name('delete');

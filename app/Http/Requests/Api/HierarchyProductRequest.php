@@ -35,16 +35,16 @@ class HierarchyProductRequest extends FormRequest
     {
         return [
             function (Validator $validator): void {
-                $isCuratedProduct = match ($this->is_curated) {
+                $isCurated = match ($this->is_curated) {
                     '1', 'true', true => true,
                     default => false,
                 };
 
-                if (! resolve(HierarchyProductQueries::class)->isGreaterThanTwentyProductsAreCurated($this->hierarchy_id)) {
+                if (! resolve(HierarchyProductQueries::class)->areTwentyProductsCuratedAlready($this->hierarchy_id)) {
                     return;
                 }
 
-                if (! $isCuratedProduct) {
+                if (! $isCurated) {
                     return;
                 }
 

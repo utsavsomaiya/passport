@@ -30,13 +30,13 @@ class HierarchyProductController extends Controller
     {
         $this->hierarchyProductQueries->createOrUpdate($request);
 
-        return Response::api('The hierarchical product has been successfully created with the curated product.');
+        return Response::api('The product has been assigned to the specified hierarchy successfully.');
     }
 
     public function delete(string $hierarchyId, string $productId): JsonResponse
     {
         $this->hierarchyProductQueries->delete($hierarchyId, $productId);
 
-        return Response::api('The hierarchical product has been successfully deleted with the curated product.');
+        return Response::api('The product has been detached to the specified hierarchy successfully.');
     }
 }
