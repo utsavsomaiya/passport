@@ -139,7 +139,7 @@ enum Locale: int
 
     /**
      * @return array<int, mixed>
-    */
+     */
     public static function listOfLocales(): array
     {
         return collect(self::cases())->map(fn ($case): array => [

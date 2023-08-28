@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Locale;
 use App\Models\LocaleProduct;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;

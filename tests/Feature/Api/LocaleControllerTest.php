@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Facades\App\Enums\Permission;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 beforeEach(function (): void {
