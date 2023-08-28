@@ -27,7 +27,7 @@ test('it cannot perform any action without any proper permission', function ($da
             'create' => 'add',
         ],
     ],
-    'hierarchy_product' => [
+    'hierarchy_products' => [
         'parameters' => ['hierarchyId' => fake()->uuid(), 'productId' => fake()->uuid()],
         'rename' => [
             'create' => 'create_or_update',

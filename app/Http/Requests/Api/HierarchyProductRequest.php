@@ -7,6 +7,7 @@ namespace App\Http\Requests\Api;
 use App\Models\Hierarchy;
 use App\Models\Product;
 use App\Queries\HierarchyProductQueries;
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
@@ -30,6 +31,8 @@ class HierarchyProductRequest extends FormRequest
 
     /**
      * Get the "after" validation callables for the request.
+     *
+     * @return array<int, Closure>
      */
     public function after(): array
     {

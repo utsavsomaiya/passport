@@ -10,7 +10,6 @@ use ArchTech\Enums\Meta\Meta;
 use ArchTech\Enums\Metadata;
 use ArchTech\Enums\Names;
 use ArchTech\Enums\Values;
-use BackedEnum;
 use Illuminate\Support\Str;
 
 #[Meta(Code::class)]
@@ -138,12 +137,15 @@ enum Locale: int
     #[Code('cy')]
     case WELSH = 58;
 
-    public static function listOfLocales()
+    /**
+     * @return array<int, mixed>
+     */
+    public static function listOfLocales(): array
     {
-        return collect(self::cases())->map(fn (BackedEnum $case): array => [
+        return collect(self::cases())->map(fn ($case): array => [
             'id' => $case->value,
             'name' => Str::of($case->name)->replaceFirst('_', ' ')->title()->value(),
-            'code' => $case->code(),
+            'code' => $case->code(), // @phpstan-ignore-line
         ])->toArray();
     }
 }
