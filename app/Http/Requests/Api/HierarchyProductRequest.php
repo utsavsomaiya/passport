@@ -24,7 +24,7 @@ class HierarchyProductRequest extends FormRequest
         return [
             'product_id' => ['required', 'uuid', Rule::exists(Product::class, 'id')->where('company_id', app('company_id'))],
             'hierarchy_id' => ['required', 'uuid', Rule::exists(Hierarchy::class, 'id')->where('company_id', app('company_id'))],
-            'is_curated_product' => ['required', 'boolean'],
+            'is_curated' => ['required', 'boolean'],
         ];
     }
 
@@ -35,7 +35,7 @@ class HierarchyProductRequest extends FormRequest
     {
         return [
             function (Validator $validator): void {
-                $isCuratedProduct = match ($this->is_curated_product) {
+                $isCuratedProduct = match ($this->is_curated) {
                     '1', 'true', true => true,
                     default => false,
                 };
@@ -48,7 +48,7 @@ class HierarchyProductRequest extends FormRequest
                     return;
                 }
 
-                $validator->errors()->add('product_id', 'The maximum number of curated products is 20. If you want to assign the hierarchy then change the `is_curated_product` to false');
+                $validator->errors()->add('product_id', 'The maximum number of curated products is 20. If you want to assign the hierarchy then change the `is_curated` to false');
             },
         ];
     }

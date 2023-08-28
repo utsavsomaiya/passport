@@ -22,7 +22,7 @@ class HierarchyProductResource extends JsonResource
         return [
             ...$hierarchy->products->map(fn (Product $product): array => [
                 ...resolve(ProductResource::class, ['resource' => $product])->toArray($request),
-                'is_curated_product' => $product->pivot->is_curated_product, // @phpstan-ignore-line
+                'is_curated' => $product->pivot->is_curated, // @phpstan-ignore-line
             ]),
         ];
     }

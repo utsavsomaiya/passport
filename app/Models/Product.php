@@ -64,7 +64,7 @@ class Product extends Model implements HasMedia
 
     public function hierarchies(): BelongsToMany
     {
-        return $this->belongsToMany(Hierarchy::class)->using(HierarchyProduct::class)->withPivot(['is_curated_product']);
+        return $this->belongsToMany(Hierarchy::class)->using(HierarchyProduct::class)->withPivot(['is_curated']);
     }
 
     public function bundleComponents(): HasMany

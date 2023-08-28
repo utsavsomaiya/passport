@@ -38,7 +38,7 @@ class HierarchyProductQueries
     {
         $curatedProductCount = HierarchyProduct::query()
             ->where('hierarchy_id', $hierarchyId)
-            ->where('is_curated_product', true)
+            ->where('is_curated', true)
             ->whereHas('product', function (Builder $query): void {
                 $query->where('company_id', app('company_id'));
             })

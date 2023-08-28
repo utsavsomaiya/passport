@@ -16,7 +16,7 @@ return new class extends Migration {
     {
         Schema::create('locale_products', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->foreignIdFor(Locale::class, 'locale_id')->constrained();
+            $table->unsignedSmallInteger('locale');
             $table->foreignIdFor(Product::class, 'product_id')->constrained();
             $table->string('name');
             $table->longText('description')->nullable();

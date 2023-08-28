@@ -17,7 +17,7 @@ class FetchHierarchyProductRequest extends FormRequest
     {
         return [
             'filter' => ['sometimes', 'array', 'max:1'],
-            'filter.is_curated_product' => ['sometimes', 'boolean'],
+            'filter.curated_products_only' => ['sometimes', 'boolean'],
         ];
     }
 }

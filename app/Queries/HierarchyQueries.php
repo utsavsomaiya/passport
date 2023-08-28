@@ -89,7 +89,7 @@ class HierarchyQueries extends GlobalQueries
     {
         return QueryBuilder::for(Hierarchy::query(), $request)
             ->allowedFilters([
-                AllowedFilter::callback('is_curated_product', function (Builder $query, $value, $property): void {
+                AllowedFilter::callback('curated_products_only', function (Builder $query, $value, $property): void {
                     $value = match ($value) {
                         '1', 'true', true => true,
                         default => false,
@@ -100,6 +100,7 @@ class HierarchyQueries extends GlobalQueries
                     });
                 }),
             ])
+            ->select('id')
             ->with('products', function ($query): void {
                 $query->with('media:id,file_name,model_id,model_type,collection_name,disk,created_at');
             })

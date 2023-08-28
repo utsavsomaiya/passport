@@ -15,7 +15,7 @@ final readonly class Permission
     public function __construct(
         /**
          * For altering an array of actions, supply the array alongside an array of key-value pairs.
-         * If a '' value is passed, the corresponding action will be removed from the array.
+         * If a null value is passed, the corresponding action will be removed from the array.
          *
          * @var array<string|int, mixed>
          */

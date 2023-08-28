@@ -14,7 +14,7 @@ class HierarchyProduct extends Pivot
      *
      * @var array<int, string>
      */
-    protected $fillable = ['hierarchy_id', 'product_id', 'is_curated_product'];
+    protected $fillable = ['hierarchy_id', 'product_id', 'is_curated'];
 
     /**
      * The attributes that should be cast.
@@ -22,7 +22,7 @@ class HierarchyProduct extends Pivot
      * @var array<string, string>
      */
     protected $casts = [
-        'is_curated_product' => 'boolean',
+        'is_curated' => 'boolean',
     ];
 
     public function product(): BelongsTo
