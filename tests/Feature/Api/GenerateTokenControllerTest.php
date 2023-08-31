@@ -3,16 +3,14 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use Facades\Laravel\Passport\PersonalAccessTokenFactory;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Passport\Client;
 use Laravel\Passport\Passport;
-use Laravel\Passport\PersonalAccessClient;
 
 test('it can generate the token', function (): void {
     User::factory()->create();
 
-    $client = Client::factory()->state(fn () => ['personal_access_client' => true])->create();
+    $client = Client::factory()->state(fn (): array => ['personal_access_client' => true])->create();
 
     Passport::$personalAccessClientModel::create(['client_id' => $client->id]);
 

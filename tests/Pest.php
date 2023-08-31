@@ -53,15 +53,15 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 function passportLogin()
 {
     $user = User::factory()->create();
-    $client = Client::factory()->state(fn () => ['personal_access_client' => true])->create(['user_id' => $user->id]);
+    $client = Client::factory()->state(fn (): array => ['personal_access_client' => true])->create(['user_id' => $user->id]);
     PersonalAccessClient::create(['client_id' => $client->id]);
 
     return [PersonalAccessTokenFactory::make($user->id, 'test'), $user, $client];
 }
 
-function generatePersonalAccessClient()
+function generatePersonalAccessClient(): void
 {
-    $client = Client::factory()->state(fn () => ['personal_access_client' => true])->create();
+    $client = Client::factory()->state(fn (): array => ['personal_access_client' => true])->create();
     PersonalAccessClient::create(['client_id' => $client->id]);
 }
 
