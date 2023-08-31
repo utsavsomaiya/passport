@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Models\PersonalAccessToken;
 use Closure;
+use Facades\Laravel\Passport\PersonalAccessTokenFactory;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,13 +21,13 @@ class AddCompanyIdInServiceContainer
         /** @var string $bearerToken */
         $bearerToken = $request->bearerToken();
 
-        $personalAccessToken = PersonalAccessToken::findToken($bearerToken);
+        $token = PersonalAccessTokenFactory::findAccessToken(['access_token' => $bearerToken]);
 
-        abort_if(! $personalAccessToken, Response::HTTP_FORBIDDEN, 'Unauthenticated.');
+        abort_if(! $token->exists, Response::HTTP_FORBIDDEN, 'Unauthenticated.');
 
-        abort_if(! $personalAccessToken->company_id, Response::HTTP_FORBIDDEN, 'Please set the company before making this request.');
+        abort_if(! $token->company_id, Response::HTTP_FORBIDDEN, 'Please set the company before making this request.');
 
-        app()->bind('company_id', fn () => $personalAccessToken->company_id);
+        app()->bind('company_id', fn () => $token->company_id);
 
         return $next($request);
     }

@@ -3,17 +3,37 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Facades\Laravel\Passport\PersonalAccessTokenFactory;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Laravel\Passport\Client;
+use Laravel\Passport\Passport;
+use Laravel\Passport\PersonalAccessClient;
 
-test('it can generate the user token', function (): void {
-    $user = User::factory()->create();
+test('it can generate the token', function (): void {
+    User::factory()->create();
 
-    $response = $this->postJson(route('api.generate_token'), [
-        'email' => $user->email,
-        'password' => 'password',
-        'device_name' => 'test',
+    $client = Client::factory()->state(fn () => ['personal_access_client' => true])->create();
+
+    Passport::$personalAccessClientModel::create(['client_id' => $client->id]);
+
+    $response = $this->postJson(route('passport.token'), [
+        'grant_type' => 'client_credentials',
+        'client_id' => $client->id,
+        'client_secret' => $client->secret,
     ]);
 
     $response->assertOk()
-        ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has('token'));
+        ->assertJson(fn (AssertableJson $json): AssertableJson => $json->has('access_token')->etc());
+});
+
+test('it can generate the personal access token', function (): void {
+    [$token, $user] = passportLogin();
+
+    $response = $this->withToken($token->accessToken)->postJson(route('api.generate_token'), [
+        'email' => $user->email,
+        'password' => 'password',
+        'device_name' => 'Frontend',
+    ]);
+
+    $response->assertOk()->assertJsonStructure(['token']);
 });

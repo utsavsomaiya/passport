@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\PersonalAccessToken;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +15,6 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rules\Password;
-use Laravel\Sanctum\Sanctum;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 
 class AppServiceProvider extends ServiceProvider
@@ -42,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
 
         QueryBuilderRequest::setArrayValueDelimiter('|'); // By default value is `,`
 
-        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         Model::preventLazyLoading(! $this->app->isProduction());
 
         Carbon::macro('displayFormat', fn () => $this->format('d F Y, h:i A')); // @phpstan-ignore-line

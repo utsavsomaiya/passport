@@ -25,13 +25,13 @@ use Illuminate\Routing\Middleware\ThrottleRequestsWithRedis;
 use Illuminate\Support\Facades\Route;
 
 Route::name('api.')->group(function () {
-    Route::middleware(ThrottleRequestsWithRedis::using('auth'))->group(function (): void {
+    Route::middleware(['client', ThrottleRequestsWithRedis::using('auth')])->group(function (): void {
         Route::post('generate-token', [GenerateTokenController::class, 'generateToken'])->name('generate_token');
         Route::post('forgot-password', ForgotPasswordController::class)->name('forgot_password');
         Route::post('reset-password', ResetPasswordController::class)->name('reset_password');
     });
 
-    Route::middleware('auth:sanctum')->group(function (): void {
+    Route::middleware('auth:api')->group(function (): void {
         Route::controller(CompanyController::class)->name('companies.')->prefix('companies')->group(function (): void {
             Route::get('fetch-current-user-companies', 'fetchCompanies')->name('fetch_current_user_companies');
             Route::post('set', 'setCompany')->name('set');

@@ -10,6 +10,7 @@ use Facades\App\Enums\Permission;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Passport::tokensExpireIn(now()->addMonths(6));
+        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
+
         Permission::getFeatureGates()->each(function (string $gate): void {
             Gate::define($gate, function (User $user) use ($gate) {
                 if (Cache::has($user->id)) {

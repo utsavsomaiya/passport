@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 test('it can reset the password using the password reset token', function (): void {
-    $user = UserFactory::new(['email' => 'test@gmail.com'])->create();
+    [$personalAccessToken, $user] = passportLogin();
 
     $token = Password::createToken($user);
 
-    $response = $this->postJson(route('api.reset_password'), [
+    $response = $this->withToken($personalAccessToken->accessToken)->postJson(route('api.reset_password'), [
         'token' => $token,
         'email' => $user->email,
         'password' => 'user@645',

@@ -8,11 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\FetchCompanyRequest;
 use App\Http\Requests\Api\SetCompanyRequest;
 use App\Http\Resources\Api\CompanyResource;
-use App\Models\PersonalAccessToken;
 use App\Queries\CompanyQueries;
+use Facades\Laravel\Passport\PersonalAccessTokenFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class CompanyController extends Controller
 {
@@ -29,20 +30,23 @@ class CompanyController extends Controller
         return CompanyResource::collection($companies);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function setCompany(SetCompanyRequest $request): JsonResponse
     {
-        /** @var string $bearerToken */
         $bearerToken = $request->bearerToken();
 
-        [$id, $token] = explode('|', $bearerToken, 2);
+        $token = PersonalAccessTokenFactory::findAccessToken(['access_token' => $bearerToken]);
 
-        /** @var PersonalAccessToken $token */
-        $token = $request->user()?->tokens->find($id);
+        if ($token->exists) {
+            $token->company_id = $request->company_id;
 
-        $token->company_id = $request->company_id;
+            $token->save();
 
-        $token->save();
+            return Response::api('Company set successfully. You may access other API endpoints now.');
+        }
 
-        return Response::api('Company set successfully. You may access other API endpoints now.');
+        throw new BadRequestException('This bearer token cannot support in the system.');
     }
 }

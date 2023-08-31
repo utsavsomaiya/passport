@@ -6,8 +6,11 @@ use App\Models\Company;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use Facades\Laravel\Passport\PersonalAccessTokenFactory;
 use Illuminate\Support\Arr;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Client;
+use Laravel\Passport\Passport;
+use Laravel\Passport\PersonalAccessClient;
 use Tests\TestCase;
 
 /*
@@ -47,8 +50,25 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 |
 */
 
+function passportLogin()
+{
+    $user = User::factory()->create();
+    $client = Client::factory()->state(fn () => ['personal_access_client' => true])->create(['user_id' => $user->id]);
+    PersonalAccessClient::create(['client_id' => $client->id]);
+
+    return [PersonalAccessTokenFactory::make($user->id, 'test'), $user, $client];
+}
+
+function generatePersonalAccessClient()
+{
+    $client = Client::factory()->state(fn () => ['personal_access_client' => true])->create();
+    PersonalAccessClient::create(['client_id' => $client->id]);
+}
+
 function frontendApiLoginWithPermissions(...$permissions)
 {
+    generatePersonalAccessClient();
+
     $company = Company::factory()->create();
 
     $user = User::factory()
@@ -60,40 +80,38 @@ function frontendApiLoginWithPermissions(...$permissions)
         )
         ->create();
 
-    $token = $user->createToken('test')->plainTextToken;
+    $token = $user->createToken('test')->accessToken;
 
-    [$id, $personalAccessToken] = explode('|', $token, 2);
-
-    $personalAccessToken = $user->tokens->find($id);
+    $personalAccessToken = PersonalAccessTokenFactory::findAccessToken(['access_token' => $token]);
 
     $personalAccessToken->company_id = $company->id;
 
     $personalAccessToken->save();
 
-    $user = Sanctum::actingAs($user);
+    $user = Passport::actingAs($user);
 
     return [$user, $company, $token];
 }
 
 function frontendApiLoginWithUser(string $roleName)
 {
+    generatePersonalAccessClient();
+
     $company = Company::factory()->create();
 
     $user = User::factory()
         ->has(Role::factory()->for($company)->named($roleName))
         ->create();
 
-    $token = $user->createToken('test')->plainTextToken;
+    $token = $user->createToken('test')->accessToken;
 
-    [$id, $personalAccessToken] = explode('|', $token, 2);
-
-    $personalAccessToken = $user->tokens->find($id);
+    $personalAccessToken = PersonalAccessTokenFactory::findAccessToken(['access_token' => $token]);
 
     $personalAccessToken->company_id = $company->id;
 
     $personalAccessToken->save();
 
-    $user = Sanctum::actingAs($user);
+    $user = Passport::actingAs($user);
 
     return [$user, $company, $token];
 }

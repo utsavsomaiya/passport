@@ -18,7 +18,7 @@ class GenerateTokenController extends Controller
     {
         $validatedData = $request->validated();
 
-        $token = $validatedData['user']->createToken($request->get('device_name', 'Frontend'))->plainTextToken;
+        $token = $validatedData['user']->createToken($request->get('device_name', 'Frontend'))->accessToken;
 
         return ['token' => $token];
     }

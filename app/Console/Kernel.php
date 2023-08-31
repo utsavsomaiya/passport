@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('sanctum:prune-expired --hours=24')->daily();
+        $schedule->command('passport:purge')->hourly();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('postman-backup')->timezone('Asia/Kolkata')->at('01:00');
 
